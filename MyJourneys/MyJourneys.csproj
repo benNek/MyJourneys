@@ -19,6 +19,7 @@
         <Content Remove="$(SpaRoot)**" />
         <Content Include="ClientApp\.env.local" />
         <Content Include="ClientApp\public\styles.css" />
+        <Content Include="ClientApp\src\components\NavBar.jsx" />
         <None Remove="$(SpaRoot)**" />
         <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
     </ItemGroup>
