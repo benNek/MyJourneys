@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Container } from 'reactstrap';
 import NavBar from "./NavBar";
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export class Layout extends Component {
   static displayName = Layout.name;
@@ -9,6 +11,17 @@ export class Layout extends Component {
     return (
       <div>
         <NavBar />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnVisibilityChange
+          draggable
+          pauseOnHover
+        />
         <Container>
           {this.props.children}
         </Container>
