@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,30 +17,38 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using MyJourneys.Data;
 using MyJourneys.Models;
+using MyJourneys.Repositories;
+using MyJourneys.Services;
 
 namespace MyJourneys
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TravelContext>(o => o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
             services.AddControllersWithViews();
+            services.AddDbContext<TravelContext>(o =>
+                o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            AddScopes(services);
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddMvc();
+            SetupAuth(services);
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/build"; });
+            services.Configure<GzipCompressionProviderOptions>(options => options.Level = CompressionLevel.Optimal);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -72,24 +83,28 @@ namespace MyJourneys
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
+            Task.Run(() => CreateRoles(serviceProvider)).GetAwaiter().GetResult();
         }
-        
-         private void ConfigureAuth(IServiceCollection services)
+
+        private void SetupAuth(IServiceCollection services)
         {
             services.AddIdentity<User, IdentityRole>(config =>
-            {
-                config.Password.RequireDigit = false;
-                config.Password.RequireLowercase = false;
-                config.Password.RequireUppercase = false;
-                config.Password.RequireNonAlphanumeric = false;
-                config.Password.RequiredLength = 8;
-                config.SignIn.RequireConfirmedEmail = false;
-            })
-           .AddEntityFrameworkStores<TravelContext>()
-           .AddDefaultTokenProviders();
+                {
+                    config.Password.RequireDigit = false;
+                    config.Password.RequireLowercase = false;
+                    config.Password.RequireUppercase = false;
+                    config.Password.RequireNonAlphanumeric = false;
+                    config.Password.RequiredLength = 8;
+                    config.SignIn.RequireConfirmedEmail = false;
+                })
+                .AddEntityFrameworkStores<TravelContext>()
+                .AddDefaultTokenProviders();
 
-            List<string> issuers = new List<string>() { Configuration["CustomAuth:Issuer"], Configuration["Google:Issuer"] };
-            List<string> audiences = new List<string>() { Configuration["CustomAuth:Audience"], Configuration["Google:Audience"] };
+            List<string> issuers = new List<string>()
+                {Configuration["CustomAuth:Issuer"], Configuration["Google:Issuer"]};
+            List<string> audiences = new List<string>()
+                {Configuration["CustomAuth:Audience"], Configuration["Google:Audience"]};
 
             services
                 .AddAuthentication(options =>
@@ -110,7 +125,9 @@ namespace MyJourneys
                         ValidAudiences = audiences,
 
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["CustomAuth:IssuerSigningKey"])),
+                        IssuerSigningKey =
+                            new SymmetricSecurityKey(
+                                Encoding.UTF8.GetBytes(Configuration["CustomAuth:IssuerSigningKey"])),
 
                         RequireExpirationTime = true,
                         ValidateLifetime = true,
@@ -118,6 +135,28 @@ namespace MyJourneys
                     };
                     configureOptions.SaveToken = true;
                 });
+        }
+
+        private void AddScopes(IServiceCollection services)
+        {
+            services.AddScoped<IUserService, UserService>();
+
+            services.AddScoped<IUserRepository, UserRepository>();
+        }
+
+        private async Task CreateRoles(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            string[] roleNames = {"Admin", "Blogger"};
+
+            foreach (var roleName in roleNames)
+            {
+                var roleExist = await roleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                {
+                    await roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
         }
     }
 }
