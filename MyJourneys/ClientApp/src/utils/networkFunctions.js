@@ -8,4 +8,4 @@ const config = () => {
   }
 };
 
-export const register = data => axios.post('/api/users/register', data);
+export const register = data => axios.post('/api/user/register', data);
