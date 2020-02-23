@@ -7,6 +7,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import MenuIcon from '@material-ui/icons/Menu';
 import {grey} from "@material-ui/core/colors";
 import Register from "./Authentication/Register";
+import Login from "./Authentication/Login";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,6 +39,7 @@ export default function NavBar() {
           <Typography variant="h6" className={classes.title}>
             MyJourneys
           </Typography>
+          <Login/>
           <Register/>
         </Toolbar>
       </AppBar>

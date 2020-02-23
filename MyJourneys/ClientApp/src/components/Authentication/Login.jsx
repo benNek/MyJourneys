@@ -8,7 +8,7 @@ import TextField from "@material-ui/core/TextField";
 import {Form, Formik} from "formik";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import {register} from "../../utils/networkFunctions";
+import {login} from "../../utils/networkFunctions";
 import {toast} from 'react-toastify';
 
 const useStyles = makeStyles(theme => ({
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Register() {
+export default function Login() {
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
@@ -46,7 +46,7 @@ export default function Register() {
 
   return (
     <React.Fragment>
-      <Button color="inherit" onClick={handleOpen}>Register</Button>
+      <Button color="inherit" onClick={handleOpen}>Login</Button>
 
       <Modal
         aria-labelledby="transition-modal-title"
@@ -63,15 +63,16 @@ export default function Register() {
         <Fade in={open}>
           <div className={classes.paper}>
             <Typography className={classes.heading} variant="h5" component="h5">
-              Sign up now!
+              Sign in to access all the features!
             </Typography>
             <Formik
               initialValues={{username: '', email: '', password: ''}}
               onSubmit={async (values, actions) => {
                 actions.setSubmitting(true);
-                await register(values)
-                  .then(() => {
-                    toast.success("User registered successfully.");
+                await login(values)
+                  .then(response => {
+                    localStorage.setItem('accessToken', response.data);
+                    toast.success("User login successfully.");
                   })
                   .catch(err => {
                     toast.error(`${err.response.data} Status code: ${err.response.status}`);
@@ -108,37 +109,12 @@ export default function Register() {
                           variant="outlined"
                           required
                           fullWidth
-                          id="email"
-                          label="Email Address"
-                          name="email"
-                          autoComplete="email"
-                          onChange={change.bind(null, "email")}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          variant="outlined"
-                          required
-                          fullWidth
                           name="password"
                           label="Password"
                           type="password"
                           id="password"
                           autoComplete="current-password"
                           onChange={change.bind(null, "password")}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          variant="outlined"
-                          required
-                          fullWidth
-                          name="confirmPassword"
-                          label="Confirm Password"
-                          type="password"
-                          id="confirmPassword"
-                          autoComplete="confirm-password"
-                          onChange={change.bind(null, "confirmPassword")}
                         />
                       </Grid>
                     </Grid>
@@ -149,7 +125,7 @@ export default function Register() {
                       color="primary"
                       className={classes.submitButton}
                     >
-                      Register
+                      Login
                     </Button>
                   </Form>
                 );

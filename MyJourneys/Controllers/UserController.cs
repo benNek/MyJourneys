@@ -19,7 +19,7 @@ namespace MyJourneys.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] UserAuthViewModel model)
+        public async Task<IActionResult> Register([FromBody] UserRegisterViewModel model)
         {
             if (_userRepository.UserWithNameExists(model.Username))
             {
@@ -37,6 +37,17 @@ namespace MyJourneys.Controllers
             }
             
             return StatusCode(500, "Registration has failed. Please try again later");
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] UserLoginViewModel model)
+        {
+            if (await _userService.Login(model))
+            {
+                return Ok(await _userService.RequestToken(model.Username));
+            }
+
+            return StatusCode(401, "Invalid username or password");
         }
     }
 }
