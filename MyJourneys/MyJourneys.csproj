@@ -15,8 +15,11 @@
         <Content Include="ClientApp\.env.local" />
         <Content Include="ClientApp\public\styles.css" />
         <Content Include="ClientApp\src\components\Authentication\Login.jsx" />
+        <Content Include="ClientApp\src\components\Authentication\Logout.jsx" />
         <Content Include="ClientApp\src\components\Authentication\Register.jsx" />
         <Content Include="ClientApp\src\components\NavBar.jsx" />
+        <Content Include="ClientApp\src\contexts\userContext.js" />
+        <Content Include="ClientApp\src\utils\auth.js" />
         <Content Include="ClientApp\src\utils\networkFunctions.js" />
         <None Remove="$(SpaRoot)**" />
         <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />

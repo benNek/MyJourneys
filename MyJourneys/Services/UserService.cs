@@ -67,13 +67,18 @@ namespace MyJourneys.Services
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Auth:IssuerSigningKey"]));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(
-                issuer: _configuration["Auth:Issuer"],
-                audience: _configuration["Auth:Audience"],
-                claims: claims,
+                _configuration["Auth:Issuer"],
+                _configuration["Auth:Audience"],
+                claims,
                 expires: DateTime.Now.AddDays(Convert.ToDouble(_configuration["Auth:ExpirationDays"])),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async void Logout()
+        {
+            await _signInManager.SignOutAsync();
         }
     }
 }

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import Button from "@material-ui/core/Button";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop/Backdrop";
@@ -10,6 +10,8 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import {login} from "../../utils/networkFunctions";
 import {toast} from 'react-toastify';
+import {UserContext} from "../../contexts/userContext";
+import {parseUser} from "../../utils/auth";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -35,7 +37,8 @@ export default function Login() {
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
-
+  const { user, setUser } = useContext(UserContext);
+  
   const handleOpen = () => {
     setOpen(true);
   };
@@ -66,12 +69,13 @@ export default function Login() {
               Sign in to access all the features!
             </Typography>
             <Formik
-              initialValues={{username: '', email: '', password: ''}}
+              initialValues={{username: '', password: ''}}
               onSubmit={async (values, actions) => {
                 actions.setSubmitting(true);
                 await login(values)
                   .then(response => {
                     localStorage.setItem('accessToken', response.data);
+                    setUser(parseUser());
                     toast.success("User login successfully.");
                   })
                   .catch(err => {

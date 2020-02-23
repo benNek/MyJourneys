@@ -8,5 +8,6 @@ namespace MyJourneys.Services
         public Task<bool> Register(UserRegisterViewModel model);
         public Task<bool> Login(UserLoginViewModel model);
         public Task<string> RequestToken(string email);
+        public void Logout();
     }
 }

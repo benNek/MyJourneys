@@ -1,13 +1,15 @@
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
-import React from "react";
+import React, {useContext} from "react";
 import Typography from "@material-ui/core/Typography";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import MenuIcon from '@material-ui/icons/Menu';
 import {grey} from "@material-ui/core/colors";
 import Register from "./Authentication/Register";
 import Login from "./Authentication/Login";
+import {UserContext} from "../contexts/userContext";
+import Logout from "./Authentication/Logout";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,7 +29,15 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function NavBar() {
+  const { user } = useContext(UserContext);
   const classes = useStyles();
+  
+  let authControls;
+  if (user) {
+    authControls = <Logout/>;
+  } else {
+    authControls = <React.Fragment><Login/><Register/></React.Fragment>
+  }
 
   return (
     <div className={classes.root}>
@@ -39,8 +49,7 @@ export default function NavBar() {
           <Typography variant="h6" className={classes.title}>
             MyJourneys
           </Typography>
-          <Login/>
-          <Register/>
+          {authControls}
         </Toolbar>
       </AppBar>
     </div>

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyJourneys.Models.ViewModels;
 using MyJourneys.Repositories;
@@ -48,6 +49,14 @@ namespace MyJourneys.Controllers
             }
 
             return StatusCode(401, "Invalid username or password");
+        }
+        
+        [Authorize]
+        [HttpGet("logout")]
+        public IActionResult Logout()
+        {
+            _userService.Logout();
+            return Ok("You have signed out successfully!");
         }
     }
 }

@@ -67,6 +67,9 @@ namespace MyJourneys
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -100,12 +103,7 @@ namespace MyJourneys
                 })
                 .AddEntityFrameworkStores<TravelContext>()
                 .AddDefaultTokenProviders();
-
-            List<string> issuers = new List<string>()
-                {Configuration["CustomAuth:Issuer"], Configuration["Google:Issuer"]};
-            List<string> audiences = new List<string>()
-                {Configuration["CustomAuth:Audience"], Configuration["Google:Audience"]};
-
+            
             services
                 .AddAuthentication(options =>
                 {
@@ -119,15 +117,15 @@ namespace MyJourneys
                     configureOptions.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
-                        ValidIssuers = issuers,
+                        ValidIssuer = Configuration["Auth:Issuer"],
 
                         ValidateAudience = true,
-                        ValidAudiences = audiences,
+                        ValidAudience = Configuration["Auth:Audience"],
 
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey =
                             new SymmetricSecurityKey(
-                                Encoding.UTF8.GetBytes(Configuration["CustomAuth:IssuerSigningKey"])),
+                                Encoding.UTF8.GetBytes(Configuration["Auth:IssuerSigningKey"])),
 
                         RequireExpirationTime = true,
                         ValidateLifetime = true,
