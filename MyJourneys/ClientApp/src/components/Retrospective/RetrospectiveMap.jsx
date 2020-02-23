@@ -1,16 +1,26 @@
-import React, {useEffect, useState} from 'react';
-import ReactMapGL from 'react-map-gl';
+import React, {useEffect, useState} from "react";
 import _ from "lodash";
+import ReactMapGL from "react-map-gl";
 
-export default function Home() {
-
+export default function RetrospectiveMap(props) {
   const defaultOpacity = 0.4;
 
+  const [lat, setLat] = useState(...props.lat);
+  const [lon, setLon] = useState(...props.lon);
+
+  useEffect(() => {
+    setLat(props.lat);
+    setLon(props.lon);
+    viewport.latitude = props.lat;
+    viewport.longitude = props.lon;
+    setViewport(viewport);
+  }, [props.lat, props.lon]);
+
   const [viewport, setViewport] = useState({
-    width: "100%",
-    height: 400,
-    latitude: 42.361145,
-    longitude: -71.057083,
+    width: "60%",
+    height: "100%",
+    latitude: lat || 42.361145,
+    longitude: lon || -71.057083,
     zoom: 8
   });
 
@@ -30,7 +40,7 @@ export default function Home() {
     if (Object.entries(map).length === 0 && map.constructor === Object) {
       return;
     }
-    
+
     const activeCountries = visitedCountries.map(country => {
       return [country, defaultOpacity];
     }).flat();

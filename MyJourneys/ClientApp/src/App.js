@@ -1,10 +1,10 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Route} from 'react-router';
 import {Layout} from './components/Layout';
-import Home from './components/Home';
 import {parseUser} from "./utils/auth";
 import {UserContext} from "./contexts/userContext";
 import Planner from "./components/Planner/Planner";
+import Retrospective from "./components/Retrospective/Retrospective";
 
 export default function App() {
 
@@ -18,7 +18,7 @@ export default function App() {
   return (
     <UserContext.Provider value={providerValue}>
       <Layout>
-        <Route exact path='/' component={Home}/>
+        <Route exact path='/' component={Retrospective}/>
         <Route exact path='/planner' component={Planner}/>
       </Layout>
     </UserContext.Provider>

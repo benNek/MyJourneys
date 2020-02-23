@@ -10,8 +10,6 @@ import Register from "./Authentication/Register";
 import Login from "./Authentication/Login";
 import {UserContext} from "../contexts/userContext";
 import Logout from "./Authentication/Logout";
-import Button from "@material-ui/core/Button";
-import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -51,7 +49,7 @@ export default function NavBar() {
           <Typography variant="h6" className={classes.title}>
             MyJourneys
           </Typography>
-          <Button color="inherit"><Link to="/planner">Trip Planner</Link></Button>
+          {/*<Button color="inherit">Test</Button>*/}
           {authControls}
         </Toolbar>
       </AppBar>

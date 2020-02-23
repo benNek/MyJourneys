@@ -14,12 +14,3 @@ export const parseUser = () => {
     return null;
   }
 };
-
-export const isAuth = () => {
-  const token = localStorage.getItem('accessToken');
-  if (!token) {
-    return false;
-  }
-
-  return parseUser();
-};
