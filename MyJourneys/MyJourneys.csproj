@@ -18,6 +18,7 @@
         <Content Include="ClientApp\src\components\Authentication\Logout.jsx" />
         <Content Include="ClientApp\src\components\Authentication\Register.jsx" />
         <Content Include="ClientApp\src\components\NavBar.jsx" />
+        <Content Include="ClientApp\src\components\Planner\Planner.jsx" />
         <Content Include="ClientApp\src\contexts\userContext.js" />
         <Content Include="ClientApp\src\utils\auth.js" />
         <Content Include="ClientApp\src\utils\networkFunctions.js" />

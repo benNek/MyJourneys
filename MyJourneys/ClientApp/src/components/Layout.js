@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Container } from 'reactstrap';
 import NavBar from "./NavBar";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import Container from "@material-ui/core/Container";
 
 export class Layout extends Component {
   static displayName = Layout.name;

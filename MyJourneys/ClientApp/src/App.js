@@ -4,6 +4,7 @@ import {Layout} from './components/Layout';
 import Home from './components/Home';
 import {parseUser} from "./utils/auth";
 import {UserContext} from "./contexts/userContext";
+import Planner from "./components/Planner/Planner";
 
 export default function App() {
 
@@ -18,6 +19,7 @@ export default function App() {
     <UserContext.Provider value={providerValue}>
       <Layout>
         <Route exact path='/' component={Home}/>
+        <Route exact path='/planner' component={Planner}/>
       </Layout>
     </UserContext.Provider>
   );
