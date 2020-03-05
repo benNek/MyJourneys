@@ -37,8 +37,8 @@ export default function Login() {
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
-  const { user, setUser } = useContext(UserContext);
-  
+  const {user, setUser} = useContext(UserContext);
+
   const handleOpen = () => {
     setOpen(true);
   };

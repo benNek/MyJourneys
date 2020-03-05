@@ -10,6 +10,7 @@ import Register from "./Authentication/Register";
 import Login from "./Authentication/Login";
 import {UserContext} from "../contexts/userContext";
 import Logout from "./Authentication/Logout";
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -49,6 +50,7 @@ export default function NavBar() {
           <Typography variant="h6" className={classes.title}>
             MyJourneys
           </Typography>
+          <Link to="/articles">Articles</Link>
           {/*<Button color="inherit">Test</Button>*/}
           {authControls}
         </Toolbar>

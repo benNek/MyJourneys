@@ -22,6 +22,8 @@
         <Content Include="ClientApp\src\components\Retrospective\Retrospective.css" />
         <Content Include="ClientApp\src\components\Retrospective\RetrospectiveMap.jsx" />
         <Content Include="ClientApp\src\components\Retrospective\Retrospective.jsx" />
+        <Content Include="ClientApp\src\components\Sharing\ArticleCreation.jsx" />
+        <Content Include="ClientApp\src\components\Sharing\Articles.jsx" />
         <Content Include="ClientApp\src\contexts\userContext.js" />
         <Content Include="ClientApp\src\utils\auth.js" />
         <Content Include="ClientApp\src\utils\mapUtils.js" />

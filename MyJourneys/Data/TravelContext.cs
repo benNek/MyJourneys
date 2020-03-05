@@ -8,6 +8,8 @@ namespace MyJourneys.Data
 {
     public class TravelContext : IdentityDbContext<User>
     {
+
+        public DbSet<Article> Articles { get; set; }
         
         public TravelContext()
         {
