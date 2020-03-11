@@ -9,7 +9,7 @@ namespace MyJourneys.Data
     public class TravelContext : IdentityDbContext<User>
     {
 
-        public DbSet<Article> Articles { get; set; }
+        public DbSet<Blog> Blogs { get; set; }
         
         public TravelContext()
         {

@@ -1,10 +1,9 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using MyJourneys.Models.Enums;
 
 namespace MyJourneys.Models
 {
-    public class Article
+    public class Blog
     {
         public int Id { get; set; }
         public string AuthorId { get; set; }
@@ -12,7 +11,6 @@ namespace MyJourneys.Models
         public string Text { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime ModifyDate { get; set; }
-        public ArticleType ArticleType { get; set; }
 
         [ForeignKey("AuthorId")] public virtual User Author { get; set; }
     }

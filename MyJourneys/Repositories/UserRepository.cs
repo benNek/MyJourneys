@@ -1,5 +1,6 @@
 using System.Linq;
 using MyJourneys.Data;
+using MyJourneys.Models;
 
 namespace MyJourneys.Repositories
 {
@@ -16,6 +17,12 @@ namespace MyJourneys.Repositories
         public bool UserWithNameExists(string username)
         {
             return _context.Users.Any(user => user.UserName.Equals(username));
+        }
+
+        public User GetUser(string username)
+        {
+            
+            return _context.Users.First(user => user.UserName.Equals(username));
         }
 
         public bool UserWithEmailExists(string email)

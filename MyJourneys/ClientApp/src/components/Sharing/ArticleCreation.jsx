@@ -1,13 +1,13 @@
-import React from "react";
-import {Link} from "react-router-dom";
+import React, {useState} from "react";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Grid from "@material-ui/core/Grid";
+import BlogCreation from "./BlogCreation";
 
 const useStyles = makeStyles({
   card: {
-    maxWidth: 150,
+    cursor: 'pointer'
   },
   bullet: {
     display: 'inline-block',
@@ -24,6 +24,7 @@ const useStyles = makeStyles({
 
 export default function ArticleCreation() {
   const classes = useStyles();
+  const [selectedArticleType, setSelectedArticleType] = useState(null);
 
   const articleTypes = [
     "blog", "travelPlan"
@@ -31,8 +32,8 @@ export default function ArticleCreation() {
 
   const articles = articleTypes.map(type => {
     return (
-      <Grid item xs={2}>
-        <Card>
+      <Grid key={type} item xs={2}>
+        <Card onClick={() => setSelectedArticleType(type)} className={classes.card}>
           <img src="https://via.placeholder.com/200" alt=""/>
           <CardContent>
             {type}
@@ -41,6 +42,17 @@ export default function ArticleCreation() {
       </Grid>
     )
   });
+  
+  const selectedArticleWizard = () => {
+    switch (selectedArticleType) {
+      case "blog" :
+        return (
+          <BlogCreation/>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div>
@@ -48,6 +60,7 @@ export default function ArticleCreation() {
       <Grid container spacing={3}>
         {articles}
       </Grid>
+      {selectedArticleWizard()}
     </div>
   )
 }

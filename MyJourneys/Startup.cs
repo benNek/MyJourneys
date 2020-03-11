@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO.Compression;
 using System.Text;
 using System.Threading.Tasks;
@@ -140,6 +139,7 @@ namespace MyJourneys
             services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IBlogRepository, BlogRepository>();
         }
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
