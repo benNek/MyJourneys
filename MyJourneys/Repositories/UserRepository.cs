@@ -21,8 +21,12 @@ namespace MyJourneys.Repositories
 
         public User GetUser(string username)
         {
-            
             return _context.Users.First(user => user.UserName.Equals(username));
+        }
+
+        public User GetUserById(string id)
+        {
+            return _context.Users.First(user => user.Id.Equals(id));
         }
 
         public bool UserWithEmailExists(string email)

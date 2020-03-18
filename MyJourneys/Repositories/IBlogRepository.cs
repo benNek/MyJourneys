@@ -6,7 +6,8 @@ namespace MyJourneys.Repositories
 {
     public interface IBlogRepository
     {
-        List<Blog> GetBlogs();
-        void AddBlog(BlogViewModel model);
+        BlogViewModel GetBlog(int id);
+        List<BlogViewModel> GetBlogs();
+        void AddBlog(BlogCreationViewModel model);
     }
 }

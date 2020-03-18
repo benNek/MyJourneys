@@ -24,11 +24,13 @@
         <Content Include="ClientApp\src\components\Retrospective\Retrospective.jsx" />
         <Content Include="ClientApp\src\components\Sharing\ArticleCreation.jsx" />
         <Content Include="ClientApp\src\components\Sharing\Articles.jsx" />
+        <Content Include="ClientApp\src\components\Sharing\Blog.jsx" />
         <Content Include="ClientApp\src\components\Sharing\BlogCreation.jsx" />
         <Content Include="ClientApp\src\contexts\userContext.js" />
         <Content Include="ClientApp\src\utils\auth.js" />
         <Content Include="ClientApp\src\utils\mapUtils.js" />
         <Content Include="ClientApp\src\utils\networkFunctions.js" />
+        <Content Include="ClientApp\src\utils\readingTime.js" />
         <None Remove="$(SpaRoot)**" />
         <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
     </ItemGroup>

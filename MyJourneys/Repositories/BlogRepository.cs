@@ -10,18 +10,39 @@ namespace MyJourneys.Repositories
     public class BlogRepository : IBlogRepository
     {
         private readonly TravelContext _context;
-
-        public BlogRepository()
+        private readonly IUserRepository _userRepository;
+        
+        public BlogRepository(IUserRepository userRepository)
         {
             _context = new TravelContext();
+            _userRepository = userRepository;
         }
 
-        public List<Blog> GetBlogs()
+        public BlogViewModel GetBlog(int id)
         {
-            return _context.Blogs.ToList();
+            return _context.Blogs.Where(blog => blog.Id == id).Select(blog => new BlogViewModel
+            {
+                Id = blog.Id,
+                AuthorName = _userRepository.GetUserById(blog.AuthorId).UserName,
+                Title = blog.Title,
+                Text = blog.Text,
+                CreateDate = blog.CreateDate
+            }).FirstOrDefault();
         }
 
-        public void AddBlog(BlogViewModel model)
+        public List<BlogViewModel> GetBlogs()
+        {
+            return _context.Blogs.Select(blog => new BlogViewModel
+            {
+                Id = blog.Id,
+                AuthorName = _userRepository.GetUserById(blog.AuthorId).UserName,
+                Title = blog.Title,
+                Text = blog.Text,
+                CreateDate = blog.CreateDate
+            }).ToList();
+        }
+
+        public void AddBlog(BlogCreationViewModel model)
         {
             _context.Blogs.Add(new Blog
             {

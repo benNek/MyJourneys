@@ -7,6 +7,7 @@ import Planner from "./components/Planner/Planner";
 import Retrospective from "./components/Retrospective/Retrospective";
 import Articles from "./components/Sharing/Articles";
 import ArticleCreation from "./components/Sharing/ArticleCreation";
+import Blog from "./components/Sharing/Blog";
 
 export default function App() {
 
@@ -24,6 +25,7 @@ export default function App() {
         <Route exact path='/planner' component={Planner}/>
         <Route exact path='/articles' component={Articles}/>
         <Route exact path='/articles/new' component={ArticleCreation}/>
+        <Route exact path='/articles/:id' component={Blog}/>
       </Layout>
     </UserContext.Provider>
   );
