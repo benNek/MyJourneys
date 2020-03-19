@@ -20,10 +20,11 @@ const useStyles = makeStyles(theme => ({
 
 export default function BlogCreation() {
   const {user} = useContext(UserContext);
-  
+
   const classes = useStyles();
-  
+
   const [text, setText] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleEditorChange = _.debounce(value => {
     setText(value());
@@ -34,6 +35,10 @@ export default function BlogCreation() {
       <Formik
         initialValues={{title: ''}}
         onSubmit={async (values, actions) => {
+          if (!isSubmitting) {
+            return;
+          }
+          setIsSubmitting(false);
           actions.setSubmitting(true);
           values['text'] = text;
           values['authorId'] = user.id;
@@ -45,7 +50,6 @@ export default function BlogCreation() {
               toast.error(`${err.response.data} Status code: ${err.response.status}`);
               actions.setSubmitting(false);
             });
-
         }}
       >
         {(formProps) => {
@@ -84,6 +88,7 @@ export default function BlogCreation() {
                 color="default"
                 className={classes.submitButton}
                 endIcon={<Icon>send</Icon>}
+                onClick={() => setIsSubmitting(true)}
               >
                 Submit
               </Button>
