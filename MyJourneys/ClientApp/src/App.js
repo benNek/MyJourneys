@@ -1,6 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Route} from 'react-router';
-import {Layout} from './components/Layout';
 import {parseUser} from "./utils/auth";
 import {UserContext} from "./contexts/userContext";
 import Planner from "./components/Planner/Planner";
@@ -8,6 +7,7 @@ import Retrospective from "./components/Retrospective/Retrospective";
 import Articles from "./components/Sharing/Articles";
 import ArticleCreation from "./components/Sharing/ArticleCreation";
 import Blog from "./components/Sharing/Blog";
+import Layout from "./components/Layout";
 
 export default function App() {
 
