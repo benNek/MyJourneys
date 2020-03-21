@@ -23,6 +23,7 @@ import SpeakerNotesIcon from '@material-ui/icons/SpeakerNotes';
 import MapIcon from '@material-ui/icons/Map';
 import WorkIcon from '@material-ui/icons/Work';
 import {Link} from "react-router-dom";
+import useTheme from "@material-ui/core/styles/useTheme";
 
 const drawerWidth = 240;
 
@@ -62,13 +63,20 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function NavBar() {
-  const {user} = useContext(UserContext);
+  const theme = useTheme();
   const classes = useStyles();
+  const {user} = useContext(UserContext);
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+  
+  const handleMobileDrawerClose = () => {
+    if (theme.breakpoints.values['sm'] >= window.innerWidth) {
+      setMobileOpen(false);
+    }
   };
 
   let authControls;
@@ -83,15 +91,15 @@ export default function NavBar() {
       <div className={classes.toolbar}/>
       <Divider/>
       <List>
-        <ListItem button component={Link} to="/">
+        <ListItem button component={Link} to="/" onClick={handleMobileDrawerClose}>
           <ListItemIcon><MapIcon/></ListItemIcon>
           <ListItemText primary="Past journeys"/>
         </ListItem>
-        <ListItem button component={Link} to="/articles">
+        <ListItem button component={Link} to="/articles" onClick={handleMobileDrawerClose}>
           <ListItemIcon><SpeakerNotesIcon/></ListItemIcon>
           <ListItemText primary="Articles"/>
         </ListItem>
-        <ListItem button component={Link} to="/journeys">
+        <ListItem button component={Link} to="/journeys" onClick={handleMobileDrawerClose}>
           <ListItemIcon><WorkIcon/></ListItemIcon>
           <ListItemText primary="Journey Planner"/>
         </ListItem>

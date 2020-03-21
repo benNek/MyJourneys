@@ -18,7 +18,7 @@
         <Content Include="ClientApp\src\components\Authentication\Logout.jsx" />
         <Content Include="ClientApp\src\components\Authentication\Register.jsx" />
         <Content Include="ClientApp\src\components\NavBar.jsx" />
-        <Content Include="ClientApp\src\components\Planner\Planner.jsx" />
+        <Content Include="ClientApp\src\components\Planner\Journeys.jsx" />
         <Content Include="ClientApp\src\components\Retrospective\Retrospective.css" />
         <Content Include="ClientApp\src\components\Retrospective\RetrospectiveMap.jsx" />
         <Content Include="ClientApp\src\components\Retrospective\Retrospective.jsx" />
