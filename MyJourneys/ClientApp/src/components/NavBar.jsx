@@ -63,8 +63,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function NavBar() {
-  const theme = useTheme();
   const classes = useStyles();
+  const theme = useTheme();
   const {user} = useContext(UserContext);
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -101,7 +101,7 @@ export default function NavBar() {
         </ListItem>
         <ListItem button component={Link} to="/journeys" onClick={handleMobileDrawerClose}>
           <ListItemIcon><WorkIcon/></ListItemIcon>
-          <ListItemText primary="Journey Planner"/>
+          <ListItemText primary="Planner"/>
         </ListItem>
       </List>
       <Divider/>

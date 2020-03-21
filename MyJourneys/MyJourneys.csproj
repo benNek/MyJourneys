@@ -18,6 +18,7 @@
         <Content Include="ClientApp\src\components\Authentication\Logout.jsx" />
         <Content Include="ClientApp\src\components\Authentication\Register.jsx" />
         <Content Include="ClientApp\src\components\NavBar.jsx" />
+        <Content Include="ClientApp\src\components\Planner\AddJourneyForm.jsx" />
         <Content Include="ClientApp\src\components\Planner\Journeys.jsx" />
         <Content Include="ClientApp\src\components\Retrospective\Retrospective.css" />
         <Content Include="ClientApp\src\components\Retrospective\RetrospectiveMap.jsx" />
@@ -31,6 +32,7 @@
         <Content Include="ClientApp\src\utils\mapUtils.js" />
         <Content Include="ClientApp\src\utils\networkFunctions.js" />
         <Content Include="ClientApp\src\utils\readingTime.js" />
+        <Content Include="ClientApp\src\utils\validation.js" />
         <None Remove="$(SpaRoot)**" />
         <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
     </ItemGroup>

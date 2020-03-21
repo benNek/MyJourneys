@@ -1,0 +1,9 @@
+hr.MuiDivider-root {
+    margin: 16px 0;
+}
+
+button.FloatingActionButton {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+}
