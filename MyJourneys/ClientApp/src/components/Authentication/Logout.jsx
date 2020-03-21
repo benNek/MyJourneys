@@ -1,25 +1,25 @@
 import React, {useContext} from 'react';
 
 import Button from "@material-ui/core/Button";
-import {UserContext} from "../../contexts/userContext";
 import {toast} from "react-toastify";
 import {logout} from "../../utils/networkFunctions";
+import {Context} from "../../state/store";
+import {setUser} from "../../state/dispatch";
 
 export default function Logout() {
-
-  const { user, setUser } = useContext(UserContext);
+  const dispatch = useContext(Context)[1];
 
   const handleLogout = async () => {
     await logout()
       .then(() => {
         localStorage.removeItem('accessToken');
-        setUser(null);
+        setUser(dispatch, null);
       })
       .catch(err => {
         toast.error(`${err.response.data} Status code: ${err.response.status}`);
       });
   };
-  
+
   return (
     <Button color="inherit" onClick={handleLogout}>Logout</Button>
   )

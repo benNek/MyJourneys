@@ -8,7 +8,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import {grey} from "@material-ui/core/colors";
 import Register from "./Authentication/Register";
 import Login from "./Authentication/Login";
-import {UserContext} from "../contexts/userContext";
 import Logout from "./Authentication/Logout";
 import Hidden from "@material-ui/core/Hidden";
 import Drawer from "@material-ui/core/Drawer";
@@ -24,6 +23,7 @@ import MapIcon from '@material-ui/icons/Map';
 import WorkIcon from '@material-ui/icons/Work';
 import {Link} from "react-router-dom";
 import useTheme from "@material-ui/core/styles/useTheme";
+import {Context} from "../state/store";
 
 const drawerWidth = 240;
 
@@ -65,7 +65,9 @@ const useStyles = makeStyles(theme => ({
 export default function NavBar() {
   const classes = useStyles();
   const theme = useTheme();
-  const {user} = useContext(UserContext);
+
+  const [state] = useContext(Context);
+  const { user } = state;
 
   const [mobileOpen, setMobileOpen] = useState(false);
 

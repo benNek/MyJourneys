@@ -1,5 +1,5 @@
 import {Form, Formik} from "formik";
-import {createItinerary} from "../../utils/networkFunctions";
+import {createJourney} from "../../utils/networkFunctions";
 import {toast} from "react-toastify";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
@@ -9,7 +9,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import Typography from "@material-ui/core/Typography";
 import moment from "moment";
 import {journeyValidation} from "../../utils/validation";
-import {UserContext} from "../../contexts/userContext";
+import {Context} from "../../state/store";
 
 const useStyles = makeStyles(theme => ({
   formTitle: {
@@ -23,7 +23,8 @@ const useStyles = makeStyles(theme => ({
 export default function AddJourneyForm(props) {
   const classes = useStyles();
 
-  const {user} = useContext(UserContext);
+  const [state] = useContext(Context);
+  const { user } = state;
 
   return (
     <Formik
@@ -41,7 +42,7 @@ export default function AddJourneyForm(props) {
         }
         
         values['userId'] = user.id;
-        await createItinerary(values)
+        await createJourney(values)
           .then(response => {
             toast.success(response.data);
           })

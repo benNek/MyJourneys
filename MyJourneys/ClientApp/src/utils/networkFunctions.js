@@ -12,5 +12,5 @@ export const createBlog = data => axios.post('/api/blog', data);
 export const getBlogs = () => axios.get('/api/blog');
 export const getBlog = id => axios.get(`/api/blog/${id}`);
 
-// Itineraries
-export const createItinerary = data => axios.post('/api/journey', data);
+// Journeys
+export const createJourney = data => axios.post('/api/journey', data);

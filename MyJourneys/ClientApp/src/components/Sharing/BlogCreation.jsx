@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import {Form, Formik} from "formik";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
@@ -9,7 +9,6 @@ import _ from "lodash";
 import Icon from "@material-ui/core/Icon";
 import {createBlog} from "../../utils/networkFunctions";
 import {toast} from 'react-toastify';
-import {UserContext} from "../../contexts/userContext";
 
 const useStyles = makeStyles(theme => ({
   submitButton: {
@@ -19,7 +18,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function BlogCreation() {
-  const {user} = useContext(UserContext);
+  const {user} = {}//useContext(UserContext);
 
   const classes = useStyles();
 

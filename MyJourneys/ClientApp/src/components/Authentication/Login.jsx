@@ -10,8 +10,9 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import {login} from "../../utils/networkFunctions";
 import {toast} from 'react-toastify';
-import {UserContext} from "../../contexts/userContext";
 import {parseUser} from "../../utils/auth";
+import {Context} from "../../state/store";
+import {setUser} from "../../state/dispatch";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -34,10 +35,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Login() {
+  const dispatch = useContext(Context)[1];
+  
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
-  const {user, setUser} = useContext(UserContext);
 
   const handleOpen = () => {
     setOpen(true);
@@ -75,10 +77,12 @@ export default function Login() {
                 await login(values)
                   .then(response => {
                     localStorage.setItem('accessToken', response.data);
-                    setUser(parseUser());
+                    
+                    setUser(dispatch, parseUser());
                     toast.success("User login successfully.");
                   })
                   .catch(err => {
+                    console.log(err);
                     toast.error(`${err.response.data} Status code: ${err.response.status}`);
                     actions.setSubmitting(false);
                   });

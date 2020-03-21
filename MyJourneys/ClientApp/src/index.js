@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
+import Store from "./state/store";
 
 require('dotenv').config();
 
@@ -12,7 +13,9 @@ const rootElement = document.getElementById('root');
 
 ReactDOM.render(
   <BrowserRouter basename={baseUrl}>
-    <App />
+    <Store>
+      <App />
+    </Store>
   </BrowserRouter>,
   rootElement);
 
