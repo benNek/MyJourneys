@@ -10,7 +10,8 @@ namespace MyJourneys.Data
     {
 
         public DbSet<Blog> Blogs { get; set; }
-        
+        public DbSet<Journey> Journeys { get; set; }
+
         public TravelContext()
         {
 

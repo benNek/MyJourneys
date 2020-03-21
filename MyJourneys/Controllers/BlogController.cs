@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyJourneys.Models;
 using MyJourneys.Models.ViewModels;
 using MyJourneys.Repositories;
 

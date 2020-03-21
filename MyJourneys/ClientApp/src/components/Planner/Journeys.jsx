@@ -65,7 +65,7 @@ export default function Journeys() {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <AddJourneyForm />
+            <AddJourneyForm onSubmit={handleClose} />
           </div>
         </Fade>
       </Modal>

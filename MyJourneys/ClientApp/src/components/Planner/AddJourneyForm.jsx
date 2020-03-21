@@ -1,15 +1,15 @@
 import {Form, Formik} from "formik";
-import {login} from "../../utils/networkFunctions";
-import {parseUser} from "../../utils/auth";
+import {createItinerary} from "../../utils/networkFunctions";
 import {toast} from "react-toastify";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import React from "react";
+import React, {useContext} from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Typography from "@material-ui/core/Typography";
 import moment from "moment";
 import {journeyValidation} from "../../utils/validation";
+import {UserContext} from "../../contexts/userContext";
 
 const useStyles = makeStyles(theme => ({
   formTitle: {
@@ -20,8 +20,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function AddJourneyForm() {
+export default function AddJourneyForm(props) {
   const classes = useStyles();
+
+  const {user} = useContext(UserContext);
 
   return (
     <Formik
@@ -33,18 +35,20 @@ export default function AddJourneyForm() {
       validationSchema={journeyValidation}
       onSubmit={async (values, actions) => {
         actions.setSubmitting(true);
-        console.log('submitting')
-        // await login(values)
-        //   .then(response => {
-        //     localStorage.setItem('accessToken', response.data);
-        //     setUser(parseUser());
-        //     toast.success("User login successfully.");
-        //   })
-        //   .catch(err => {
-        //     toast.error(`${err.response.data} Status code: ${err.response.status}`);
-        //     actions.setSubmitting(false);
-        //   });
 
+        if (props && props.onSubmit) {
+          props.onSubmit();
+        }
+        
+        values['userId'] = user.id;
+        await createItinerary(values)
+          .then(response => {
+            toast.success(response.data);
+          })
+          .catch(err => {
+            toast.error(`${err.response.data} Status code: ${err.response.status}`);
+            actions.setSubmitting(false);
+          });
       }}
     >
       {(formProps) => {

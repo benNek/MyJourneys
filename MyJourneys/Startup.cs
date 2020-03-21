@@ -140,6 +140,7 @@ namespace MyJourneys
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBlogRepository, BlogRepository>();
+            services.AddScoped<IJourneyRepository, JourneyRepository>();
         }
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
