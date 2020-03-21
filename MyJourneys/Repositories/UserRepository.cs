@@ -1,4 +1,6 @@
 using System.Linq;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using MyJourneys.Data;
 using MyJourneys.Models;
 
@@ -6,14 +8,13 @@ namespace MyJourneys.Repositories
 {
     public class UserRepository : IUserRepository
     {
-
         private TravelContext _context;
 
         public UserRepository()
         {
             _context = new TravelContext();
         }
-        
+
         public bool UserWithNameExists(string username)
         {
             return _context.Users.Any(user => user.UserName.Equals(username));

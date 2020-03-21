@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using MyJourneys.Data;
 using MyJourneys.Models;
 using MyJourneys.Models.ViewModels;
@@ -23,6 +26,20 @@ namespace MyJourneys.Repositories
                 EndDate = model.EndDate
             });
             _context.SaveChanges();
+        }
+
+        public List<JourneyViewModel> GetJourneys(string userId)
+        {
+            return _context.Journeys
+                .Where(journey => journey.UserId.Equals(userId))
+                .Select(journey => new JourneyViewModel
+                {
+                    Id = journey.Id,
+                    Location = journey.Location,
+                    StartDate = journey.StartDate,
+                    EndDate = journey.EndDate
+                })
+                .ToList();
         }
     }
 }

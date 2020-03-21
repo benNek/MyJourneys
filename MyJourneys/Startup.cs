@@ -65,7 +65,7 @@ namespace MyJourneys
             app.UseSpaStaticFiles();
 
             app.UseRouting();
-
+            
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -99,6 +99,7 @@ namespace MyJourneys
                     config.Password.RequireNonAlphanumeric = false;
                     config.Password.RequiredLength = 8;
                     config.SignIn.RequireConfirmedEmail = false;
+                    config.ClaimsIdentity.UserIdClaimType = "id";
                 })
                 .AddEntityFrameworkStores<TravelContext>()
                 .AddDefaultTokenProviders();

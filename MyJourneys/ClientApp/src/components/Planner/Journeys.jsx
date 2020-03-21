@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -9,6 +9,11 @@ import Fade from "@material-ui/core/Fade";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop/Backdrop";
 import AddJourneyForm from "./AddJourneyForm";
+import {Context} from "../../state/store";
+import {getJourneys} from "../../utils/networkFunctions";
+import {setJourneys} from "../../state/actions";
+import {toast} from "react-toastify";
+import JourneyCard from "./JourneyCard";
 
 const useStyles = makeStyles(theme => ({
   loader: {
@@ -25,12 +30,31 @@ const useStyles = makeStyles(theme => ({
     boxShadow: theme.shadows[3],
     padding: theme.spacing(2, 4, 3),
   },
+  journey: {
+    marginBottom: '12px'
+  }
 }));
 
 export default function Journeys() {
   const classes = useStyles();
+  const [state, dispatch] = useContext(Context);
   const [open, setOpen] = useState(false);
-  
+  const [loading, setLoading] = useState(true);
+  const {journeys} = state;
+
+  useEffect(() => {
+    if (journeys.length) {
+      setLoading(false);
+    }
+    
+    if (!journeys.length) {
+      getJourneys().then(res => {
+        setLoading(false);
+        setJourneys(dispatch, res.data)
+      }).catch(err => toast.error(err));
+    }
+  }, [dispatch]);
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -38,17 +62,32 @@ export default function Journeys() {
   const handleClose = () => {
     setOpen(false);
   };
-  
+
+  const content = () => {
+    if (loading) {
+      return (<CircularProgress className={classes.loader}/>)
+    } else if (!journeys.length) {
+      return (
+        <Typography variant="body1">
+          You don't have any journeys planned! Go ahead and create one!
+        </Typography>
+      )
+    }
+
+    return journeys.map(journey =>
+      <JourneyCard className={classes.journey} key={journey.id} journey={journey} />
+    )
+  };
+
   return (
     <React.Fragment>
       <Typography component='h1' variant='h3'>
         Journey planner
       </Typography>
       <Divider/>
-      <CircularProgress className={classes.loader} />
-      No trips found yet! Create one.
+      {content()}
       <Fab onClick={handleOpen} color="primary" className="FloatingActionButton" aria-label="add">
-        <AddIcon />
+        <AddIcon/>
       </Fab>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -64,7 +103,7 @@ export default function Journeys() {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <AddJourneyForm onSubmit={handleClose} />
+            <AddJourneyForm onSubmit={handleClose}/>
           </div>
         </Fade>
       </Modal>

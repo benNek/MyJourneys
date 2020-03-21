@@ -19,6 +19,7 @@
         <Content Include="ClientApp\src\components\Authentication\Register.jsx" />
         <Content Include="ClientApp\src\components\NavBar.jsx" />
         <Content Include="ClientApp\src\components\Planner\AddJourneyForm.jsx" />
+        <Content Include="ClientApp\src\components\Planner\JourneyCard.jsx" />
         <Content Include="ClientApp\src\components\Planner\Journeys.jsx" />
         <Content Include="ClientApp\src\components\Retrospective\Retrospective.css" />
         <Content Include="ClientApp\src\components\Retrospective\RetrospectiveMap.jsx" />
@@ -27,7 +28,7 @@
         <Content Include="ClientApp\src\components\Sharing\Articles.jsx" />
         <Content Include="ClientApp\src\components\Sharing\Blog.jsx" />
         <Content Include="ClientApp\src\components\Sharing\BlogCreation.jsx" />
-        <Content Include="ClientApp\src\state\dispatch.js" />
+        <Content Include="ClientApp\src\state\actions.js" />
         <Content Include="ClientApp\src\state\reducer.js" />
         <Content Include="ClientApp\src\state\store.js" />
         <Content Include="ClientApp\src\utils\auth.js" />

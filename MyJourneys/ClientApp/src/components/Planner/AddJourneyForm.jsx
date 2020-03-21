@@ -31,7 +31,7 @@ export default function AddJourneyForm(props) {
       initialValues={{
         location: '',
         startDate: moment().format('YYYY-MM-DD'),
-        enDate: moment().add(7, 'days').format('YYYY-MM-DD')
+        endDate: moment().add(7, 'days').format('YYYY-MM-DD')
       }}
       validationSchema={journeyValidation}
       onSubmit={async (values, actions) => {

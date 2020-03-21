@@ -12,7 +12,7 @@ import {login} from "../../utils/networkFunctions";
 import {toast} from 'react-toastify';
 import {parseUser} from "../../utils/auth";
 import {Context} from "../../state/store";
-import {setUser} from "../../state/dispatch";
+import {setUser} from "../../state/actions";
 
 const useStyles = makeStyles(theme => ({
   modal: {

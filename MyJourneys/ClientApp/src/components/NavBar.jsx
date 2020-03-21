@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
   },
   drawer: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       width: drawerWidth,
       flexShrink: 0,
     },
@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       display: 'none',
     },
   },
@@ -52,10 +52,6 @@ const useStyles = makeStyles(theme => ({
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
   },
   rightAlign: {
     marginLeft: 'auto'
@@ -67,16 +63,16 @@ export default function NavBar() {
   const theme = useTheme();
 
   const [state] = useContext(Context);
-  const { user } = state;
+  const {user} = state;
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  
+
   const handleMobileDrawerClose = () => {
-    if (theme.breakpoints.values['sm'] >= window.innerWidth) {
+    if (theme.breakpoints.values['md'] >= window.innerWidth) {
       setMobileOpen(false);
     }
   };
@@ -139,7 +135,7 @@ export default function NavBar() {
           </div>
         </Toolbar>
       </AppBar>
-      <Hidden smUp implementation="css">
+      <Hidden mdUp implementation="css">
         <Drawer
           variant="temporary"
           open={mobileOpen}
@@ -155,7 +151,7 @@ export default function NavBar() {
           {drawer}
         </Drawer>
       </Hidden>
-      <Hidden xsDown implementation="css">
+      <Hidden smDown implementation="css">
         <Drawer
           classes={{
             paper: classes.drawerPaper,

@@ -4,7 +4,7 @@ import Button from "@material-ui/core/Button";
 import {toast} from "react-toastify";
 import {logout} from "../../utils/networkFunctions";
 import {Context} from "../../state/store";
-import {setUser} from "../../state/dispatch";
+import {setUser} from "../../state/actions";
 
 export default function Logout() {
   const dispatch = useContext(Context)[1];

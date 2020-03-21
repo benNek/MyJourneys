@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyJourneys.Models.ViewModels;
@@ -31,9 +33,17 @@ namespace MyJourneys.Controllers
             {
                 return StatusCode(422, "Failed to fetch user");
             }
-            
+
             _journeyRepository.AddJourney(user, model);
             return Ok("Journey has been created successfully");
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IEnumerable<JourneyViewModel> GetJourneys()
+        {
+            var userId = User.Claims.ToList()[0].Value;
+            return _journeyRepository.GetJourneys(userId);
         }
     }
 }

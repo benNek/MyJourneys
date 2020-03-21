@@ -8,7 +8,7 @@ import Blog from "./components/Sharing/Blog";
 import Layout from "./components/Layout";
 import Journeys from "./components/Planner/Journeys";
 import {Context} from "./state/store";
-import {setUser} from "./state/dispatch";
+import {setUser} from "./state/actions";
 
 export default function App() {
   const dispatch = useContext(Context)[1];

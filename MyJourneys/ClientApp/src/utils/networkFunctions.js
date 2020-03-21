@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// potencialiai del sito reload reikia po login/logout
 axios.defaults.headers.Authorization = `Bearer ${localStorage.getItem('accessToken')}`;
 
 // Auth
@@ -14,3 +15,4 @@ export const getBlog = id => axios.get(`/api/blog/${id}`);
 
 // Journeys
 export const createJourney = data => axios.post('/api/journey', data);
+export const getJourneys = () => axios.get('/api/journey');

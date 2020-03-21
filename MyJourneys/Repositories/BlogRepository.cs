@@ -11,7 +11,7 @@ namespace MyJourneys.Repositories
     {
         private readonly TravelContext _context;
         private readonly IUserRepository _userRepository;
-        
+
         public BlogRepository(IUserRepository userRepository)
         {
             _context = new TravelContext();
