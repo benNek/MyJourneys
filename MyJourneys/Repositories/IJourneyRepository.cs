@@ -8,5 +8,6 @@ namespace MyJourneys.Repositories
     {
         void AddJourney(User user, JourneyCreationViewModel model);
         List<JourneyViewModel> GetJourneys(string userId);
+        void AddFlightItem(string userId, FlightItemCreationViewModel model);
     }
 }

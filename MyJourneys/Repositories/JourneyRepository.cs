@@ -41,5 +41,20 @@ namespace MyJourneys.Repositories
                 })
                 .ToList();
         }
+
+        public void AddFlightItem(string userId, FlightItemCreationViewModel model)
+        {
+            _context.FlightItems.Add(new FlightItem
+            {
+                UserId = userId,
+                JourneyId = model.JourneyId,
+                Airline = model.Airline,
+                FlightNumber = model.FlightNumber,
+                Origin = model.Origin,
+                Destination = model.Destination,
+                DepartureDate = model.DepartureDate
+            });
+            _context.SaveChanges();
+        }
     }
 }

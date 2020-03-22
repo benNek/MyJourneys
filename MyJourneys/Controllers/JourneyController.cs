@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyJourneys.Models.ViewModels;
 using MyJourneys.Repositories;
+using static System.DateTime;
+using static MyJourneys.Utils.AuthorizationUtils;
 
 namespace MyJourneys.Controllers
 {
@@ -23,6 +25,11 @@ namespace MyJourneys.Controllers
         [Authorize]
         public IActionResult Create([FromBody] JourneyCreationViewModel model)
         {
+            if (model.StartDate < Now)
+            {
+                return StatusCode(422, "Start date must not be in the past");
+            }
+
             if (model.StartDate.CompareTo(model.EndDate) > 0)
             {
                 return StatusCode(422, "Start date is later than end date");
@@ -42,8 +49,22 @@ namespace MyJourneys.Controllers
         [Authorize]
         public IEnumerable<JourneyViewModel> GetJourneys()
         {
-            var userId = User.Claims.ToList()[0].Value;
+            var userId = GetUserId(User);
             return _journeyRepository.GetJourneys(userId);
+        }
+
+        [HttpPost("flight")]
+        [Authorize]
+        public IActionResult AddFlight([FromBody] FlightItemCreationViewModel model)
+        {
+            if (model.DepartureDate < Now)
+            {
+                return StatusCode(422, "Date must not be in the past");
+            }
+
+            var userId = GetUserId(User);
+            _journeyRepository.AddFlightItem(userId, model);
+            return Ok("Flight has been successfully added to the journey");
         }
     }
 }

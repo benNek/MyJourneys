@@ -25,11 +25,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function JourneyItemsSpeedDial() {
+export default function JourneyItemsSpeedDial(props) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState(undefined);
+  const { journeyId } = props;
 
   const handleOpen = () => {
     setOpen(true);
@@ -53,7 +54,7 @@ export default function JourneyItemsSpeedDial() {
     {icon: <PlaceIcon/>, name: 'Place'},
     {icon: <NoteAddIcon/>, name: 'Note'},
     {icon: <HotelIcon/>, name: 'Accommodation'},
-    {icon: <FlightIcon/>, name: 'Flight', form: <FlightItemForm onSubmit={handleModalClose}/>}
+    {icon: <FlightIcon/>, name: 'Flight', form: <FlightItemForm journeyId={journeyId} onSubmit={handleModalClose}/>}
   ];
 
   return (

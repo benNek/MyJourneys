@@ -9,6 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {DateTimePicker} from "@material-ui/pickers";
+import {createFlightItem} from "../../../utils/networkFunctions";
 
 const useStyles = makeStyles(theme => ({
   formTitle: {
@@ -21,6 +22,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function FlightItemForm(props) {
   const classes = useStyles();
+  const {journeyId} = props;
 
   return (
     <Formik
@@ -29,7 +31,7 @@ export default function FlightItemForm(props) {
         flightNumber: '',
         origin: '',
         destination: '',
-        date: moment().add(1, 'days').format('YYYY-MM-DD hh:mm')
+        departureDate: moment().add(1, 'days').format('YYYY-MM-DD hh:mm')
       }}
       validationSchema={flightItemValidation}
       onSubmit={async (values, actions) => {
@@ -39,15 +41,16 @@ export default function FlightItemForm(props) {
           props.onSubmit();
         }
 
-        // values['userId'] = user.id;
-        // await createJourney(values)
-        //   .then(response => {
-        //     toast.success(response.data);
-        //   })
-        //   .catch(err => {
-        //     toast.error(`${err.response.data} Status code: ${err.response.status}`);
-        //     actions.setSubmitting(false);
-        //   });
+        values['journeyId'] = parseInt(journeyId);
+        values['departureDate'] = moment(values.departureDate).format();
+        await createFlightItem(values)
+          .then(response => {
+            toast.success(response.data);
+          })
+          .catch(err => {
+            toast.error(`${err.response.data} Status code: ${err.response.status}`);
+            actions.setSubmitting(false);
+          });
       }}
     >
       {(formProps) => {
@@ -125,8 +128,8 @@ export default function FlightItemForm(props) {
                   fullWidth
                   format="YYYY-MM-DD hh:mm"
                   value={moment().add(1, 'days').format('YYYY-MM-DD hh:mm')}
-                  error={errors.date && touched.date}
-                  helperText={(errors.date && touched.date) && errors.date}
+                  error={errors.departureDate && touched.departureDate}
+                  helperText={(errors.departureDate && touched.departureDate) && errors.departureDate}
                   onChange={setFieldValue}
                 />
               </Grid>
