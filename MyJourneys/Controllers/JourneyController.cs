@@ -74,5 +74,19 @@ namespace MyJourneys.Controllers
             _journeyRepository.AddFlightItem(userId, model);
             return Ok("Flight has been successfully added to the journey");
         }
+        
+        [HttpPost("hotel")]
+        [Authorize]
+        public IActionResult AddHotel([FromBody] HotelItemCreationViewModel model)
+        {
+            if (model.Date < Now)
+            {
+                return StatusCode(422, "Date must not be in the past");
+            }
+
+            var userId = GetUserId(User);
+            _journeyRepository.AddHotelItem(userId, model);
+            return Ok("Hotel has been successfully added to the journey");
+        }
     }
 }

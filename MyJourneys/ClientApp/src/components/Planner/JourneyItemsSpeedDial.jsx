@@ -11,17 +11,18 @@ import Backdrop from "@material-ui/core/Backdrop/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import FlightItemForm from "./Forms/FlightItemForm";
+import HotelItemForm from "./Forms/HotelItemForm";
 
 const useStyles = makeStyles(theme => ({
   modal: {
     display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
-      boxShadow: theme.shadows[3],
-      padding: theme.spacing(2, 4, 3),
+    boxShadow: theme.shadows[3],
+    padding: theme.spacing(2, 4, 3),
   },
 }));
 
@@ -30,7 +31,7 @@ export default function JourneyItemsSpeedDial(props) {
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState(undefined);
-  const { journeyId } = props;
+  const {journeyId} = props;
 
   const handleOpen = () => {
     setOpen(true);
@@ -43,9 +44,9 @@ export default function JourneyItemsSpeedDial(props) {
   const handleModalOpen = (form) => {
     handleClose();
     setForm(form);
-    setModalOpen(true);    
+    setModalOpen(true);
   };
-  
+
   const handleModalClose = () => {
     setModalOpen(false);
   };
@@ -53,8 +54,16 @@ export default function JourneyItemsSpeedDial(props) {
   const actions = [
     {icon: <PlaceIcon/>, name: 'Place'},
     {icon: <NoteAddIcon/>, name: 'Note'},
-    {icon: <HotelIcon/>, name: 'Accommodation'},
-    {icon: <FlightIcon/>, name: 'Flight', form: <FlightItemForm journeyId={journeyId} onSubmit={handleModalClose}/>}
+    {
+      icon: <HotelIcon/>,
+      name: 'Hotel',
+      form: <HotelItemForm journeyId={journeyId} onSubmit={handleModalClose}/>
+    },
+    {
+      icon: <FlightIcon/>,
+      name: 'Flight',
+      form: <FlightItemForm journeyId={journeyId} onSubmit={handleModalClose}/>
+    }
   ];
 
   return (

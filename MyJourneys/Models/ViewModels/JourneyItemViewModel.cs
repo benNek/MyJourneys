@@ -14,5 +14,9 @@ namespace MyJourneys.Models.ViewModels
         public string Origin { get; set; }
         public string Destination { get; set; }
         
+        // Hotel item
+        public string Name { get; set; }
+        public string Address { get; set; }
+        
     }
 }

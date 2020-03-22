@@ -21,6 +21,8 @@
         <Content Include="ClientApp\src\components\Planner\FlightItemCard.jsx" />
         <Content Include="ClientApp\src\components\Planner\Forms\AddJourneyForm.jsx" />
         <Content Include="ClientApp\src\components\Planner\Forms\FlightItemForm.jsx" />
+        <Content Include="ClientApp\src\components\Planner\Forms\HotelItemForm.jsx" />
+        <Content Include="ClientApp\src\components\Planner\HotelItemCard.jsx" />
         <Content Include="ClientApp\src\components\Planner\Journey.jsx" />
         <Content Include="ClientApp\src\components\Planner\JourneyCard.jsx" />
         <Content Include="ClientApp\src\components\Planner\JourneyItemsSpeedDial.jsx" />

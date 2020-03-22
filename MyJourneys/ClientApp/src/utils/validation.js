@@ -17,5 +17,11 @@ export const flightItemValidation = Yup.object().shape({
     .matches(/^([A-Z]{2}|[A-Z]\d|\d[A-Z])[1-9](\d{1,3})?$/, 'Invalid flight number'),
   origin: Yup.string().required('Origin airport is required'),
   destination: Yup.string().required('Destination airport is required'),
-  departureDate: Yup.date().required('Departure date is required').min(yesterday, 'Departure date cannot be in the past')
+  date: Yup.date().required('Departure date is required').min(yesterday, 'Departure date cannot be in the past')
+});
+
+export const hotelItemValidation = Yup.object().shape({
+  name: Yup.string().required('Airline name is required'),
+  address: Yup.string().required('Flight number is required'),
+  date: Yup.date().required('Check-in date is required').min(yesterday, 'Check-in date cannot be in the past')
 });

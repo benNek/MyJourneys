@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyJourneys.Models
@@ -5,6 +6,7 @@ namespace MyJourneys.Models
     public class JourneyItem
     {
         public int Id { get; set; }
+        public DateTime Date { get; set; }
         public string UserId { get; set; }
         public int JourneyId { get; set; }
 

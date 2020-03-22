@@ -46,18 +46,30 @@ namespace MyJourneys.Repositories
         public List<JourneyItemViewModel> GetJourneyItems(string userId, int journeyId)
         {
             var items = _context.FlightItems
+                .OfType<FlightItem>()
                 .Where(item => item.UserId.Equals(userId) && item.JourneyId == journeyId)
                 .Select(item => new JourneyItemViewModel
                 {
                     Id = item.Id,
                     Type = JourneyItemType.Flight.ToString(),
+                    Date = item.Date,
                     Airline = item.Airline,
                     FlightNumber = item.FlightNumber,
                     Origin = item.Origin,
-                    Destination = item.Destination,
-                    Date = item.Date
+                    Destination = item.Destination
                 })
-                .ToList();
+                .AsEnumerable()
+                .Union(_context.HotelItems
+                    .OfType<HotelItem>()
+                    .Where(item => item.UserId.Equals(userId) && item.JourneyId == journeyId)
+                    .Select(item => new JourneyItemViewModel
+                    {
+                        Id = item.Id,
+                        Type = JourneyItemType.Hotel.ToString(),
+                        Date = item.Date,
+                        Name = item.Name,
+                        Address = item.Address
+                    })).ToList();
             items.Sort((it1, it2) => it1.Date.CompareTo(it2.Date));
             return items;
         }
@@ -68,11 +80,24 @@ namespace MyJourneys.Repositories
             {
                 UserId = userId,
                 JourneyId = model.JourneyId,
+                Date = model.Date,
                 Airline = model.Airline,
                 FlightNumber = model.FlightNumber,
                 Origin = model.Origin,
-                Destination = model.Destination,
-                Date = model.Date
+                Destination = model.Destination
+            });
+            _context.SaveChanges();
+        }
+
+        public void AddHotelItem(string userId, HotelItemCreationViewModel model)
+        {
+            _context.HotelItems.Add(new HotelItem
+            {
+                UserId = userId,
+                JourneyId = model.JourneyId,
+                Date = model.Date,
+                Name = model.Name,
+                Address = model.Address
             });
             _context.SaveChanges();
         }
