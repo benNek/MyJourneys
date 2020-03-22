@@ -9,7 +9,8 @@ import Link from "@material-ui/core/Link";
 const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
-    marginBottom: '18px'
+    margin: '9px 0',
+    width: '100%'
   },
   date: {
     display: 'flex',
