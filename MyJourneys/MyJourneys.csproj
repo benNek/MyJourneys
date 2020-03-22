@@ -19,7 +19,9 @@
         <Content Include="ClientApp\src\components\Authentication\Register.jsx" />
         <Content Include="ClientApp\src\components\NavBar.jsx" />
         <Content Include="ClientApp\src\components\Planner\AddJourneyForm.jsx" />
+        <Content Include="ClientApp\src\components\Planner\Journey.jsx" />
         <Content Include="ClientApp\src\components\Planner\JourneyCard.jsx" />
+        <Content Include="ClientApp\src\components\Planner\JourneyItemsSpeedDial.jsx" />
         <Content Include="ClientApp\src\components\Planner\Journeys.jsx" />
         <Content Include="ClientApp\src\components\Retrospective\Retrospective.css" />
         <Content Include="ClientApp\src\components\Retrospective\RetrospectiveMap.jsx" />

@@ -120,7 +120,7 @@ export default function AddJourneyForm(props) {
               color="primary"
               className={classes.submitButton}
             >
-              Login
+              Create
             </Button>
           </Form>
         );

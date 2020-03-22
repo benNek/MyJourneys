@@ -25,7 +25,8 @@ export default function Journeys(props) {
   const {journey} = props;
 
   const handleClick = () => {
-    history.push('/');
+    const url = `${encodeURIComponent(journey.location)}.${journey.id}`;
+    history.push(`/journeys/${url}`);
   };
   
   const formatDate = date => {
