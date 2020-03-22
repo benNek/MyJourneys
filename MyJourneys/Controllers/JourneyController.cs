@@ -102,5 +102,19 @@ namespace MyJourneys.Controllers
             _journeyRepository.AddReservationItem(userId, model);
             return Ok("Reservation has been successfully added to the journey");
         }
+        
+        [HttpPost("event")]
+        [Authorize]
+        public IActionResult AddEvent([FromBody] CommonItemCreationViewModel model)
+        {
+            if (model.Date < Now)
+            {
+                return StatusCode(422, "Date must not be in the past");
+            }
+
+            var userId = GetUserId(User);
+            _journeyRepository.AddEventItem(userId, model);
+            return Ok("Event has been successfully added to the journey");
+        }
     }
 }

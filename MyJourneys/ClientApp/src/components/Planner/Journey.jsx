@@ -7,10 +7,11 @@ import JourneyItemsSpeedDial from "./JourneyItemsSpeedDial";
 import {getJourneyItems} from "../../utils/networkFunctions";
 import {toast} from "react-toastify";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import {ITEM_TYPE_FLIGHT, ITEM_TYPE_HOTEL, ITEM_TYPE_RESERVATION} from "../../types/journeyItemTypes";
+import {ITEM_TYPE_EVENT, ITEM_TYPE_FLIGHT, ITEM_TYPE_HOTEL, ITEM_TYPE_RESERVATION} from "../../types/journeyItemTypes";
 import FlightItemCard from "./FlightItemCard";
 import HotelItemCard from "./HotelItemCard";
 import ReservationItemCard from "./ReservationItemCard";
+import EventItemCard from "./EventItemCard";
 
 export default function Journey() {
   let {location, id} = useParams();
@@ -39,11 +40,13 @@ export default function Journey() {
     return items.map(item => {
         switch (item.type) {
           case ITEM_TYPE_FLIGHT:
-            return <FlightItemCard key={item.id} flight={item}/>;
+            return <FlightItemCard key={`${item.type}-${item.id}`} flight={item}/>;
           case ITEM_TYPE_HOTEL:
-            return <HotelItemCard key={item.id} hotel={item}/>;
+            return <HotelItemCard key={`${item.type}-${item.id}`} hotel={item}/>;
           case ITEM_TYPE_RESERVATION:
-            return <ReservationItemCard key={item.id} reservation={item}/>;
+            return <ReservationItemCard key={`${item.type}-${item.id}`} reservation={item}/>;
+          case ITEM_TYPE_EVENT:
+            return <EventItemCard key={`${item.type}-${item.id}`} event={item}/>;
           default:
             return <p>Invalid item type</p>;
         }

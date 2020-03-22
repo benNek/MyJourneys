@@ -13,6 +13,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import FlightItemForm from "./Forms/FlightItemForm";
 import HotelItemForm from "./Forms/HotelItemForm";
 import ReservationItemForm from "./Forms/ReservationItemForm";
+import EventItemForm from "./Forms/EventItemForm";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -60,7 +61,8 @@ export default function JourneyItemsSpeedDial(props) {
     },
     {
       icon: <EventIcon/>,
-      name: 'Event'
+      name: 'Event',
+      form: <EventItemForm journeyId={journeyId} onSubmit={handleModalClose}/>
     },
     {
       icon: <HotelIcon/>,

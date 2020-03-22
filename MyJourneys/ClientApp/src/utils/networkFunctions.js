@@ -20,3 +20,4 @@ export const getJourneyItems = id => axios.get(`/api/journey/${id}`);
 export const createFlightItem = data => axios.post('/api/journey/flight', data);
 export const createHotelItem = data => axios.post('/api/journey/hotel', data);
 export const createReservationItem = data => axios.post('/api/journey/reservation', data);
+export const createEventItem = data => axios.post('/api/journey/event', data);

@@ -82,6 +82,18 @@ namespace MyJourneys.Repositories
                         Name = item.Name,
                         Address = item.Address
                     }))
+                .AsEnumerable()
+                .Union(_context.EventItems
+                    .OfType<EventItem>()
+                    .Where(item => item.UserId.Equals(userId) && item.JourneyId == journeyId)
+                    .Select(item => new JourneyItemViewModel
+                    {
+                        Id = item.Id,
+                        Type = JourneyItemType.Event.ToString(),
+                        Date = item.Date,
+                        Name = item.Name,
+                        Address = item.Address
+                    }))
                 .ToList();
             items.Sort((it1, it2) => it1.Date.CompareTo(it2.Date));
             return items;
@@ -118,6 +130,19 @@ namespace MyJourneys.Repositories
         public void AddReservationItem(string userId, CommonItemCreationViewModel model)
         {
             _context.ReservationItems.Add(new ReservationItem
+            {
+                UserId = userId,
+                JourneyId = model.JourneyId,
+                Date = model.Date,
+                Name = model.Name,
+                Address = model.Address
+            });
+            _context.SaveChanges();
+        }
+
+        public void AddEventItem(string userId, CommonItemCreationViewModel model)
+        {
+            _context.EventItems.Add(new EventItem
             {
                 UserId = userId,
                 JourneyId = model.JourneyId,

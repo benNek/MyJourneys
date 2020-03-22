@@ -18,8 +18,10 @@
         <Content Include="ClientApp\src\components\Authentication\Logout.jsx" />
         <Content Include="ClientApp\src\components\Authentication\Register.jsx" />
         <Content Include="ClientApp\src\components\NavBar.jsx" />
+        <Content Include="ClientApp\src\components\Planner\EventItemCard.jsx" />
         <Content Include="ClientApp\src\components\Planner\FlightItemCard.jsx" />
         <Content Include="ClientApp\src\components\Planner\Forms\AddJourneyForm.jsx" />
+        <Content Include="ClientApp\src\components\Planner\Forms\EventItemForm.jsx" />
         <Content Include="ClientApp\src\components\Planner\Forms\FlightItemForm.jsx" />
         <Content Include="ClientApp\src\components\Planner\Forms\HotelItemForm.jsx" />
         <Content Include="ClientApp\src\components\Planner\Forms\ReservationItemForm.jsx" />

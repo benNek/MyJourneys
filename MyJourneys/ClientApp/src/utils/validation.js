@@ -22,12 +22,18 @@ export const flightItemValidation = Yup.object().shape({
 
 export const hotelItemValidation = Yup.object().shape({
   name: Yup.string().required('Hotel name is required'),
-  address: Yup.string().required('Hotel number is required'),
+  address: Yup.string().required('Hotel address is required'),
   date: Yup.date().required('Check-in date is required').min(yesterday, 'Check-in date cannot be in the past')
 });
 
 export const reservationItemValidation = Yup.object().shape({
   name: Yup.string().required('Reservation name is required'),
-  address: Yup.string().required('Reservation number is required'),
+  address: Yup.string().required('Reservation address is required'),
   date: Yup.date().required('Reservation date is required').min(yesterday, 'Reservation date cannot be in the past')
+});
+
+export const eventItemValidation = Yup.object().shape({
+  name: Yup.string().required('Event name is required'),
+  address: Yup.string().required('Event address is required'),
+  date: Yup.date().required('Event date is required').min(yesterday, 'Event date cannot be in the past')
 });
