@@ -7,9 +7,10 @@ import JourneyItemsSpeedDial from "./JourneyItemsSpeedDial";
 import {getJourneyItems} from "../../utils/networkFunctions";
 import {toast} from "react-toastify";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import {ITEM_TYPE_FLIGHT, ITEM_TYPE_HOTEL} from "../../types/journeyItemTypes";
+import {ITEM_TYPE_FLIGHT, ITEM_TYPE_HOTEL, ITEM_TYPE_RESERVATION} from "../../types/journeyItemTypes";
 import FlightItemCard from "./FlightItemCard";
 import HotelItemCard from "./HotelItemCard";
+import ReservationItemCard from "./ReservationItemCard";
 
 export default function Journey() {
   let {location, id} = useParams();
@@ -41,6 +42,8 @@ export default function Journey() {
             return <FlightItemCard key={item.id} flight={item}/>;
           case ITEM_TYPE_HOTEL:
             return <HotelItemCard key={item.id} hotel={item}/>;
+          case ITEM_TYPE_RESERVATION:
+            return <ReservationItemCard key={item.id} reservation={item}/>;
           default:
             return <p>Invalid item type</p>;
         }

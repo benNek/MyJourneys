@@ -144,7 +144,7 @@ export default function FlightItemForm(props) {
               color="primary"
               className={classes.submitButton}
             >
-              Add flight
+              Save
             </Button>
           </Form>
         );

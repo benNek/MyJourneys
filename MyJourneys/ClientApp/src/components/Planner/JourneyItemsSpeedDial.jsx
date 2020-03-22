@@ -4,14 +4,15 @@ import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
 import SpeedDial from "@material-ui/lab/SpeedDial";
 import FlightIcon from '@material-ui/icons/Flight';
 import HotelIcon from '@material-ui/icons/Hotel';
-import PlaceIcon from '@material-ui/icons/Place';
-import NoteAddIcon from '@material-ui/icons/NoteAdd';
+import RestaurantIcon from '@material-ui/icons/Restaurant';
+import EventIcon from '@material-ui/icons/Event';
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import FlightItemForm from "./Forms/FlightItemForm";
 import HotelItemForm from "./Forms/HotelItemForm";
+import ReservationItemForm from "./Forms/ReservationItemForm";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -52,8 +53,15 @@ export default function JourneyItemsSpeedDial(props) {
   };
 
   const actions = [
-    {icon: <PlaceIcon/>, name: 'Place'},
-    {icon: <NoteAddIcon/>, name: 'Note'},
+    {
+      icon: <RestaurantIcon/>,
+      name: 'Reservation',
+      form: <ReservationItemForm journeyId={journeyId} onSubmit={handleModalClose}/>
+    },
+    {
+      icon: <EventIcon/>,
+      name: 'Event'
+    },
     {
       icon: <HotelIcon/>,
       name: 'Hotel',

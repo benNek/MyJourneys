@@ -2,7 +2,7 @@ using System;
 
 namespace MyJourneys.Models.ViewModels
 {
-    public class HotelItemCreationViewModel
+    public class CommonItemCreationViewModel
     {
         public int JourneyId { get; set; }
         public string Name { get; set; }

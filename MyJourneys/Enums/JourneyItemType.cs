@@ -4,7 +4,7 @@ namespace MyJourneys.Enums
     {
         Flight,
         Hotel,
-        Place,
-        Note
+        Reservation,
+        Event
     }
 }

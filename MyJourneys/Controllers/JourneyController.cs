@@ -77,7 +77,7 @@ namespace MyJourneys.Controllers
         
         [HttpPost("hotel")]
         [Authorize]
-        public IActionResult AddHotel([FromBody] HotelItemCreationViewModel model)
+        public IActionResult AddHotel([FromBody] CommonItemCreationViewModel model)
         {
             if (model.Date < Now)
             {
@@ -87,6 +87,20 @@ namespace MyJourneys.Controllers
             var userId = GetUserId(User);
             _journeyRepository.AddHotelItem(userId, model);
             return Ok("Hotel has been successfully added to the journey");
+        }
+        
+        [HttpPost("reservation")]
+        [Authorize]
+        public IActionResult AddReservation([FromBody] CommonItemCreationViewModel model)
+        {
+            if (model.Date < Now)
+            {
+                return StatusCode(422, "Date must not be in the past");
+            }
+
+            var userId = GetUserId(User);
+            _journeyRepository.AddReservationItem(userId, model);
+            return Ok("Reservation has been successfully added to the journey");
         }
     }
 }

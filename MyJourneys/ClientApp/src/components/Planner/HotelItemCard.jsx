@@ -13,6 +13,7 @@ const useStyles = makeStyles(() => ({
   },
   date: {
     display: 'flex',
+    flexShrink: 0,
     alignItems: 'center',
     textAlign: 'center',
     padding: '12px 24px 24px',

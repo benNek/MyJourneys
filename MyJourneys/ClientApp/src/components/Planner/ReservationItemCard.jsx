@@ -4,6 +4,7 @@ import CardContent from "@material-ui/core/CardContent";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Typography from "@material-ui/core/Typography";
 import moment from "moment";
+import Link from "@material-ui/core/Link";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -20,23 +21,28 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-export default function FlightItemCard(props) {
+export default function ReservationItemCard(props) {
   const classes = useStyles();
-  const {flight} = props;
+  const {reservation} = props;
 
   return (
     <Card className={classes.root}>
       <div className={classes.date}>
         <Typography variant='h6'>
-          {moment(flight.date).format('hh:mm a')}
+          {moment(reservation.date).format('hh:mm a')}
         </Typography>
       </div>
       <CardContent>
         <Typography variant='subtitle2'>
-          {flight.airline} ({flight.flightNumber})
+          {reservation.name}
         </Typography>
         <Typography variant='subtitle1'>
-          {flight.origin} – {flight.destination}
+          {reservation.address}
+        </Typography>
+        <Typography variant='body2'>
+          <Link href={`https://www.google.com/maps/place/${encodeURI(reservation.address)}`} target="_blank" rel="noopener">
+            Find on maps
+          </Link>
         </Typography>
       </CardContent>
     </Card>

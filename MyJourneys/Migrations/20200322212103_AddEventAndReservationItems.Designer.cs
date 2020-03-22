@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyJourneys.Data;
 
 namespace MyJourneys.Migrations
 {
     [DbContext(typeof(TravelContext))]
-    partial class TravelContextModelSnapshot : ModelSnapshot
+    [Migration("20200322212103_AddEventAndReservationItems")]
+    partial class AddEventAndReservationItems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,7 +181,7 @@ namespace MyJourneys.Migrations
                     b.ToTable("Blogs");
                 });
 
-            modelBuilder.Entity("MyJourneys.Models.EventItem", b =>
+            modelBuilder.Entity("MyJourneys.Models.CommonJourneyItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -207,7 +209,7 @@ namespace MyJourneys.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("EventItems");
+                    b.ToTable("CommonJourneyItem");
                 });
 
             modelBuilder.Entity("MyJourneys.Models.FlightItem", b =>
@@ -247,37 +249,6 @@ namespace MyJourneys.Migrations
                     b.ToTable("FlightItems");
                 });
 
-            modelBuilder.Entity("MyJourneys.Models.HotelItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("JourneyId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("JourneyId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("HotelItems");
-                });
-
             modelBuilder.Entity("MyJourneys.Models.Journey", b =>
                 {
                     b.Property<int>("Id")
@@ -300,37 +271,6 @@ namespace MyJourneys.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Journeys");
-                });
-
-            modelBuilder.Entity("MyJourneys.Models.ReservationItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("JourneyId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("JourneyId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ReservationItems");
                 });
 
             modelBuilder.Entity("MyJourneys.Models.User", b =>
@@ -456,7 +396,7 @@ namespace MyJourneys.Migrations
                         .HasForeignKey("AuthorId");
                 });
 
-            modelBuilder.Entity("MyJourneys.Models.EventItem", b =>
+            modelBuilder.Entity("MyJourneys.Models.CommonJourneyItem", b =>
                 {
                     b.HasOne("MyJourneys.Models.Journey", "Journey")
                         .WithMany()
@@ -470,32 +410,6 @@ namespace MyJourneys.Migrations
                 });
 
             modelBuilder.Entity("MyJourneys.Models.FlightItem", b =>
-                {
-                    b.HasOne("MyJourneys.Models.Journey", "Journey")
-                        .WithMany()
-                        .HasForeignKey("JourneyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MyJourneys.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("MyJourneys.Models.HotelItem", b =>
-                {
-                    b.HasOne("MyJourneys.Models.Journey", "Journey")
-                        .WithMany()
-                        .HasForeignKey("JourneyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MyJourneys.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("MyJourneys.Models.ReservationItem", b =>
                 {
                     b.HasOne("MyJourneys.Models.Journey", "Journey")
                         .WithMany()

@@ -10,6 +10,7 @@ namespace MyJourneys.Repositories
         List<JourneyViewModel> GetJourneys(string userId);
         List<JourneyItemViewModel> GetJourneyItems(string userId, int journeyId);
         void AddFlightItem(string userId, FlightItemCreationViewModel model);
-        void AddHotelItem(string userId, HotelItemCreationViewModel model);
+        void AddHotelItem(string userId, CommonItemCreationViewModel model);
+        void AddReservationItem(string userId, CommonItemCreationViewModel model);
     }
 }

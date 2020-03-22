@@ -1,7 +1,7 @@
 import React from "react";
 import {Form, Formik} from "formik";
 import moment from "moment";
-import {hotelItemValidation} from "../../../utils/validation";
+import {reservationItemValidation} from "../../../utils/validation";
 import {toast} from "react-toastify";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Typography from "@material-ui/core/Typography";
@@ -9,7 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {DateTimePicker} from "@material-ui/pickers";
-import {createHotelItem} from "../../../utils/networkFunctions";
+import {createReservationItem} from "../../../utils/networkFunctions";
 
 const useStyles = makeStyles(theme => ({
   formTitle: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function HotelItemForm(props) {
+export default function ReservationItemForm(props) {
   const classes = useStyles();
   const {journeyId} = props;
 
@@ -31,7 +31,7 @@ export default function HotelItemForm(props) {
         address: '',
         date: moment().add(1, 'days').format('YYYY-MM-DD HH:mm')
       }}
-      validationSchema={hotelItemValidation}
+      validationSchema={reservationItemValidation}
       onSubmit={async (values, actions) => {
         actions.setSubmitting(true);
 
@@ -41,7 +41,7 @@ export default function HotelItemForm(props) {
 
         values['journeyId'] = parseInt(journeyId, 10);
         values['date'] = moment(values.date).format();
-        await createHotelItem(values)
+        await createReservationItem(values)
           .then(response => {
             toast.success(response.data);
           })
@@ -61,7 +61,7 @@ export default function HotelItemForm(props) {
         return (
           <Form>
             <Typography className={classes.formTitle} variant='h5'>
-              Add a hotel
+              Add a reservation
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={12}>
@@ -71,7 +71,7 @@ export default function HotelItemForm(props) {
                   required
                   fullWidth
                   id="name"
-                  label="Hotel name"
+                  label="Reservation name"
                   autoFocus
                   error={errors.name && touched.name}
                   helperText={(errors.name && touched.name) && errors.name}
@@ -95,7 +95,7 @@ export default function HotelItemForm(props) {
                 <DateTimePicker
                   id="date"
                   name="date"
-                  label="Check-in date"
+                  label="Reservation time"
                   variant="outlined"
                   inputVariant="outlined"
                   fullWidth

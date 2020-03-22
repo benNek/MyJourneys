@@ -13,6 +13,8 @@ namespace MyJourneys.Data
         public DbSet<Journey> Journeys { get; set; }
         public DbSet<FlightItem> FlightItems { get; set; }
         public DbSet<HotelItem> HotelItems { get; set; }
+        public DbSet<ReservationItem> ReservationItems { get; set; }
+        public DbSet<EventItem> EventItems { get; set; }
 
         public TravelContext()
         {
