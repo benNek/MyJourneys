@@ -43,7 +43,7 @@ const useStyles = makeStyles(() => ({
   },
   icon: {
     display: 'flex',
-    flexShrink: '0',
+    flexShrink: 0,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1,
