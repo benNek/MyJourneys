@@ -10,6 +10,8 @@ import Journeys from "./components/Planner/Journeys";
 import {Context} from "./state/store";
 import {setUser} from "./state/actions";
 import Journey from "./components/Planner/Journey";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
 
 export default function App() {
   const dispatch = useContext(Context)[1];
@@ -18,13 +20,15 @@ export default function App() {
   }, [dispatch]);
 
   return (
-    <Layout>
-      <Route exact path='/' component={Retrospective}/>
-      <Route exact path='/journeys' component={Journeys}/>
-      <Route exact path='/journeys/:location.:id' component={Journey}/>
-      <Route exact path='/articles' component={Articles}/>
-      <Route exact path='/articles/new' component={ArticleCreation}/>
-      <Route exact path='/articles/:id' component={Blog}/>
-    </Layout>
+    <MuiPickersUtilsProvider utils={MomentUtils}>
+      <Layout>
+        <Route exact path='/' component={Retrospective}/>
+        <Route exact path='/journeys' component={Journeys}/>
+        <Route exact path='/journeys/:location.:id' component={Journey}/>
+        <Route exact path='/articles' component={Articles}/>
+        <Route exact path='/articles/new' component={ArticleCreation}/>
+        <Route exact path='/articles/:id' component={Blog}/>
+      </Layout>
+    </MuiPickersUtilsProvider>
   );
 }

@@ -8,7 +8,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Fade from "@material-ui/core/Fade";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop/Backdrop";
-import AddJourneyForm from "./AddJourneyForm";
+import AddJourneyForm from "./Forms/AddJourneyForm";
 import {Context} from "../../state/store";
 import {getJourneys} from "../../utils/networkFunctions";
 import {setJourneys} from "../../state/actions";

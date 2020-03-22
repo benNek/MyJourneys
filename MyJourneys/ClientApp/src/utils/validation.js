@@ -10,3 +10,12 @@ export const journeyValidation = Yup.object().shape({
   endDate: Yup.date().required('End date is required')
     .min(Yup.ref('startDate'), 'End date should be after start date')
 });
+
+export const flightItemValidation = Yup.object().shape({
+  airline: Yup.string().required('Airline name is required'),
+  flightNumber: Yup.string().required('Flight number is required')
+    .matches(/^([A-Z]{2}|[A-Z]\d|\d[A-Z])[1-9](\d{1,3})?$/, 'Invalid flight number'),
+  origin: Yup.string().required('Origin airport is required'),
+  destination: Yup.string().required('Destination airport is required'),
+  date: Yup.date().required('Departure date is required').min(yesterday, 'Departure date cannot be in the past')
+});
