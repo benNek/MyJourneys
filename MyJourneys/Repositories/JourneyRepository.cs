@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MyJourneys.Data;
+using MyJourneys.Enums;
 using MyJourneys.Models;
 using MyJourneys.Models.ViewModels;
 
@@ -42,6 +43,25 @@ namespace MyJourneys.Repositories
                 .ToList();
         }
 
+        public List<JourneyItemViewModel> GetJourneyItems(string userId, int journeyId)
+        {
+            var items = _context.FlightItems
+                .Where(item => item.UserId.Equals(userId) && item.JourneyId == journeyId)
+                .Select(item => new JourneyItemViewModel
+                {
+                    Id = item.Id,
+                    Type = JourneyItemType.Flight.ToString(),
+                    Airline = item.Airline,
+                    FlightNumber = item.FlightNumber,
+                    Origin = item.Origin,
+                    Destination = item.Destination,
+                    Date = item.Date
+                })
+                .ToList();
+            items.Sort((it1, it2) => it1.Date.CompareTo(it2.Date));
+            return items;
+        }
+
         public void AddFlightItem(string userId, FlightItemCreationViewModel model)
         {
             _context.FlightItems.Add(new FlightItem
@@ -52,7 +72,7 @@ namespace MyJourneys.Repositories
                 FlightNumber = model.FlightNumber,
                 Origin = model.Origin,
                 Destination = model.Destination,
-                DepartureDate = model.DepartureDate
+                Date = model.Date
             });
             _context.SaveChanges();
         }

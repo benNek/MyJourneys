@@ -53,11 +53,19 @@ namespace MyJourneys.Controllers
             return _journeyRepository.GetJourneys(userId);
         }
 
+        [HttpGet("{id}")]
+        [Authorize]
+        public IEnumerable<JourneyItemViewModel> GetJourneyItems(int id)
+        {
+            var userId = GetUserId(User);
+            return _journeyRepository.GetJourneyItems(userId, id);
+        }
+
         [HttpPost("flight")]
         [Authorize]
         public IActionResult AddFlight([FromBody] FlightItemCreationViewModel model)
         {
-            if (model.DepartureDate < Now)
+            if (model.Date < Now)
             {
                 return StatusCode(422, "Date must not be in the past");
             }

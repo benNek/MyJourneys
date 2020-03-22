@@ -13,3 +13,8 @@ div.FloatingActionButton {
     bottom: 24px;
     right: 24px;
 }
+
+div.Loader {
+    display: block;
+    margin: 0 auto 24px;
+}

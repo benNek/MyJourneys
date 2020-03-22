@@ -16,10 +16,6 @@ import {toast} from "react-toastify";
 import JourneyCard from "./JourneyCard";
 
 const useStyles = makeStyles(theme => ({
-  loader: {
-    display: 'block',
-    margin: '0 auto 24px'
-  },
   modal: {
     display: 'flex',
     alignItems: 'center',
@@ -65,7 +61,7 @@ export default function Journeys() {
 
   const content = () => {
     if (loading) {
-      return (<CircularProgress className={classes.loader}/>)
+      return (<CircularProgress className="Loader"/>)
     } else if (!journeys.length) {
       return (
         <Typography variant="body1">

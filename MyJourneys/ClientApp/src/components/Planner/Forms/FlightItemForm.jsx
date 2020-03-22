@@ -1,7 +1,7 @@
 import React from "react";
 import {Form, Formik} from "formik";
 import moment from "moment";
-import {flightItemValidation, journeyValidation} from "../../../utils/validation";
+import {flightItemValidation} from "../../../utils/validation";
 import {toast} from "react-toastify";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Typography from "@material-ui/core/Typography";
@@ -31,7 +31,7 @@ export default function FlightItemForm(props) {
         flightNumber: '',
         origin: '',
         destination: '',
-        departureDate: moment().add(1, 'days').format('YYYY-MM-DD hh:mm')
+        date: moment().add(1, 'days').format('YYYY-MM-DD HH:mm')
       }}
       validationSchema={flightItemValidation}
       onSubmit={async (values, actions) => {
@@ -41,8 +41,8 @@ export default function FlightItemForm(props) {
           props.onSubmit();
         }
 
-        values['journeyId'] = parseInt(journeyId);
-        values['departureDate'] = moment(values.departureDate).format();
+        values['journeyId'] = parseInt(journeyId, 10);
+        values['date'] = moment(values.date).format();
         await createFlightItem(values)
           .then(response => {
             toast.success(response.data);
@@ -54,7 +54,7 @@ export default function FlightItemForm(props) {
       }}
     >
       {(formProps) => {
-        const {handleChange, setFieldTouched, errors, touched, setFieldValue} = formProps;
+        const {handleChange, setFieldTouched, errors, touched, setFieldValue, values} = formProps;
         const change = (name, e) => {
           e.persist();
           handleChange(e);
@@ -122,15 +122,18 @@ export default function FlightItemForm(props) {
               <Grid item xs={12}>
                 <DateTimePicker
                   id="date"
+                  name="date"
                   label="Depart date"
                   variant="outlined"
                   inputVariant="outlined"
                   fullWidth
-                  format="YYYY-MM-DD hh:mm"
-                  value={moment().add(1, 'days').format('YYYY-MM-DD hh:mm')}
-                  error={errors.departureDate && touched.departureDate}
-                  helperText={(errors.departureDate && touched.departureDate) && errors.departureDate}
-                  onChange={setFieldValue}
+                  value={values['date']}
+                  format="YYYY-MM-DD HH:mm"
+                  error={errors.date && touched.date}
+                  helperText={(errors.date && touched.date) && errors.date}
+                  onChange={value => {
+                    setFieldValue("date", moment(value).format('YYYY-MM-DD HH:mm'));
+                  }}
                 />
               </Grid>
             </Grid>
