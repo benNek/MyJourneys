@@ -8,6 +8,6 @@ namespace MyJourneys.Repositories
     {
         BlogViewModel GetBlog(int id);
         List<BlogViewModel> GetBlogs();
-        void AddBlog(BlogCreationViewModel model);
+        void AddBlog(string userId, BlogCreationViewModel model);
     }
 }

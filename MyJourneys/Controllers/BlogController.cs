@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyJourneys.Models.ViewModels;
 using MyJourneys.Repositories;
+using static MyJourneys.Utils.AuthorizationUtils;
 
 namespace MyJourneys.Controllers
 {
@@ -20,7 +21,8 @@ namespace MyJourneys.Controllers
         [Authorize]
         public IActionResult Create([FromBody] BlogCreationViewModel model)
         {
-            _blogRepository.AddBlog(model);
+            var userId = GetUserId(User);
+            _blogRepository.AddBlog(userId, model);
             return Ok("Blog has been created successfully");
         }
 

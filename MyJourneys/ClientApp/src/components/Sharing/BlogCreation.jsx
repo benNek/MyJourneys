@@ -18,8 +18,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function BlogCreation() {
-  const {user} = {}//useContext(UserContext);
-
   const classes = useStyles();
 
   const [text, setText] = useState("");
@@ -37,18 +35,17 @@ export default function BlogCreation() {
           if (!isSubmitting) {
             return;
           }
-          setIsSubmitting(false);
           actions.setSubmitting(true);
           values['text'] = text;
-          values['authorId'] = user.id;
           await createBlog(values)
             .then(response => {
-              console.log(response)
+              toast.success(response.data);
             })
             .catch(err => {
               toast.error(`${err.response.data} Status code: ${err.response.status}`);
               actions.setSubmitting(false);
             });
+          setIsSubmitting(false);
         }}
       >
         {(formProps) => {

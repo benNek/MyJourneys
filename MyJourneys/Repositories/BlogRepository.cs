@@ -42,13 +42,13 @@ namespace MyJourneys.Repositories
             }).ToList();
         }
 
-        public void AddBlog(BlogCreationViewModel model)
+        public void AddBlog(string userId, BlogCreationViewModel model)
         {
             _context.Blogs.Add(new Blog
             {
                 Title = model.Title,
                 Text = model.Text,
-                AuthorId = model.AuthorId,
+                AuthorId = userId,
                 CreateDate = DateTime.UtcNow,
                 ModifyDate = DateTime.UtcNow
             });
