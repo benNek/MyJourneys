@@ -25,6 +25,7 @@
         <Content Include="ClientApp\src\components\Planner\Forms\FlightItemForm.jsx" />
         <Content Include="ClientApp\src\components\Planner\Forms\HotelItemForm.jsx" />
         <Content Include="ClientApp\src\components\Planner\Forms\NoteForm.jsx" />
+        <Content Include="ClientApp\src\components\Planner\Forms\PlaceForm.jsx" />
         <Content Include="ClientApp\src\components\Planner\Forms\ReservationItemForm.jsx" />
         <Content Include="ClientApp\src\components\Planner\HotelItemCard.jsx" />
         <Content Include="ClientApp\src\components\Planner\Itinerary.jsx" />
@@ -33,6 +34,7 @@
         <Content Include="ClientApp\src\components\Planner\JourneyItemsSpeedDial.jsx" />
         <Content Include="ClientApp\src\components\Planner\Journeys.jsx" />
         <Content Include="ClientApp\src\components\Planner\Notes.jsx" />
+        <Content Include="ClientApp\src\components\Planner\Places.jsx" />
         <Content Include="ClientApp\src\components\Planner\ReservationItemCard.jsx" />
         <Content Include="ClientApp\src\components\Retrospective\Retrospective.css" />
         <Content Include="ClientApp\src\components\Retrospective\RetrospectiveMap.jsx" />

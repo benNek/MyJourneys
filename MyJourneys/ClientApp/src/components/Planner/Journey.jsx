@@ -10,6 +10,7 @@ import Itinerary from "./Itinerary";
 import {getJourneyItems, getNotes} from "../../utils/networkFunctions";
 import {toast} from "react-toastify";
 import Notes from "./Notes";
+import Places from "./Places";
 
 export default function Journey() {
   let {location, id} = useParams();
@@ -73,7 +74,7 @@ export default function Journey() {
         <Itinerary items={items}/>
       </TabPanel>
       <TabPanel value={tab} index={1}>
-        Places
+        <Places/>
       </TabPanel>
       <TabPanel value={tab} index={2}>
         <Notes notes={notes}/>
