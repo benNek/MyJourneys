@@ -79,8 +79,8 @@ export default function JourneyItemsSpeedDial(props) {
   return (
     <React.Fragment>
       <SpeedDial
-        ariaLabel="SpeedDial tooltip example"
-        className={"FloatingActionButton"}
+        ariaLabel="Itinerary items setup"
+        className="FloatingActionButton"
         icon={<SpeedDialIcon/>}
         onClose={handleClose}
         onOpen={handleOpen}

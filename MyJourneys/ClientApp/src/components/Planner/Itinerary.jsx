@@ -13,6 +13,7 @@ import RestaurantIcon from "@material-ui/icons/Restaurant";
 import EventIcon from "@material-ui/icons/Event";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {useParams} from "react-router";
+import JourneyItemsSpeedDial from "./JourneyItemsSpeedDial";
 
 const useStyles = makeStyles(() => ({
   day: {
@@ -51,7 +52,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function Itinerary(props) {
-  let {location} = useParams();
+  let {location, id} = useParams();
   const {items} = props;
 
   const classes = useStyles();
@@ -131,6 +132,7 @@ export default function Itinerary(props) {
   return (
     <React.Fragment>
       {getItems()}
+      <JourneyItemsSpeedDial journeyId={id}/>
     </React.Fragment>
   )
 

@@ -74,7 +74,7 @@ namespace MyJourneys.Controllers
             _journeyRepository.AddFlightItem(userId, model);
             return Ok("Flight has been successfully added to the journey");
         }
-        
+
         [HttpPost("hotel")]
         [Authorize]
         public IActionResult AddHotel([FromBody] CommonItemCreationViewModel model)
@@ -88,7 +88,7 @@ namespace MyJourneys.Controllers
             _journeyRepository.AddHotelItem(userId, model);
             return Ok("Hotel has been successfully added to the journey");
         }
-        
+
         [HttpPost("reservation")]
         [Authorize]
         public IActionResult AddReservation([FromBody] CommonItemCreationViewModel model)
@@ -102,7 +102,7 @@ namespace MyJourneys.Controllers
             _journeyRepository.AddReservationItem(userId, model);
             return Ok("Reservation has been successfully added to the journey");
         }
-        
+
         [HttpPost("event")]
         [Authorize]
         public IActionResult AddEvent([FromBody] CommonItemCreationViewModel model)
@@ -115,6 +115,15 @@ namespace MyJourneys.Controllers
             var userId = GetUserId(User);
             _journeyRepository.AddEventItem(userId, model);
             return Ok("Event has been successfully added to the journey");
+        }
+
+        [HttpPost("note")]
+        [Authorize]
+        public IActionResult AddNote([FromBody] NoteFormViewModel model)
+        {
+            var userId = GetUserId(User);
+            _journeyRepository.AddNoteItem(userId, model);
+            return Ok("Note has been successfully added");
         }
     }
 }

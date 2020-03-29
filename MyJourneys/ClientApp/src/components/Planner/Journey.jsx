@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {useParams} from "react-router";
 import Typography from "@material-ui/core/Typography";
 import OfflinePinIcon from '@material-ui/icons/OfflinePin';
-import JourneyItemsSpeedDial from "./JourneyItemsSpeedDial";
 import Tabs from "@material-ui/core/Tabs";
 import Paper from "@material-ui/core/Paper";
 import Tab from "@material-ui/core/Tab";
@@ -10,6 +9,7 @@ import Box from "@material-ui/core/Box";
 import Itinerary from "./Itinerary";
 import {getJourneyItems} from "../../utils/networkFunctions";
 import {toast} from "react-toastify";
+import Notes from "./Notes";
 
 export default function Journey() {
   let {location, id} = useParams();
@@ -71,9 +71,8 @@ export default function Journey() {
         Places
       </TabPanel>
       <TabPanel value={tab} index={2}>
-        Notes
+        <Notes/>
       </TabPanel>
-      <JourneyItemsSpeedDial journeyId={id}/>
     </React.Fragment>
   )
 }

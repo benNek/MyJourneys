@@ -13,5 +13,6 @@ namespace MyJourneys.Repositories
         void AddHotelItem(string userId, CommonItemCreationViewModel model);
         void AddReservationItem(string userId, CommonItemCreationViewModel model);
         void AddEventItem(string userId, CommonItemCreationViewModel model);
+        void AddNoteItem(string userId, NoteFormViewModel model);
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using MyJourneys.Data;
@@ -149,6 +148,18 @@ namespace MyJourneys.Repositories
                 Date = model.Date,
                 Name = model.Name,
                 Address = model.Address
+            });
+            _context.SaveChanges();
+        }
+
+        public void AddNoteItem(string userId, NoteFormViewModel model)
+        {
+            _context.Notes.Add(new Note
+            {
+                UserId = userId,
+                JourneyId = model.JourneyId,
+                Title = model.Title,
+                Text = model.Text
             });
             _context.SaveChanges();
         }

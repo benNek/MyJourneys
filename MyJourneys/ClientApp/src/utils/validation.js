@@ -37,3 +37,8 @@ export const eventItemValidation = Yup.object().shape({
   address: Yup.string().required('Event address is required'),
   date: Yup.date().required('Event date is required').min(yesterday, 'Event date cannot be in the past')
 });
+
+export const noteValidation = Yup.object().shape({
+  title: Yup.string().required('Title is required'),
+  text: Yup.string().required('Text is required')
+});
