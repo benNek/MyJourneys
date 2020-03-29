@@ -7,6 +7,12 @@ import Fade from "@material-ui/core/Fade";
 import NoteForm from "./Forms/NoteForm";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {useParams} from "react-router";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
+import CardActions from "@material-ui/core/CardActions";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -21,12 +27,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Notes() {
+export default function Notes(props) {
   let {id} = useParams();
+  const {notes} = props;
 
   const classes = useStyles();
   const [modalOpen, setModalOpen] = useState(false);
-  
+
   const handleModalOpen = () => {
     setModalOpen(true);
   };
@@ -34,11 +41,37 @@ export default function Notes() {
   const handleModalClose = () => {
     setModalOpen(false);
   };
-  
+
+  const renderNotes = () => {
+    return notes.map(note =>
+      <Grid item xs={4} key={note.id}>
+        <Card>
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="h2">
+              {note.title}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
+              {note.text}
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Button size="small" color="primary">
+              Edit
+            </Button>
+            <Button size="small" color="primary">
+              Delete
+            </Button>
+          </CardActions>
+        </Card>
+      </Grid>
+    )
+  };
+
   return (
     <React.Fragment>
-      NOTE ONE
-      NOTE TWO
+      <Grid container spacing={2}>
+        {renderNotes()}
+      </Grid>
       <Fab onClick={handleModalOpen} aria-label="add note" color="primary" className="FloatingActionButton">
         <NoteAddIcon/>
       </Fab>

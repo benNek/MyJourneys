@@ -101,7 +101,7 @@ export default function Itinerary(props) {
     );
   };
 
-  const getItems = () => {
+  const renderItems = () => {
     if (!items.length) {
       return (
         <Typography variant="body1">
@@ -131,7 +131,7 @@ export default function Itinerary(props) {
 
   return (
     <React.Fragment>
-      {getItems()}
+      {renderItems()}
       <JourneyItemsSpeedDial journeyId={id}/>
     </React.Fragment>
   )

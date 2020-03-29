@@ -98,6 +98,19 @@ namespace MyJourneys.Repositories
             return items;
         }
 
+        public List<NoteViewModel> GetNotes(string userId, int journeyId)
+        {
+            return _context.Notes
+                .Where(item => item.UserId.Equals(userId) && item.JourneyId == journeyId)
+                .Select(note => new NoteViewModel
+                {
+                    Id = note.Id,
+                    Title = note.Title,
+                    Text = note.Text
+                })
+                .ToList();
+        }
+
         public void AddFlightItem(string userId, FlightItemCreationViewModel model)
         {
             _context.FlightItems.Add(new FlightItem

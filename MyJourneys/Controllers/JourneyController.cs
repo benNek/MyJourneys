@@ -125,5 +125,13 @@ namespace MyJourneys.Controllers
             _journeyRepository.AddNoteItem(userId, model);
             return Ok("Note has been successfully added");
         }
+        
+        [HttpGet("{id}/notes")]
+        [Authorize]
+        public IEnumerable<NoteViewModel> GetNotes(int id)
+        {
+            var userId = GetUserId(User);
+            return _journeyRepository.GetNotes(userId, id);
+        }
     }
 }

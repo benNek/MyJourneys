@@ -7,7 +7,7 @@ import Paper from "@material-ui/core/Paper";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import Itinerary from "./Itinerary";
-import {getJourneyItems} from "../../utils/networkFunctions";
+import {getJourneyItems, getNotes} from "../../utils/networkFunctions";
 import {toast} from "react-toastify";
 import Notes from "./Notes";
 
@@ -15,10 +15,15 @@ export default function Journey() {
   let {location, id} = useParams();
   const [tab, setTab] = React.useState(0);
   const [items, setItems] = useState([]);
+  const [notes, setNotes] = useState([]);
 
   useEffect(() => {
     getJourneyItems(id).then(res => {
       setItems(res.data);
+    }).catch(err => toast.error(err));
+
+    getNotes(id).then(res => {
+      setNotes(res.data);
     }).catch(err => toast.error(err));
   }, []);
 
@@ -71,7 +76,7 @@ export default function Journey() {
         Places
       </TabPanel>
       <TabPanel value={tab} index={2}>
-        <Notes/>
+        <Notes notes={notes}/>
       </TabPanel>
     </React.Fragment>
   )
