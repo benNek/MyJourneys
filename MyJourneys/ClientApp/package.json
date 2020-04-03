@@ -17,6 +17,7 @@
     "formik-material-ui": "^2.0.0-alpha.3",
     "jquery": "3.4.0",
     "jwt-decode": "^2.2.0",
+    "kind-of": "^6.0.3",
     "lodash": "^4.17.15",
     "mapbox-gl": "^1.7.0",
     "moment": "^2.24.0",
