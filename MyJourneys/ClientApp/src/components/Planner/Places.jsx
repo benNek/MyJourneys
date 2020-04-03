@@ -12,6 +12,10 @@ import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import Card from "@material-ui/core/Card";
 import Link from "@material-ui/core/Link";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -27,6 +31,14 @@ const useStyles = makeStyles(theme => ({
   card: {
     marginBottom: '12px'
   },
+  formControl: {
+    marginBottom: '12px',
+    minWidth: '150px'
+  },
+  routeLink: {
+    display: 'block',
+    marginBottom: '12px'
+  },
   link: {
     padding: '6px 8px'
   }
@@ -38,6 +50,7 @@ export default function Places(props) {
 
   const classes = useStyles();
   const [modalOpen, setModalOpen] = useState(false);
+  const [travelType, setTravelType] = useState('auto');
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -45,6 +58,77 @@ export default function Places(props) {
 
   const handleModalClose = () => {
     setModalOpen(false);
+  };
+
+  const handleTravelTypeChange = (event) => {
+    setTravelType(event.target.value);
+  };
+
+  const renderContent = () => {
+    const hasPlaces = !!places.length;
+
+    if (!hasPlaces) {
+      return (
+        <Typography variant="body1">
+          No places have been added yet!
+        </Typography>
+      )
+    }
+
+    const routeUrl = generateDirectionsUrl();
+    return (
+      <React.Fragment>
+        {routeUrl &&
+        <React.Fragment>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="transit-type-label">Travel Type</InputLabel>
+            <Select
+              labelId="travel-type-label"
+              id="travel-type"
+              value={travelType}
+              onChange={handleTravelTypeChange}
+              label="Travel type"
+            >
+              <MenuItem value='auto'>Recommended</MenuItem>
+              <MenuItem value='driving'>Driving</MenuItem>
+              <MenuItem value='walking'>Walking</MenuItem>
+              <MenuItem value='bicycling'>Bicycling</MenuItem>
+              <MenuItem value='transit'>Transit</MenuItem>
+            </Select>
+          </FormControl>
+          <Link href={routeUrl} target="_blank" rel="noopener" className={classes.routeLink}>
+            Show route on maps
+          </Link>
+        </React.Fragment>
+        }
+        {renderPlaces()}
+      </React.Fragment>
+    );
+  };
+
+  // TODO react test
+  const generateDirectionsUrl = () => {
+    const values = Object.values(places);
+    const origin = values.shift();
+    const destination = values.pop();
+
+    let waypoints = '';
+    values.forEach(place =>
+      waypoints += `${place.latitude},${place.longitude},`
+    );
+    waypoints = waypoints.substring(0, waypoints.length - 1);
+
+    const baseUrl = 'https://www.google.com/maps/dir/?api=1';
+    const originUrl = origin ? `&origin=${origin.latitude},${origin.longitude}` : '';
+    const destinationUrl = destination ? `&destination=${destination.latitude},${destination.longitude}` : '';
+    const waypointsUrl = waypoints ? `&waypoints=${waypoints}` : '';
+    const travelTypeUrl = travelType && travelType !== 'auto' ? `&travelmode=${travelType}` : '';
+
+    const url = `${baseUrl}${originUrl}${destinationUrl}${travelTypeUrl}${waypointsUrl}`;
+    if (!url.includes('origin') || !url.includes('destination')) {
+      return '';
+    }
+    return url;
   };
 
   const renderPlaces = () => {
@@ -74,7 +158,7 @@ export default function Places(props) {
 
   return (
     <React.Fragment>
-      {renderPlaces()}
+      {renderContent()}
       <Fab onClick={handleModalOpen} aria-label="add note" color="primary" className="FloatingActionButton">
         <AddLocationIcon/>
       </Fab>
