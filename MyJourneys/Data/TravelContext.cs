@@ -16,6 +16,7 @@ namespace MyJourneys.Data
         public DbSet<ReservationItem> ReservationItems { get; set; }
         public DbSet<EventItem> EventItems { get; set; }
         public DbSet<Note> Notes { get; set; }
+        public DbSet<Place> Places { get; set; }
 
         public TravelContext()
         {

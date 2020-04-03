@@ -92,9 +92,9 @@ export default function PlaceForm(props) {
     const values = {
       journeyId: parseInt(journeyId, 10),
       location: name,
-      latitude: location[0],
-      longitude: location[1]
-    }
+      latitude: parseFloat(location[0]),
+      longitude: parseFloat(location[1])
+    };
     await createPlace(values)
       .then(response => {
         toast.success(response.data);
@@ -119,6 +119,9 @@ export default function PlaceForm(props) {
             autoComplete
             includeInputInList
             onChange={e => {
+              if (!e.currentTarget || !e.currentTarget.children || !e.currentTarget.children[0]) {
+                return;
+              }
               const data = e.currentTarget.children[0].dataset;
               setLocation([data.lat, data.lon]);
               setName(data.name);
@@ -134,7 +137,8 @@ export default function PlaceForm(props) {
             )}
             renderOption={(option) => {
               return (
-                <Grid container alignItems="center" data-lon={option.center[0]} data-lat={option.center[1]} data-name={options.text}>
+                <Grid container alignItems="center" data-lon={option.center[0]} data-lat={option.center[1]}
+                      data-name={option.text}>
                   <Grid item>
                     <LocationOnIcon className={classes.icon}/>
                   </Grid>

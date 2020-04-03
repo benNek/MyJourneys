@@ -42,6 +42,11 @@ namespace MyJourneys.Repositories
                 .ToList();
         }
 
+        public bool IsUsersJourney(string userId, int journeyId)
+        {
+            return _context.Journeys.Any(journey => journey.Id == journeyId && journey.UserId.Equals(userId));
+        }
+
         public List<JourneyItemViewModel> GetJourneyItems(string userId, int journeyId)
         {
             var items = _context.FlightItems
@@ -161,6 +166,19 @@ namespace MyJourneys.Repositories
                 Date = model.Date,
                 Name = model.Name,
                 Address = model.Address
+            });
+            _context.SaveChanges();
+        }
+
+        public void AddPlaceItem(string userId, PlaceFormViewModel model)
+        {
+            _context.Places.Add(new Place
+            {
+                UserId = userId,
+                JourneyId = model.JourneyId,
+                Location = model.Location,
+                Latitude = model.Latitude,
+                Longitude = model.Longitude
             });
             _context.SaveChanges();
         }

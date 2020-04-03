@@ -65,12 +65,16 @@ namespace MyJourneys.Controllers
         [Authorize]
         public IActionResult AddFlight([FromBody] FlightItemCreationViewModel model)
         {
+            var userId = GetUserId(User);
+            if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
+            {
+                return StatusCode(403, $"Journey {model.JourneyId} doesn't belong to user");
+            }
             if (model.Date < Now)
             {
                 return StatusCode(422, "Date must not be in the past");
             }
 
-            var userId = GetUserId(User);
             _journeyRepository.AddFlightItem(userId, model);
             return Ok("Flight has been successfully added to the journey");
         }
@@ -79,12 +83,16 @@ namespace MyJourneys.Controllers
         [Authorize]
         public IActionResult AddHotel([FromBody] CommonItemCreationViewModel model)
         {
+            var userId = GetUserId(User);
+            if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
+            {
+                return StatusCode(403, $"Journey {model.JourneyId} doesn't belong to user");
+            }
             if (model.Date < Now)
             {
                 return StatusCode(422, "Date must not be in the past");
             }
 
-            var userId = GetUserId(User);
             _journeyRepository.AddHotelItem(userId, model);
             return Ok("Hotel has been successfully added to the journey");
         }
@@ -93,12 +101,16 @@ namespace MyJourneys.Controllers
         [Authorize]
         public IActionResult AddReservation([FromBody] CommonItemCreationViewModel model)
         {
+            var userId = GetUserId(User);
+            if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
+            {
+                return StatusCode(403, $"Journey {model.JourneyId} doesn't belong to user");
+            }
             if (model.Date < Now)
             {
                 return StatusCode(422, "Date must not be in the past");
             }
 
-            var userId = GetUserId(User);
             _journeyRepository.AddReservationItem(userId, model);
             return Ok("Reservation has been successfully added to the journey");
         }
@@ -107,14 +119,40 @@ namespace MyJourneys.Controllers
         [Authorize]
         public IActionResult AddEvent([FromBody] CommonItemCreationViewModel model)
         {
+            var userId = GetUserId(User);
+            if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
+            {
+                return StatusCode(403, $"Journey {model.JourneyId} doesn't belong to user");
+            }
             if (model.Date < Now)
             {
                 return StatusCode(422, "Date must not be in the past");
             }
 
-            var userId = GetUserId(User);
             _journeyRepository.AddEventItem(userId, model);
             return Ok("Event has been successfully added to the journey");
+        }
+        
+        [HttpPost("place")]
+        [Authorize]
+        public IActionResult AddPlace([FromBody] PlaceFormViewModel model)
+        {
+            var userId = GetUserId(User);
+            if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
+            {
+                return StatusCode(403, $"Journey {model.JourneyId} doesn't belong to user");
+            }
+            if (model.Latitude < -90 || model.Latitude > 90)
+            {
+                return StatusCode(422, "Latitude must be between -90 and 90");
+            }
+            if (model.Longitude < -180 || model.Longitude > 180)
+            {
+                return StatusCode(422, "Longitude must be between -180 and 180");
+            }
+
+            _journeyRepository.AddPlaceItem(userId, model);
+            return Ok("Place has been successfully added to the journey");
         }
 
         [HttpPost("note")]
@@ -133,5 +171,6 @@ namespace MyJourneys.Controllers
             var userId = GetUserId(User);
             return _journeyRepository.GetNotes(userId, id);
         }
+
     }
 }
