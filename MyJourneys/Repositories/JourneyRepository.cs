@@ -113,8 +113,20 @@ namespace MyJourneys.Repositories
                     Location = place.Location,
                     Address = place.Address,
                     Latitude = place.Latitude,
-                    Longitude = place.Longitude
+                    Longitude = place.Longitude,
+                    Rank = place.Rank
                 })
+                .OrderByDescending(place => place.Rank)
+                .ThenByDescending(place => place.Id)
+                .ToList();
+        }
+
+        public List<Place> GetPlaceObjects(string userId, int journeyId)
+        {
+            return _context.Places
+                .Where(item => item.UserId.Equals(userId) && item.JourneyId == journeyId)
+                .OrderByDescending(place => place.Rank)
+                .ThenByDescending(place => place.Id)
                 .ToList();
         }
 

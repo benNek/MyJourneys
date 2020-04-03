@@ -16,6 +16,7 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -63,6 +64,10 @@ export default function Places(props) {
   const handleTravelTypeChange = (event) => {
     setTravelType(event.target.value);
   };
+  
+  const reorderPlaces = () => {
+    console.log('tt')
+  };
 
   const renderContent = () => {
     const hasPlaces = !!places.length;
@@ -99,6 +104,9 @@ export default function Places(props) {
           <Link href={routeUrl} target="_blank" rel="noopener" className={classes.routeLink}>
             Show route on maps
           </Link>
+          <Button onClick={reorderPlaces} variant="contained" color="primary">
+            Reorder places for best route
+          </Button>
         </React.Fragment>
         }
         {renderPlaces()}

@@ -138,6 +138,7 @@ namespace MyJourneys
         private void AddScopes(IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IJourneyService, JourneyService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBlogRepository, BlogRepository>();

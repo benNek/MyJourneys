@@ -9,6 +9,7 @@ namespace MyJourneys.Models
         public string Address { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+        public int Rank { get; set; }
         public string UserId { get; set; }
         public int JourneyId { get; set; }
         

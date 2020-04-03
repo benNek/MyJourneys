@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyJourneys.Models.ViewModels;
 using MyJourneys.Repositories;
+using MyJourneys.Services;
 using static System.DateTime;
 using static MyJourneys.Utils.AuthorizationUtils;
 
@@ -14,13 +15,15 @@ namespace MyJourneys.Controllers
     {
         private readonly IJourneyRepository _journeyRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IJourneyService _journeyService;
 
-        public JourneyController(IJourneyRepository journeyRepository, IUserRepository userRepository)
+        public JourneyController(IJourneyRepository journeyRepository, IUserRepository userRepository, IJourneyService journeyService)
         {
             _journeyRepository = journeyRepository;
             _userRepository = userRepository;
+            _journeyService = journeyService;
         }
-
+        
         [HttpPost]
         [Authorize]
         public IActionResult Create([FromBody] JourneyCreationViewModel model)
@@ -161,6 +164,20 @@ namespace MyJourneys.Controllers
         {
             var userId = GetUserId(User);
             return _journeyRepository.GetPlaces(userId, id);
+        }
+
+        [HttpGet("{id}/places/reorder")]
+        [Authorize]
+        public IActionResult ReorderPlaces(int id)
+        {
+            var userId = GetUserId(User);
+            if (!_journeyRepository.IsUsersJourney(userId, id))
+            {
+                return StatusCode(403, $"Journey {id} doesn't belong to user");
+            }
+            
+            _journeyService.ReorderPlaces(userId, id);
+            return Ok();
         }
 
         [HttpPost("note")]
