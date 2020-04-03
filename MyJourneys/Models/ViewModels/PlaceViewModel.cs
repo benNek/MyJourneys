@@ -1,8 +1,8 @@
 namespace MyJourneys.Models.ViewModels
 {
-    public class PlaceFormViewModel
+    public class PlaceViewModel
     {
-        public int JourneyId { get; set; }
+        public int Id { get; set; }
         public string Location { get; set; }
         public string Address { get; set; }
         public double Latitude { get; set; }

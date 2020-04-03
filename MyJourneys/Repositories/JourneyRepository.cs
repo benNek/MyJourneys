@@ -103,6 +103,21 @@ namespace MyJourneys.Repositories
             return items;
         }
 
+        public List<PlaceViewModel> GetPlaces(string userId, int journeyId)
+        {
+            return _context.Places
+                .Where(item => item.UserId.Equals(userId) && item.JourneyId == journeyId)
+                .Select(place => new PlaceViewModel
+                {
+                    Id = place.Id,
+                    Location = place.Location,
+                    Address = place.Address,
+                    Latitude = place.Latitude,
+                    Longitude = place.Longitude
+                })
+                .ToList();
+        }
+
         public List<NoteViewModel> GetNotes(string userId, int journeyId)
         {
             return _context.Notes
@@ -177,6 +192,7 @@ namespace MyJourneys.Repositories
                 UserId = userId,
                 JourneyId = model.JourneyId,
                 Location = model.Location,
+                Address = model.Address,
                 Latitude = model.Latitude,
                 Longitude = model.Longitude
             });

@@ -154,6 +154,14 @@ namespace MyJourneys.Controllers
             _journeyRepository.AddPlaceItem(userId, model);
             return Ok("Place has been successfully added to the journey");
         }
+        
+        [HttpGet("{id}/places")]
+        [Authorize]
+        public IEnumerable<PlaceViewModel> GetPlaces(int id)
+        {
+            var userId = GetUserId(User);
+            return _journeyRepository.GetPlaces(userId, id);
+        }
 
         [HttpPost("note")]
         [Authorize]
@@ -171,6 +179,5 @@ namespace MyJourneys.Controllers
             var userId = GetUserId(User);
             return _journeyRepository.GetNotes(userId, id);
         }
-
     }
 }

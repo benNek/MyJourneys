@@ -38,9 +38,9 @@ export default function PlaceForm(props) {
 
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
+  const [name, setName] = React.useState('');
+  const [address, setAddress] = React.useState('');
   const [location, setLocation] = React.useState([]);
-  const [name, setName] = React.useState([]);
-
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
@@ -92,6 +92,7 @@ export default function PlaceForm(props) {
     const values = {
       journeyId: parseInt(journeyId, 10),
       location: name,
+      address: address,
       latitude: parseFloat(location[0]),
       longitude: parseFloat(location[1])
     };
@@ -123,8 +124,9 @@ export default function PlaceForm(props) {
                 return;
               }
               const data = e.currentTarget.children[0].dataset;
-              setLocation([data.lat, data.lon]);
               setName(data.name);
+              setAddress(data.address);
+              setLocation([data.lat, data.lon]);
             }}
             renderInput={(params) => (
               <TextField
@@ -136,9 +138,10 @@ export default function PlaceForm(props) {
               />
             )}
             renderOption={(option) => {
+              const address = option.properties.address ? option.properties.address : option.place_name;
               return (
                 <Grid container alignItems="center" data-lon={option.center[0]} data-lat={option.center[1]}
-                      data-name={option.text}>
+                      data-name={option.text} data-address={option.place_name}>
                   <Grid item>
                     <LocationOnIcon className={classes.icon}/>
                   </Grid>
@@ -147,7 +150,7 @@ export default function PlaceForm(props) {
                       {option.text}
                     </span>
                     <Typography variant="body2" color="textSecondary">
-                      {option.properties.address}
+                      {address}
                     </Typography>
                   </Grid>
                 </Grid>
