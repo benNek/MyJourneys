@@ -10,6 +10,11 @@ const Reducer = (state, action) => {
         ...state,
         journeys: action.payload
       };
+    case 'SET_BLOGS':
+      return {
+        ...state,
+        blogs: action.payload
+      };
     default:
       return state;
   }

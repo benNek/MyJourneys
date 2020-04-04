@@ -3,7 +3,8 @@ import Reducer from './reducer';
 
 const initialState = {
   user: null,
-  journeys: []
+  journeys: [],
+  blogs: []
 };
 
 const Store = ({children}) => {

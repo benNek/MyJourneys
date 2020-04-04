@@ -1,6 +1,8 @@
 import * as Yup from 'yup';
 import moment from "moment";
 
+// Planner
+
 const yesterday = moment().subtract(1, 'days').toDate();
 
 export const journeyValidation = Yup.object().shape({
@@ -39,6 +41,13 @@ export const eventItemValidation = Yup.object().shape({
 });
 
 export const noteValidation = Yup.object().shape({
+  title: Yup.string().required('Title is required'),
+  text: Yup.string().required('Text is required')
+});
+
+// Sharing
+
+export const blogValidation = Yup.object().shape({
   title: Yup.string().required('Title is required'),
   text: Yup.string().required('Text is required')
 });

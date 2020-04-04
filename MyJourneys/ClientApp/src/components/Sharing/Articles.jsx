@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect} from "react";
 import {Link} from "react-router-dom";
 import {getBlogs} from "../../utils/networkFunctions";
 import Card from "@material-ui/core/Card";
@@ -8,6 +8,10 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import {readingTime} from "../../utils/readingTime";
 import removeMd from "remove-markdown";
 import TextTruncate from "react-text-truncate";
+import {setBlogs} from "../../state/actions";
+import {Context} from "../../state/store";
+import ArticlesSpeedDial from "./ArticlesSpeedDial";
+import Divider from "@material-ui/core/Divider";
 
 const useStyles = makeStyles({
   card: {
@@ -32,11 +36,14 @@ const useStyles = makeStyles({
 
 export default function Articles() {
   const classes = useStyles();
-  const [blogs, setBlogs] = useState([]);
+  const [state, dispatch] = useContext(Context);
+  const {blogs} = state;
 
   useEffect(() => {
-    getBlogs().then(res => setBlogs(res.data)).catch(err => console.log(err));
-  }, []);
+    if(!blogs.length) {
+      getBlogs().then(res => setBlogs(dispatch, res.data)).catch(err => console.log(err));
+    }
+  }, [dispatch]);
 
   const renderBlogs = () => {
     if (!blogs.length) {
@@ -68,9 +75,13 @@ export default function Articles() {
   };
 
   return (
-    <div>
-      <Link to="/articles/new">Create new articke</Link>
+    <React.Fragment>
+      <Typography component='h1' variant='h3'>
+        Articles
+      </Typography>
+      <Divider/>
       {renderBlogs()}
-    </div>
+      <ArticlesSpeedDial/>
+    </React.Fragment>
   )
 }
