@@ -9,6 +9,8 @@ namespace MyJourneys.Repositories
 {
     public class ArticleRepository : IArticleRepository
     {
+        private const int PopularLimit = 20;
+
         private readonly TravelContext _context;
         private readonly IUserRepository _userRepository;
 
@@ -26,6 +28,7 @@ namespace MyJourneys.Repositories
                 AuthorName = _userRepository.GetUserById(blog.AuthorId).UserName,
                 Title = blog.Title,
                 Text = blog.Text,
+                Tags = blog.BlogTags.Select(tag => tag.ArticleTag.Tag).ToList(),
                 CreateDate = blog.CreateDate
             }).FirstOrDefault();
         }
@@ -38,8 +41,24 @@ namespace MyJourneys.Repositories
                 AuthorName = _userRepository.GetUserById(blog.AuthorId).UserName,
                 Title = blog.Title,
                 Text = blog.Text,
+                Tags = blog.BlogTags.Select(tag => tag.ArticleTag.Tag).ToList(),
                 CreateDate = blog.CreateDate
             }).ToList();
+        }
+
+        public List<BlogViewModel> GetBlogsByTag(string tagName)
+        {
+            return _context.Blogs
+                .Where(blog => blog.BlogTags.Any(blogTag => blogTag.ArticleTag.Tag.Equals(tagName)))
+                .Select(blog => new BlogViewModel
+                {
+                    Id = blog.Id,
+                    AuthorName = _userRepository.GetUserById(blog.AuthorId).UserName,
+                    Title = blog.Title,
+                    Text = blog.Text,
+                    Tags = blog.BlogTags.Select(tag => tag.ArticleTag.Tag).ToList(),
+                    CreateDate = blog.CreateDate
+                }).ToList();
         }
 
         public void AddBlog(string userId, BlogCreationViewModel model)
@@ -87,6 +106,18 @@ namespace MyJourneys.Repositories
             }
 
             return articleTag;
+        }
+
+        public List<PopularTagViewModel> GetPopularTags()
+        {
+            return _context.ArticleTags.Select(tag => new PopularTagViewModel
+                {
+                    Tag = tag.Tag,
+                    Count = tag.BlogTags.Count
+                })
+                .OrderByDescending(tag => tag.Count)
+                .Take(PopularLimit)
+                .ToList();
         }
     }
 }

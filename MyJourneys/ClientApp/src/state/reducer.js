@@ -10,6 +10,16 @@ const Reducer = (state, action) => {
         ...state,
         journeys: action.payload
       };
+    case 'SET_POPULAR_TAGS':
+      return {
+        ...state,
+        popularTags: action.payload
+      };
+    case 'SET_ACTIVE_TAG':
+      return {
+        ...state,
+        activeTag: action.payload
+      };
     case 'SET_BLOGS':
       return {
         ...state,

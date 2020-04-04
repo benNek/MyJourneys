@@ -1,6 +1,6 @@
 import React, {useContext, useEffect} from "react";
 import {Link} from "react-router-dom";
-import {getBlogs} from "../../utils/networkFunctions";
+import {getBlogs, getBlogsByTag, getPopularTags} from "../../utils/networkFunctions";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
@@ -8,12 +8,33 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import {readingTime} from "../../utils/readingTime";
 import removeMd from "remove-markdown";
 import TextTruncate from "react-text-truncate";
-import {setBlogs} from "../../state/actions";
+import {setActiveTag, setBlogs, setPopularTags} from "../../state/actions";
 import {Context} from "../../state/store";
 import ArticlesSpeedDial from "./ArticlesSpeedDial";
 import Divider from "@material-ui/core/Divider";
+import Chip from "@material-ui/core/Chip";
+import PopularTags from "./PopularTags";
+import {toast} from "react-toastify";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
+  container: {
+    display: 'flex',
+    flexDirection: 'column-reverse',
+    [theme.breakpoints.up('md')]: {
+      flexDirection: 'row'
+    },
+  },
+  blogs: {
+    flexBasis: '70%'
+  },
+  popularTags: {
+    flexBasis: '30%',
+    marginBottom: '6px',
+    [theme.breakpoints.up('md')]: {
+      marginBottom: 0,
+      marginLeft: '18px',
+    },
+  },
   card: {
     marginBottom: '12px'
   },
@@ -28,22 +49,47 @@ const useStyles = makeStyles({
   heading: {
     marginBottom: '12px'
   },
+  tags: {
+    marginTop: '-8px',
+    marginBottom: '12px'
+  },
+  tag: {
+    marginRight: '6px'
+  },
   readMore: {
     display: 'inline-block',
     marginTop: '12px'
   }
-});
+}));
 
 export default function Articles() {
   const classes = useStyles();
   const [state, dispatch] = useContext(Context);
-  const {blogs} = state;
+  const {activeTag, popularTags, blogs} = state;
 
   useEffect(() => {
-    if(!blogs.length) {
-      getBlogs().then(res => setBlogs(dispatch, res.data)).catch(err => console.log(err));
+    if (!blogs.length) {
+      if (activeTag) {
+        getBlogsByTag(activeTag).then(res => setBlogs(dispatch, res.data)).catch(err => toast.error(err));
+      } else {
+        getBlogs().then(res => setBlogs(dispatch, res.data)).catch(err => toast.error(err));
+      }
+    }
+
+    if (!popularTags.length) {
+      getPopularTags().then(res => setPopularTags(dispatch, res.data)).catch(err => toast.error(err));
     }
   }, [dispatch]);
+
+  const handleTagClick = tag => {
+    if (activeTag === tag) {
+      setActiveTag(dispatch, '');
+      getBlogs().then(res => setBlogs(dispatch, res.data)).catch(err => toast.error(err));
+      return;
+    }
+    setActiveTag(dispatch, tag);
+    getBlogsByTag(tag).then(res => setBlogs(dispatch, res.data)).catch(err => toast.error(err));
+  };
 
   const renderBlogs = () => {
     if (!blogs.length) {
@@ -60,6 +106,7 @@ export default function Articles() {
           <Typography className={classes.heading} variant="h5" component="h2">
             {blog.title}
           </Typography>
+          {renderTags(blog.tags)}
           <Typography variant="body2">
             <TextTruncate
               line={2}
@@ -74,13 +121,41 @@ export default function Articles() {
     );
   };
 
+  const renderTags = tags => {
+    if (!tags.length) {
+      return;
+    }
+    return (
+      <div className={classes.tags}>
+        {tags.map(tag =>
+          <Chip
+            key={tag}
+            className={classes.tag}
+            variant="outlined"
+            color={activeTag === tag ? 'primary' :''}
+            size="small"
+            label={tag}
+            onClick={() => handleTagClick(tag)}
+          />
+        )}
+      </div>
+    )
+  };
+
   return (
     <React.Fragment>
       <Typography component='h1' variant='h3'>
         Articles
       </Typography>
       <Divider/>
-      {renderBlogs()}
+      <div className={classes.container}>
+        <div className={classes.blogs}>
+          {renderBlogs()}
+        </div>
+        <div className={classes.popularTags}>
+          <PopularTags activeTag={activeTag} tags={popularTags} handleClick={handleTagClick}/>
+        </div>
+      </div>
       <ArticlesSpeedDial/>
     </React.Fragment>
   )

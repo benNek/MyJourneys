@@ -9,8 +9,10 @@ namespace MyJourneys.Repositories
     {
         BlogViewModel GetBlog(int id);
         List<BlogViewModel> GetBlogs();
+        List<BlogViewModel> GetBlogsByTag(string tag);
         void AddBlog(string userId, BlogCreationViewModel model);
         void AddBlogTags(int blogId, List<String> tags);
         ArticleTag GetTag(string tagName);
+        List<PopularTagViewModel> GetPopularTags();
     }
 }

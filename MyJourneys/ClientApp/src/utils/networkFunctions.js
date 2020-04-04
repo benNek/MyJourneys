@@ -9,9 +9,11 @@ export const login = data => axios.post('/api/user/login', data);
 export const logout = () => axios.get('/api/user/logout');
 
 // Sharing
-export const createBlog = data => axios.post('/api/blog', data);
-export const getBlogs = () => axios.get('/api/blog');
-export const getBlog = id => axios.get(`/api/blog/${id}`);
+export const getPopularTags = () => axios.get('/api/article/tags');
+export const createBlog = data => axios.post('/api/article/blog', data);
+export const getBlogs = () => axios.get('/api/article/blog');
+export const getBlogsByTag = tag => axios.get(`/api/article/blog?tag=${tag}`);
+export const getBlog = id => axios.get(`/api/article/blog/${id}`);
 
 // Journeys
 export const createJourney = data => axios.post('/api/journey', data);

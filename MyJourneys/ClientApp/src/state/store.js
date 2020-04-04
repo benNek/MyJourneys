@@ -4,6 +4,8 @@ import Reducer from './reducer';
 const initialState = {
   user: null,
   journeys: [],
+  popularTags: [],
+  activeTag: '',
   blogs: []
 };
 
