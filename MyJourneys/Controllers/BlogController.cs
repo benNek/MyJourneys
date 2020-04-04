@@ -22,7 +22,7 @@ namespace MyJourneys.Controllers
         public IActionResult Create([FromBody] BlogCreationViewModel model)
         {
             var userId = GetUserId(User);
-            _blogRepository.AddBlog(userId, model);
+            // _blogRepository.AddBlog(userId, model);
             return Ok("Blog has been created successfully");
         }
 
