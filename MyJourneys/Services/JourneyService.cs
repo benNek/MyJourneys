@@ -20,9 +20,27 @@ namespace MyJourneys.Services
             List<Place> places = _journeyRepository.GetPlaceObjects(userId, journeyId);
             double[,] graph = ResolveGraph(places);
             int[] parent = ResolvePrimMstPath(places.Count, graph);
-            Console.WriteLine("Edge \tWeight"); 
-            for (int i = 1; i < places.Count; i++) 
-                System.Diagnostics.Debug.WriteLine(parent[i] + " - " + i + "\t" + graph[i, parent[i]]);
+
+            int vertex = GetVertexLeadingTo(parent, 0);
+            int rank = 1;
+            while (vertex > 0)
+            {
+                _journeyRepository.UpdatePlaceRank(places[vertex].Id, rank++);
+                vertex = GetVertexLeadingTo(parent, vertex);
+            }
+        }
+
+        private int GetVertexLeadingTo(int[] parent, int vertex)
+        {
+            for (int i = 0; i < parent.Length; i++)
+            {
+                if (parent[i] == vertex)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
         }
 
         private double[,] ResolveGraph(List<Place> places)

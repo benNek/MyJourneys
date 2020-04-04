@@ -117,17 +117,30 @@ namespace MyJourneys.Repositories
                     Rank = place.Rank
                 })
                 .OrderByDescending(place => place.Rank)
-                .ThenByDescending(place => place.Id)
+                .ThenBy(place => place.Id)
                 .ToList();
         }
 
         public List<Place> GetPlaceObjects(string userId, int journeyId)
         {
             return _context.Places
-                .Where(item => item.UserId.Equals(userId) && item.JourneyId == journeyId)
+                .Where(place => place.UserId.Equals(userId) && place.JourneyId == journeyId)
                 .OrderByDescending(place => place.Rank)
-                .ThenByDescending(place => place.Id)
+                .ThenBy(place => place.Id)
                 .ToList();
+        }
+
+        public void UpdatePlaceRank(int placeId, int rank)
+        {
+            var place = _context.Places
+                .FirstOrDefault(p => p.Id == placeId);
+            if (place == null)
+            {
+                return;
+            }
+
+            place.Rank = rank;
+            _context.SaveChanges();
         }
 
         public List<NoteViewModel> GetNotes(string userId, int journeyId)
