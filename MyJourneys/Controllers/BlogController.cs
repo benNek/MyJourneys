@@ -10,11 +10,11 @@ namespace MyJourneys.Controllers
     [Route("api/[controller]")]
     public class BlogController : Controller
     {
-        private readonly IBlogRepository _blogRepository;
+        private readonly IArticleRepository _articleRepository;
 
-        public BlogController(IBlogRepository blogRepository)
+        public BlogController(IArticleRepository articleRepository)
         {
-            _blogRepository = blogRepository;
+            _articleRepository = articleRepository;
         }
 
         [HttpPost]
@@ -22,20 +22,20 @@ namespace MyJourneys.Controllers
         public IActionResult Create([FromBody] BlogCreationViewModel model)
         {
             var userId = GetUserId(User);
-            // _blogRepository.AddBlog(userId, model);
+            _articleRepository.AddBlog(userId, model);
             return Ok("Blog has been created successfully");
         }
 
         [HttpGet]
         public IEnumerable<BlogViewModel> Get()
         {
-            return _blogRepository.GetBlogs();
+            return _articleRepository.GetBlogs();
         }
 
         [HttpGet("{id}")]
         public BlogViewModel GetBlog(int id)
         {
-            return _blogRepository.GetBlog(id);
+            return _articleRepository.GetBlog(id);
         }
         
     }

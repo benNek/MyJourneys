@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyJourneys.Models
@@ -13,5 +14,6 @@ namespace MyJourneys.Models
         public DateTime ModifyDate { get; set; }
 
         [ForeignKey("AuthorId")] public virtual User Author { get; set; }
+        public virtual ICollection<BlogTags> BlogTags { get; set; }
     }
 }

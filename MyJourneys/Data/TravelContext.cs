@@ -8,8 +8,9 @@ namespace MyJourneys.Data
 {
     public class TravelContext : IdentityDbContext<User>
     {
-
+        public DbSet<ArticleTag> ArticleTags { get; set; }
         public DbSet<Blog> Blogs { get; set; }
+        public DbSet<BlogTags> BlogTags { get; set; }
         public DbSet<Journey> Journeys { get; set; }
         public DbSet<FlightItem> FlightItems { get; set; }
         public DbSet<HotelItem> HotelItems { get; set; }
@@ -20,14 +21,12 @@ namespace MyJourneys.Data
 
         public TravelContext()
         {
-
         }
 
         public TravelContext(DbContextOptions options) : base(options)
         {
-
         }
-        
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -44,6 +43,5 @@ namespace MyJourneys.Data
                 optionsBuilder.UseSqlServer(connectionString);
             }
         }
-        
     }
 }

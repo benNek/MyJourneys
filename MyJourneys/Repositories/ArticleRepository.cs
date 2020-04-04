@@ -7,12 +7,12 @@ using MyJourneys.Models.ViewModels;
 
 namespace MyJourneys.Repositories
 {
-    public class BlogRepository : IBlogRepository
+    public class ArticleRepository : IArticleRepository
     {
         private readonly TravelContext _context;
         private readonly IUserRepository _userRepository;
 
-        public BlogRepository(IUserRepository userRepository)
+        public ArticleRepository(IUserRepository userRepository)
         {
             _context = new TravelContext();
             _userRepository = userRepository;
@@ -44,15 +44,49 @@ namespace MyJourneys.Repositories
 
         public void AddBlog(string userId, BlogCreationViewModel model)
         {
-            _context.Blogs.Add(new Blog
+            var blog = new Blog
             {
                 Title = model.Title,
                 Text = model.Text,
                 AuthorId = userId,
                 CreateDate = DateTime.UtcNow,
                 ModifyDate = DateTime.UtcNow
-            });
+            };
+            _context.Blogs.Add(blog);
             _context.SaveChanges();
+            AddBlogTags(blog.Id, model.Tags);
+        }
+
+        public void AddBlogTags(int blogId, List<string> tags)
+        {
+            foreach (string tag in tags)
+            {
+                var tagId = GetTag(tag).Id;
+                _context.BlogTags.Add(new BlogTags
+                {
+                    TagId = tagId,
+                    BlogId = blogId
+                });
+            }
+
+            _context.SaveChanges();
+        }
+
+        public ArticleTag GetTag(string tagName)
+        {
+            var articleTag = _context.ArticleTags.FirstOrDefault(tag => tag.Tag.ToLower().Equals(tagName.ToLower()));
+            if (articleTag == null)
+            {
+                var newTag = new ArticleTag
+                {
+                    Tag = tagName
+                };
+                _context.ArticleTags.Add(newTag);
+                _context.SaveChanges();
+                return newTag;
+            }
+
+            return articleTag;
         }
     }
 }

@@ -141,7 +141,7 @@ namespace MyJourneys
             services.AddScoped<IJourneyService, JourneyService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IBlogRepository, BlogRepository>();
+            services.AddScoped<IArticleRepository, ArticleRepository>();
             services.AddScoped<IJourneyRepository, JourneyRepository>();
         }
 
