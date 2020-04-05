@@ -13,5 +13,6 @@ namespace MyJourneys.Models
         public ICollection<ReservationItem> ReservationItems { get; set; }
         public ICollection<Note> Notes { get; set; }
         public ICollection<Place> Places { get; set; }
+        public ICollection<ArticleLikes> ArticleLikes { get; set; }
     }
 }

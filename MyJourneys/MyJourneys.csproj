@@ -39,6 +39,7 @@
         <Content Include="ClientApp\src\components\Retrospective\Retrospective.css" />
         <Content Include="ClientApp\src\components\Retrospective\RetrospectiveMap.jsx" />
         <Content Include="ClientApp\src\components\Retrospective\Retrospective.jsx" />
+        <Content Include="ClientApp\src\components\Sharing\Article.css" />
         <Content Include="ClientApp\src\components\Sharing\ArticlePreview.jsx" />
         <Content Include="ClientApp\src\components\Sharing\Articles.jsx" />
         <Content Include="ClientApp\src\components\Sharing\Article.jsx" />

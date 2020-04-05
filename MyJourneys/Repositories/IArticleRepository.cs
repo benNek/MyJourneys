@@ -14,5 +14,7 @@ namespace MyJourneys.Repositories
         Tag GetTag(string tagName);
         List<string> GetTags();
         List<PopularTagViewModel> GetPopularTags();
+        void LikeArticle(string userId, int articleId);
+        bool HasLiked(string userId, int articleId);
     }
 }

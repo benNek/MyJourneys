@@ -11,6 +11,7 @@ namespace MyJourneys.Data
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Article> Articles { get; set; }
         public DbSet<ArticleTags> ArticleTags { get; set; }
+        public DbSet<ArticleLikes> ArticleLikes { get; set; }
         public DbSet<Journey> Journeys { get; set; }
         public DbSet<FlightItem> FlightItems { get; set; }
         public DbSet<HotelItem> HotelItems { get; set; }

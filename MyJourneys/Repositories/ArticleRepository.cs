@@ -31,6 +31,7 @@ namespace MyJourneys.Repositories
                     Title = article.Title,
                     Text = article.Text,
                     Tags = article.ArticleTags.Select(tag => tag.Tag.Name).ToList(),
+                    LikesCount = article.ArticleLikes.Count,
                     CreateDate = article.CreateDate
                 }).FirstOrDefault();
         }
@@ -45,6 +46,7 @@ namespace MyJourneys.Repositories
                     Title = article.Title,
                     Text = article.Text,
                     Tags = article.ArticleTags.Select(tag => tag.Tag.Name).ToList(),
+                    LikesCount = article.ArticleLikes.Count,
                     CreateDate = article.CreateDate
                 }).Skip(skip).Take(take).ToList();
         }
@@ -60,6 +62,7 @@ namespace MyJourneys.Repositories
                     Title = article.Title,
                     Text = article.Text,
                     Tags = article.ArticleTags.Select(tag => tag.Tag.Name).ToList(),
+                    LikesCount = article.ArticleLikes.Count,
                     CreateDate = article.CreateDate
                 }).Skip(skip).Take(take).ToList();
         }
@@ -126,6 +129,32 @@ namespace MyJourneys.Repositories
                 .OrderByDescending(tag => tag.Count)
                 .Take(PopularLimit)
                 .ToList();
+        }
+
+        public void LikeArticle(string userId, int articleId)
+        {
+            var entry = _context.ArticleLikes
+                .FirstOrDefault(likes => likes.UserId.Equals(userId) && likes.ArticleId == articleId);
+
+            if (entry == null)
+            {
+                _context.ArticleLikes.Add(new ArticleLikes
+                {
+                    UserId = userId,
+                    ArticleId = articleId
+                });
+            }
+            else
+            {
+                _context.ArticleLikes.Remove(entry);
+            }
+
+            _context.SaveChanges();
+        }
+
+        public bool HasLiked(string userId, int articleId)
+        {
+            return _context.ArticleLikes.Any(likes => likes.UserId.Equals(userId) && likes.ArticleId == articleId);
         }
     }
 }

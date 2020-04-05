@@ -25,6 +25,8 @@ export const getPopularTags = () => axios.get('/api/article/tags/popular');
 export const createArticle = data => axios.post('/api/article', data);
 export const getArticles = params => axios.get(`/api/article${createParameters(params)}`);
 export const getArticle = id => axios.get(`/api/article/${id}`);
+export const likeArticle = id => axios.post(`/api/article/${id}/like`);
+export const hasLikedArticle = id => axios.get(`/api/article/${id}/like`);
 
 // Journeys
 export const createJourney = data => axios.post('/api/journey', data);

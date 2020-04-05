@@ -1,0 +1,24 @@
+svg.Article__heartIcon path:first-child {
+    fill: red;
+    opacity: 0;
+    transition: opacity .2s ease-in-out;
+}
+
+svg.Article__heartIcon--active path:first-child {
+    fill: red;
+    opacity: .9;
+}
+
+svg.Article__heartIcon path:first-child:hover {
+    opacity: .9;
+    cursor: pointer;
+    transition: opacity .2s ease-in-out;
+}
+
+svg.Article__heartIcon--active path:first-child:hover {
+    cursor: pointer;
+}
+
+svg.Article__heartIcon path:nth-child(2) {
+    fill: #484848;
+}

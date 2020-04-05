@@ -27,12 +27,14 @@ namespace MyJourneys.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ArticleViewModel> Get([FromQuery] string tag, [FromQuery] int skip = 0, [FromQuery] int take = 6)
+        public IEnumerable<ArticleViewModel> Get([FromQuery] string tag, [FromQuery] int skip = 0,
+            [FromQuery] int take = 6)
         {
             if (tag != null)
             {
                 return _articleRepository.GetArticlesByTag(tag, skip, take);
             }
+
             return _articleRepository.GetArticles(skip, take);
         }
 
@@ -41,7 +43,7 @@ namespace MyJourneys.Controllers
         {
             return _articleRepository.GetArticle(id);
         }
-        
+
         [HttpGet("tags")]
         public IEnumerable<string> GetTags()
         {
@@ -52,6 +54,21 @@ namespace MyJourneys.Controllers
         public IEnumerable<PopularTagViewModel> GetPopularTags()
         {
             return _articleRepository.GetPopularTags();
+        }
+
+        [HttpPost("{id}/like")]
+        public IActionResult Like(int id)
+        {
+            var userId = GetUserId(User);
+            _articleRepository.LikeArticle(userId, id);
+            return Ok();
+        }
+        
+        [HttpGet("{id}/like")]
+        public bool HasLiked(int id)
+        {
+            var userId = GetUserId(User);
+            return _articleRepository.HasLiked(userId, id);
         }
     }
 }

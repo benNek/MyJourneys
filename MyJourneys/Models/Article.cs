@@ -15,5 +15,6 @@ namespace MyJourneys.Models
 
         [ForeignKey("AuthorId")] public virtual User Author { get; set; }
         public virtual ICollection<ArticleTags> ArticleTags { get; set; }
+        public virtual ICollection<ArticleLikes> ArticleLikes { get; set; }
     }
 }
