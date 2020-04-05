@@ -1,4 +1,15 @@
 import axios from 'axios';
+import _ from 'lodash';
+
+const createParameters = (parameters) => {
+  if (parameters === undefined) return '';
+  if (_.isEmpty(parameters)) return '';
+  const strings = _.reduce(parameters, (result, value, key) => {
+    if (value && key) return [...result, (`${key}=${value}`)];
+    return result;
+  }, []);
+  return `?${_.join(strings, '&')}`;
+};
 
 // potencialiai del sito reload reikia po login/logout
 axios.defaults.headers.Authorization = `Bearer ${localStorage.getItem('accessToken')}`;
@@ -9,10 +20,10 @@ export const login = data => axios.post('/api/user/login', data);
 export const logout = () => axios.get('/api/user/logout');
 
 // Sharing
-export const getPopularTags = () => axios.get('/api/article/tags');
+export const getTags = () => axios.get('/api/article/tags');
+export const getPopularTags = () => axios.get('/api/article/tags/popular');
 export const createBlog = data => axios.post('/api/article/blog', data);
-export const getBlogs = () => axios.get('/api/article/blog');
-export const getBlogsByTag = tag => axios.get(`/api/article/blog?tag=${tag}`);
+export const getBlogs = params => axios.get(`/api/article/blog${createParameters(params)}`);
 export const getBlog = id => axios.get(`/api/article/blog/${id}`);
 
 // Journeys

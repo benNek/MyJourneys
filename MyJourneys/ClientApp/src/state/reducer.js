@@ -25,6 +25,11 @@ const Reducer = (state, action) => {
         ...state,
         blogs: action.payload
       };
+    case 'LOAD_BLOGS':
+      return {
+        ...state,
+        blogs: [...state.blogs, ...action.payload]
+      };
     default:
       return state;
   }

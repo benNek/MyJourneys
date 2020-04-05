@@ -5,10 +5,9 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Editor from "rich-markdown-editor";
-import _ from "lodash";
 import Icon from "@material-ui/core/Icon";
 import {toast} from 'react-toastify';
-import {createBlog} from "../../../utils/networkFunctions";
+import {createBlog, getTags} from "../../../utils/networkFunctions";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -24,18 +23,16 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const tags = [
-  "Travel",
-  "Spain",
-  "Lithuania",
-  "Dining"
-];
-
 export default function BlogForm() {
   const classes = useStyles();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [tags, setTags] = useState([]);
+
+  useEffect(() => {
+    getTags().then(res => setTags(res.data)).catch(err => console.error(err));
+  }, []);
   
   const editorRef = createRef();
 

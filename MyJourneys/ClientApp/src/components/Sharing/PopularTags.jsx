@@ -36,7 +36,7 @@ export default function PopularTags(props) {
           <Chip className={classes.tag} key={tag.tag}
                 avatar={<Avatar className={classes.avatar}>{tag.count}</Avatar>}
                 label={tag.tag}
-                color={activeTag === tag.tag ? 'secondary' : ''}
+                color={activeTag === tag.tag ? 'secondary' : undefined}
                 onClick={() => handleClick(tag.tag)}
                 variant="outlined"
           />

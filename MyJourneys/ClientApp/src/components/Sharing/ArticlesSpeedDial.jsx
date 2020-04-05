@@ -4,7 +4,7 @@ import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
 import SpeedDial from "@material-ui/lab/SpeedDial";
 import TimelineIcon from '@material-ui/icons/Timeline';
 import SubjectIcon from '@material-ui/icons/Subject';
-import {Redirect, useHistory} from "react-router";
+import {useHistory} from "react-router";
 
 export default function ArticlesSpeedDial() {
   const history = useHistory();

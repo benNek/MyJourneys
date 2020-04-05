@@ -1,6 +1,6 @@
 import React, {useContext, useEffect} from "react";
 import {Link} from "react-router-dom";
-import {getBlogs, getBlogsByTag, getPopularTags} from "../../utils/networkFunctions";
+import {getBlogs, getPopularTags} from "../../utils/networkFunctions";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
@@ -8,13 +8,17 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import {readingTime} from "../../utils/readingTime";
 import removeMd from "remove-markdown";
 import TextTruncate from "react-text-truncate";
-import {setActiveTag, setBlogs, setPopularTags} from "../../state/actions";
+import {loadBlogs, setActiveTag, setBlogs, setPopularTags} from "../../state/actions";
 import {Context} from "../../state/store";
 import ArticlesSpeedDial from "./ArticlesSpeedDial";
 import Divider from "@material-ui/core/Divider";
 import Chip from "@material-ui/core/Chip";
 import PopularTags from "./PopularTags";
 import {toast} from "react-toastify";
+import Button from "@material-ui/core/Button";
+
+const take = 6;
+let skip = 0;
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -69,11 +73,7 @@ export default function Articles() {
 
   useEffect(() => {
     if (!blogs.length) {
-      if (activeTag) {
-        getBlogsByTag(activeTag).then(res => setBlogs(dispatch, res.data)).catch(err => toast.error(err));
-      } else {
-        getBlogs().then(res => setBlogs(dispatch, res.data)).catch(err => toast.error(err));
-      }
+      getBlogs({tag: activeTag}).then(res => setBlogs(dispatch, res.data)).catch(err => toast.error(err));
     }
 
     if (!popularTags.length) {
@@ -82,13 +82,19 @@ export default function Articles() {
   }, [dispatch]);
 
   const handleTagClick = tag => {
+    skip = 0;
     if (activeTag === tag) {
       setActiveTag(dispatch, '');
       getBlogs().then(res => setBlogs(dispatch, res.data)).catch(err => toast.error(err));
       return;
     }
     setActiveTag(dispatch, tag);
-    getBlogsByTag(tag).then(res => setBlogs(dispatch, res.data)).catch(err => toast.error(err));
+    getBlogs({tag}).then(res => setBlogs(dispatch, res.data)).catch(err => toast.error(err));
+  };
+
+  const handleLoadMoreClick = () => {
+    skip += take;
+    getBlogs({tag: activeTag, skip, take}).then(res => loadBlogs(dispatch, res.data)).catch(err => toast.error(err));
   };
 
   const renderBlogs = () => {
@@ -132,7 +138,7 @@ export default function Articles() {
             key={tag}
             className={classes.tag}
             variant="outlined"
-            color={activeTag === tag ? 'primary' :''}
+            color={activeTag === tag ? 'primary' : undefined}
             size="small"
             label={tag}
             onClick={() => handleTagClick(tag)}
@@ -151,6 +157,8 @@ export default function Articles() {
       <div className={classes.container}>
         <div className={classes.blogs}>
           {renderBlogs()}
+          {blogs.length > 0 && skip < blogs.length &&
+          <Button onClick={handleLoadMoreClick} fullWidth variant="outlined" color="primary">Load more</Button>}
         </div>
         <div className={classes.popularTags}>
           <PopularTags activeTag={activeTag} tags={popularTags} handleClick={handleTagClick}/>

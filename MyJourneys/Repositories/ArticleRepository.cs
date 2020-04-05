@@ -33,7 +33,7 @@ namespace MyJourneys.Repositories
             }).FirstOrDefault();
         }
 
-        public List<BlogViewModel> GetBlogs()
+        public List<BlogViewModel> GetBlogs(int skip, int take)
         {
             return _context.Blogs.Select(blog => new BlogViewModel
             {
@@ -43,10 +43,10 @@ namespace MyJourneys.Repositories
                 Text = blog.Text,
                 Tags = blog.BlogTags.Select(tag => tag.ArticleTag.Tag).ToList(),
                 CreateDate = blog.CreateDate
-            }).ToList();
+            }).Skip(skip).Take(take).ToList();
         }
 
-        public List<BlogViewModel> GetBlogsByTag(string tagName)
+        public List<BlogViewModel> GetBlogsByTag(string tagName, int skip, int take)
         {
             return _context.Blogs
                 .Where(blog => blog.BlogTags.Any(blogTag => blogTag.ArticleTag.Tag.Equals(tagName)))
@@ -58,7 +58,7 @@ namespace MyJourneys.Repositories
                     Text = blog.Text,
                     Tags = blog.BlogTags.Select(tag => tag.ArticleTag.Tag).ToList(),
                     CreateDate = blog.CreateDate
-                }).ToList();
+                }).Skip(skip).Take(take).ToList();
         }
 
         public void AddBlog(string userId, BlogCreationViewModel model)
@@ -106,6 +106,11 @@ namespace MyJourneys.Repositories
             }
 
             return articleTag;
+        }
+
+        public List<string> GetTags()
+        {
+            return _context.ArticleTags.Select(tag => tag.Tag).ToList();
         }
 
         public List<PopularTagViewModel> GetPopularTags()

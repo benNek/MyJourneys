@@ -27,13 +27,13 @@ namespace MyJourneys.Controllers
         }
 
         [HttpGet("blog")]
-        public IEnumerable<BlogViewModel> Get([FromQuery] string tag)
+        public IEnumerable<BlogViewModel> Get([FromQuery] string tag, [FromQuery] int skip = 0, [FromQuery] int take = 6)
         {
             if (tag != null)
             {
-                return _articleRepository.GetBlogsByTag(tag);
+                return _articleRepository.GetBlogsByTag(tag, skip, take);
             }
-            return _articleRepository.GetBlogs();
+            return _articleRepository.GetBlogs(skip, take);
         }
 
         [HttpGet("blog/{id}")]
@@ -41,8 +41,14 @@ namespace MyJourneys.Controllers
         {
             return _articleRepository.GetBlog(id);
         }
-
+        
         [HttpGet("tags")]
+        public IEnumerable<string> GetTags()
+        {
+            return _articleRepository.GetTags();
+        }
+
+        [HttpGet("tags/popular")]
         public IEnumerable<PopularTagViewModel> GetPopularTags()
         {
             return _articleRepository.GetPopularTags();
