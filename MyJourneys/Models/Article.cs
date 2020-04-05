@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyJourneys.Models
 {
-    public class Blog
+    public class Article
     {
         public int Id { get; set; }
         public string AuthorId { get; set; }
@@ -14,6 +14,6 @@ namespace MyJourneys.Models
         public DateTime ModifyDate { get; set; }
 
         [ForeignKey("AuthorId")] public virtual User Author { get; set; }
-        public virtual ICollection<BlogTags> BlogTags { get; set; }
+        public virtual ICollection<ArticleTags> ArticleTags { get; set; }
     }
 }

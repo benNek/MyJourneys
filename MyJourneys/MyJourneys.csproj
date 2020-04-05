@@ -39,10 +39,10 @@
         <Content Include="ClientApp\src\components\Retrospective\Retrospective.css" />
         <Content Include="ClientApp\src\components\Retrospective\RetrospectiveMap.jsx" />
         <Content Include="ClientApp\src\components\Retrospective\Retrospective.jsx" />
+        <Content Include="ClientApp\src\components\Sharing\ArticlePreview.jsx" />
         <Content Include="ClientApp\src\components\Sharing\Articles.jsx" />
-        <Content Include="ClientApp\src\components\Sharing\ArticlesSpeedDial.jsx" />
-        <Content Include="ClientApp\src\components\Sharing\Blog.jsx" />
-        <Content Include="ClientApp\src\components\Sharing\Forms\BlogForm.jsx" />
+        <Content Include="ClientApp\src\components\Sharing\Article.jsx" />
+        <Content Include="ClientApp\src\components\Sharing\ArticleForm.jsx" />
         <Content Include="ClientApp\src\components\Sharing\PopularTags.jsx" />
         <Content Include="ClientApp\src\state\actions.js" />
         <Content Include="ClientApp\src\state\reducer.js" />

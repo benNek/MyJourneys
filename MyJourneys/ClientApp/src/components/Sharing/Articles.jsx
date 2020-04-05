@@ -1,21 +1,17 @@
 import React, {useContext, useEffect} from "react";
-import {Link} from "react-router-dom";
-import {getBlogs, getPopularTags} from "../../utils/networkFunctions";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
+import {getArticles, getPopularTags} from "../../utils/networkFunctions";
 import Typography from "@material-ui/core/Typography";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {readingTime} from "../../utils/readingTime";
-import removeMd from "remove-markdown";
-import TextTruncate from "react-text-truncate";
-import {loadBlogs, setActiveTag, setBlogs, setPopularTags} from "../../state/actions";
+import {loadArticles, setActiveTag, setArticles, setPopularTags} from "../../state/actions";
 import {Context} from "../../state/store";
-import ArticlesSpeedDial from "./ArticlesSpeedDial";
 import Divider from "@material-ui/core/Divider";
-import Chip from "@material-ui/core/Chip";
 import PopularTags from "./PopularTags";
 import {toast} from "react-toastify";
 import Button from "@material-ui/core/Button";
+import Fab from "@material-ui/core/Fab";
+import SubjectIcon from '@material-ui/icons/Subject';
+import {useHistory} from "react-router";
+import ArticlePreview from "./ArticlePreview";
 
 const take = 6;
 let skip = 0;
@@ -28,7 +24,7 @@ const useStyles = makeStyles(theme => ({
       flexDirection: 'row'
     },
   },
-  blogs: {
+  articles: {
     flexBasis: '70%'
   },
   popularTags: {
@@ -38,42 +34,18 @@ const useStyles = makeStyles(theme => ({
       marginBottom: 0,
       marginLeft: '18px',
     },
-  },
-  card: {
-    marginBottom: '12px'
-  },
-  blogInfo: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'baseline',
-    fontWeight: 300,
-    marginBottom: '8px',
-    opacity: .6
-  },
-  heading: {
-    marginBottom: '12px'
-  },
-  tags: {
-    marginTop: '-8px',
-    marginBottom: '12px'
-  },
-  tag: {
-    marginRight: '6px'
-  },
-  readMore: {
-    display: 'inline-block',
-    marginTop: '12px'
   }
 }));
 
 export default function Articles() {
   const classes = useStyles();
+  const history = useHistory();
   const [state, dispatch] = useContext(Context);
-  const {activeTag, popularTags, blogs} = state;
+  const {activeTag, popularTags, articles} = state;
 
   useEffect(() => {
-    if (!blogs.length) {
-      getBlogs({tag: activeTag}).then(res => setBlogs(dispatch, res.data)).catch(err => toast.error(err));
+    if (!articles.length) {
+      getArticles({tag: activeTag}).then(res => setArticles(dispatch, res.data)).catch(err => toast.error(err));
     }
 
     if (!popularTags.length) {
@@ -85,67 +57,28 @@ export default function Articles() {
     skip = 0;
     if (activeTag === tag) {
       setActiveTag(dispatch, '');
-      getBlogs().then(res => setBlogs(dispatch, res.data)).catch(err => toast.error(err));
+      getArticles().then(res => setArticles(dispatch, res.data)).catch(err => toast.error(err));
       return;
     }
     setActiveTag(dispatch, tag);
-    getBlogs({tag}).then(res => setBlogs(dispatch, res.data)).catch(err => toast.error(err));
+    getArticles({tag}).then(res => setArticles(dispatch, res.data)).catch(err => toast.error(err));
   };
 
   const handleLoadMoreClick = () => {
     skip += take;
-    getBlogs({tag: activeTag, skip, take}).then(res => loadBlogs(dispatch, res.data)).catch(err => toast.error(err));
+    getArticles({
+      tag: activeTag, skip, take
+    }).then(res => loadArticles(dispatch, res.data)).catch(err => toast.error(err));
   };
 
-  const renderBlogs = () => {
-    if (!blogs.length) {
+  const renderArticles = () => {
+    if (!articles.length) {
       return;
     }
 
-    return blogs.map(blog =>
-      <Card className={classes.card} key={blog.id} variant="outlined">
-        <CardContent>
-          <Typography className={classes.blogInfo} variant="subtitle1">
-            <span>Written by {blog.authorName}</span>
-            <span>{readingTime(blog.text).text}</span>
-          </Typography>
-          <Typography className={classes.heading} variant="h5" component="h2">
-            {blog.title}
-          </Typography>
-          {renderTags(blog.tags)}
-          <Typography variant="body2">
-            <TextTruncate
-              line={2}
-              element="span"
-              truncateText="…"
-              text={removeMd(blog.text).replace('\\', '')}
-            />
-          </Typography>
-          <Link className={classes.readMore} to={`/articles/${blog.id}`}>Continue reading</Link>
-        </CardContent>
-      </Card>
+    return articles.map(article =>
+      <ArticlePreview key={article.id} article={article} activeTag={activeTag} handleTagClick={handleTagClick} />
     );
-  };
-
-  const renderTags = tags => {
-    if (!tags.length) {
-      return;
-    }
-    return (
-      <div className={classes.tags}>
-        {tags.map(tag =>
-          <Chip
-            key={tag}
-            className={classes.tag}
-            variant="outlined"
-            color={activeTag === tag ? 'primary' : undefined}
-            size="small"
-            label={tag}
-            onClick={() => handleTagClick(tag)}
-          />
-        )}
-      </div>
-    )
   };
 
   return (
@@ -154,17 +87,33 @@ export default function Articles() {
         Articles
       </Typography>
       <Divider/>
-      <div className={classes.container}>
-        <div className={classes.blogs}>
-          {renderBlogs()}
-          {blogs.length > 0 && skip < blogs.length &&
-          <Button onClick={handleLoadMoreClick} fullWidth variant="outlined" color="primary">Load more</Button>}
-        </div>
-        <div className={classes.popularTags}>
-          <PopularTags activeTag={activeTag} tags={popularTags} handleClick={handleTagClick}/>
-        </div>
-      </div>
-      <ArticlesSpeedDial/>
+      {
+        articles.length > 0 ?
+          (
+            <div className={classes.container}>
+              <div className={classes.articles}>
+                {renderArticles()}
+                {articles.length > 0 && articles.length === take + skip &&
+                <Button onClick={handleLoadMoreClick} fullWidth variant="outlined" color="primary">Load more</Button>}
+              </div>
+              <div className={classes.popularTags}>
+                <PopularTags activeTag={activeTag} tags={popularTags} handleClick={handleTagClick}/>
+              </div>
+            </div>
+          )
+          :
+          (
+            <Typography variant='body1'>
+              No articles have been added yet.
+            </Typography>
+          )
+      }
+      <Fab onClick={() => history.push('/article')}
+           aria-label="add article"
+           color="primary"
+           className="FloatingActionButton">
+        <SubjectIcon/>
+      </Fab>
     </React.Fragment>
   )
 }

@@ -20,50 +20,53 @@ namespace MyJourneys.Repositories
             _userRepository = userRepository;
         }
 
-        public BlogViewModel GetBlog(int id)
+        public ArticleViewModel GetArticle(int id)
         {
-            return _context.Blogs.Where(blog => blog.Id == id).Select(blog => new BlogViewModel
-            {
-                Id = blog.Id,
-                AuthorName = _userRepository.GetUserById(blog.AuthorId).UserName,
-                Title = blog.Title,
-                Text = blog.Text,
-                Tags = blog.BlogTags.Select(tag => tag.ArticleTag.Tag).ToList(),
-                CreateDate = blog.CreateDate
-            }).FirstOrDefault();
-        }
-
-        public List<BlogViewModel> GetBlogs(int skip, int take)
-        {
-            return _context.Blogs.Select(blog => new BlogViewModel
-            {
-                Id = blog.Id,
-                AuthorName = _userRepository.GetUserById(blog.AuthorId).UserName,
-                Title = blog.Title,
-                Text = blog.Text,
-                Tags = blog.BlogTags.Select(tag => tag.ArticleTag.Tag).ToList(),
-                CreateDate = blog.CreateDate
-            }).Skip(skip).Take(take).ToList();
-        }
-
-        public List<BlogViewModel> GetBlogsByTag(string tagName, int skip, int take)
-        {
-            return _context.Blogs
-                .Where(blog => blog.BlogTags.Any(blogTag => blogTag.ArticleTag.Tag.Equals(tagName)))
-                .Select(blog => new BlogViewModel
+            return _context.Articles
+                .Where(article => article.Id == id)
+                .Select(article => new ArticleViewModel
                 {
-                    Id = blog.Id,
-                    AuthorName = _userRepository.GetUserById(blog.AuthorId).UserName,
-                    Title = blog.Title,
-                    Text = blog.Text,
-                    Tags = blog.BlogTags.Select(tag => tag.ArticleTag.Tag).ToList(),
-                    CreateDate = blog.CreateDate
+                    Id = article.Id,
+                    AuthorName = article.Author.UserName,
+                    Title = article.Title,
+                    Text = article.Text,
+                    Tags = article.ArticleTags.Select(tag => tag.Tag.Name).ToList(),
+                    CreateDate = article.CreateDate
+                }).FirstOrDefault();
+        }
+
+        public List<ArticleViewModel> GetArticles(int skip, int take)
+        {
+            return _context.Articles
+                .Select(article => new ArticleViewModel
+                {
+                    Id = article.Id,
+                    AuthorName = article.Author.UserName,
+                    Title = article.Title,
+                    Text = article.Text,
+                    Tags = article.ArticleTags.Select(tag => tag.Tag.Name).ToList(),
+                    CreateDate = article.CreateDate
                 }).Skip(skip).Take(take).ToList();
         }
 
-        public void AddBlog(string userId, BlogCreationViewModel model)
+        public List<ArticleViewModel> GetArticlesByTag(string tagName, int skip, int take)
         {
-            var blog = new Blog
+            return _context.Articles
+                .Where(article => article.ArticleTags.Any(articleTag => articleTag.Tag.Name.Equals(tagName)))
+                .Select(article => new ArticleViewModel
+                {
+                    Id = article.Id,
+                    AuthorName = _userRepository.GetUserById(article.AuthorId).UserName,
+                    Title = article.Title,
+                    Text = article.Text,
+                    Tags = article.ArticleTags.Select(tag => tag.Tag.Name).ToList(),
+                    CreateDate = article.CreateDate
+                }).Skip(skip).Take(take).ToList();
+        }
+
+        public void AddArticle(string userId, ArticleFormViewModel model)
+        {
+            var article = new Article
             {
                 Title = model.Title,
                 Text = model.Text,
@@ -71,36 +74,36 @@ namespace MyJourneys.Repositories
                 CreateDate = DateTime.UtcNow,
                 ModifyDate = DateTime.UtcNow
             };
-            _context.Blogs.Add(blog);
+            _context.Articles.Add(article);
             _context.SaveChanges();
-            AddBlogTags(blog.Id, model.Tags);
+            AddTagsToArticle(article.Id, model.Tags);
         }
 
-        public void AddBlogTags(int blogId, List<string> tags)
+        public void AddTagsToArticle(int articleId, List<string> tags)
         {
             foreach (string tag in tags)
             {
                 var tagId = GetTag(tag).Id;
-                _context.BlogTags.Add(new BlogTags
+                _context.ArticleTags.Add(new ArticleTags
                 {
                     TagId = tagId,
-                    BlogId = blogId
+                    ArticleId = articleId
                 });
             }
 
             _context.SaveChanges();
         }
 
-        public ArticleTag GetTag(string tagName)
+        public Tag GetTag(string tagName)
         {
-            var articleTag = _context.ArticleTags.FirstOrDefault(tag => tag.Tag.ToLower().Equals(tagName.ToLower()));
+            var articleTag = _context.Tags.FirstOrDefault(tag => tag.Name.ToLower().Equals(tagName.ToLower()));
             if (articleTag == null)
             {
-                var newTag = new ArticleTag
+                var newTag = new Tag
                 {
-                    Tag = tagName
+                    Name = tagName
                 };
-                _context.ArticleTags.Add(newTag);
+                _context.Tags.Add(newTag);
                 _context.SaveChanges();
                 return newTag;
             }
@@ -110,15 +113,15 @@ namespace MyJourneys.Repositories
 
         public List<string> GetTags()
         {
-            return _context.ArticleTags.Select(tag => tag.Tag).ToList();
+            return _context.Tags.Select(tag => tag.Name).ToList();
         }
 
         public List<PopularTagViewModel> GetPopularTags()
         {
-            return _context.ArticleTags.Select(tag => new PopularTagViewModel
+            return _context.Tags.Select(tag => new PopularTagViewModel
                 {
-                    Tag = tag.Tag,
-                    Count = tag.BlogTags.Count
+                    Tag = tag.Name,
+                    Count = tag.ArticleTags.Count
                 })
                 .OrderByDescending(tag => tag.Count)
                 .Take(PopularLimit)

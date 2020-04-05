@@ -25,6 +25,12 @@ const useStyles = makeStyles(theme => ({
 export default function PopularTags(props) {
   const classes = useStyles();
   const {activeTag, tags, handleClick} = props;
+  
+  if (!tags.length) {
+    return (
+      <React.Fragment/>
+    );
+  }
 
   return (
     <React.Fragment>

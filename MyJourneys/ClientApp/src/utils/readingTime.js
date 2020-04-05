@@ -13,10 +13,10 @@ export function readingTime(text, options) {
   options = options || {};
 
   // use default values if necessary
-  options.wordsPerMinute = options.wordsPerMinute || 200
+  options.wordsPerMinute = options.wordsPerMinute || 200;
 
   // use provided function if available
-  wordBound = options.wordBound || ansiWordBound
+  wordBound = options.wordBound || ansiWordBound;
 
   // fetch bounds
   while (wordBound(text[start])) start++;
@@ -30,9 +30,9 @@ export function readingTime(text, options) {
   }
 
   // reading time stats
-  var minutes = words / options.wordsPerMinute
-  var time = minutes * 60 * 1000
-  var displayed = Math.ceil(minutes.toFixed(2))
+  const minutes = words / options.wordsPerMinute
+  const time = minutes * 60 * 1000
+  const displayed = Math.ceil(minutes.toFixed(2))
 
   return {
     text: displayed + ' min read',

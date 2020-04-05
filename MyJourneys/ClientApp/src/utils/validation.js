@@ -47,7 +47,7 @@ export const noteValidation = Yup.object().shape({
 
 // Sharing
 
-export const blogValidation = Yup.object().shape({
+export const articleValidation = Yup.object().shape({
   title: Yup.string().required('Title is required'),
   text: Yup.string().required('Text is required')
 });

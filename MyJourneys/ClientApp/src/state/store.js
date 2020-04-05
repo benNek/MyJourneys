@@ -6,7 +6,7 @@ const initialState = {
   journeys: [],
   popularTags: [],
   activeTag: '',
-  blogs: []
+  articles: []
 };
 
 const Store = ({children}) => {

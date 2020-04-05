@@ -17,18 +17,20 @@ namespace MyJourneys.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IJourneyService _journeyService;
 
-        public JourneyController(IJourneyRepository journeyRepository, IUserRepository userRepository, IJourneyService journeyService)
+        public JourneyController(IJourneyRepository journeyRepository, IUserRepository userRepository,
+            IJourneyService journeyService)
         {
             _journeyRepository = journeyRepository;
             _userRepository = userRepository;
             _journeyService = journeyService;
         }
-        
+
         [HttpPost]
         [Authorize]
         public IActionResult Create([FromBody] JourneyCreationViewModel model)
         {
-            if (model.StartDate < Now)
+            if (model.StartDate.Year < Now.Year ||
+                (model.StartDate.Year >= Now.Year && model.StartDate.DayOfYear < Now.DayOfYear))
             {
                 return StatusCode(422, "Start date must not be in the past");
             }
@@ -73,6 +75,7 @@ namespace MyJourneys.Controllers
             {
                 return StatusCode(403, $"Journey {model.JourneyId} doesn't belong to user");
             }
+
             if (model.Date < Now)
             {
                 return StatusCode(422, "Date must not be in the past");
@@ -91,6 +94,7 @@ namespace MyJourneys.Controllers
             {
                 return StatusCode(403, $"Journey {model.JourneyId} doesn't belong to user");
             }
+
             if (model.Date < Now)
             {
                 return StatusCode(422, "Date must not be in the past");
@@ -109,6 +113,7 @@ namespace MyJourneys.Controllers
             {
                 return StatusCode(403, $"Journey {model.JourneyId} doesn't belong to user");
             }
+
             if (model.Date < Now)
             {
                 return StatusCode(422, "Date must not be in the past");
@@ -127,6 +132,7 @@ namespace MyJourneys.Controllers
             {
                 return StatusCode(403, $"Journey {model.JourneyId} doesn't belong to user");
             }
+
             if (model.Date < Now)
             {
                 return StatusCode(422, "Date must not be in the past");
@@ -135,7 +141,7 @@ namespace MyJourneys.Controllers
             _journeyRepository.AddEventItem(userId, model);
             return Ok("Event has been successfully added to the journey");
         }
-        
+
         [HttpPost("place")]
         [Authorize]
         public IActionResult AddPlace([FromBody] PlaceFormViewModel model)
@@ -145,10 +151,12 @@ namespace MyJourneys.Controllers
             {
                 return StatusCode(403, $"Journey {model.JourneyId} doesn't belong to user");
             }
+
             if (model.Latitude < -90 || model.Latitude > 90)
             {
                 return StatusCode(422, "Latitude must be between -90 and 90");
             }
+
             if (model.Longitude < -180 || model.Longitude > 180)
             {
                 return StatusCode(422, "Longitude must be between -180 and 180");
@@ -157,7 +165,7 @@ namespace MyJourneys.Controllers
             _journeyRepository.AddPlaceItem(userId, model);
             return Ok("Place has been successfully added to the journey");
         }
-        
+
         [HttpGet("{id}/places")]
         [Authorize]
         public IEnumerable<PlaceViewModel> GetPlaces(int id)
@@ -175,7 +183,7 @@ namespace MyJourneys.Controllers
             {
                 return StatusCode(403, $"Journey {id} doesn't belong to user");
             }
-            
+
             _journeyService.ReorderPlaces(userId, id);
             return Ok();
         }
@@ -188,7 +196,7 @@ namespace MyJourneys.Controllers
             _journeyRepository.AddNoteItem(userId, model);
             return Ok("Note has been successfully added");
         }
-        
+
         [HttpGet("{id}/notes")]
         [Authorize]
         public IEnumerable<NoteViewModel> GetNotes(int id)

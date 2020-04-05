@@ -20,15 +20,15 @@ const Reducer = (state, action) => {
         ...state,
         activeTag: action.payload
       };
-    case 'SET_BLOGS':
+    case 'SET_ARTICLES':
       return {
         ...state,
-        blogs: action.payload
+        articles: action.payload
       };
-    case 'LOAD_BLOGS':
+    case 'LOAD_ARTICLES':
       return {
         ...state,
-        blogs: [...state.blogs, ...action.payload]
+        articles: [...state.articles, ...action.payload]
       };
     default:
       return state;

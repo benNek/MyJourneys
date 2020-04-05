@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {useParams} from "react-router";
-import {getBlog} from "../../utils/networkFunctions";
+import {getArticle} from "../../utils/networkFunctions";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
@@ -34,17 +34,17 @@ const useStyles = makeStyles({
   }
 });
 
-export default function Blog() {
+export default function Article() {
   const classes = useStyles();
-  const [blog, setBlog] = useState(undefined);
+  const [article, setArticle] = useState(undefined);
 
   let {id} = useParams();
 
   useEffect(() => {
-    getBlog(id).then(res => setBlog(res.data)).catch(err => console.log(err));
+    getArticle(id).then(res => setArticle(res.data)).catch(err => console.log(err));
   }, []);
 
-  if (!blog) {
+  if (!article) {
     return (
       <React.Fragment/>
     )
@@ -53,16 +53,16 @@ export default function Blog() {
     <Card variant="outlined">
       <CardContent>
         <Typography className={classes.heading} variant="h3" component="h1">
-          {blog.title}
+          {article.title}
         </Typography>
         <Divider className={classes.divider}/>
         <Editor
           readOnly={true}
-          defaultValue={blog.text}
+          defaultValue={article.text}
         />
         <Divider className={classes.divider}/>
         <Typography className={classes.dateSocialBlock} variant="caption">
-          {moment(blog.createDate, 'YYYY-MM-DD').fromNow()}
+          {moment(article.createDate, 'YYYY-MM-DD').fromNow()}
           <span className={classes.social}>
             <EmailShareButton className={classes.socialItem} url={window.location.href}>
               <EmailIcon size={24} round={true} bgStyle={{fill: '#484848'}}/>

@@ -8,9 +8,9 @@ namespace MyJourneys.Data
 {
     public class TravelContext : IdentityDbContext<User>
     {
-        public DbSet<ArticleTag> ArticleTags { get; set; }
-        public DbSet<Blog> Blogs { get; set; }
-        public DbSet<BlogTags> BlogTags { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<Article> Articles { get; set; }
+        public DbSet<ArticleTags> ArticleTags { get; set; }
         public DbSet<Journey> Journeys { get; set; }
         public DbSet<FlightItem> FlightItems { get; set; }
         public DbSet<HotelItem> HotelItems { get; set; }

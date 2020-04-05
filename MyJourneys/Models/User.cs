@@ -5,7 +5,7 @@ namespace MyJourneys.Models
 {
     public class User : IdentityUser
     {
-        public ICollection<Blog> Blogs { get; set; }
+        public ICollection<Article> Articles { get; set; }
         public ICollection<Journey> Journeys { get; set; }
         public ICollection<EventItem> EventItems { get; set; }
         public ICollection<FlightItem> FlightItems { get; set; }

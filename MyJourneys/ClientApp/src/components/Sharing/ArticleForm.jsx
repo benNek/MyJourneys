@@ -7,14 +7,14 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import Editor from "rich-markdown-editor";
 import Icon from "@material-ui/core/Icon";
 import {toast} from 'react-toastify';
-import {createBlog, getTags} from "../../../utils/networkFunctions";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Chip from "@material-ui/core/Chip";
-import {blogValidation} from "../../../utils/validation";
 import Popover from "@material-ui/core/Popover";
 import removeMd from "remove-markdown";
+import {createArticle, getTags} from "../../utils/networkFunctions";
+import {articleValidation} from "../../utils/validation";
 
 const useStyles = makeStyles(theme => ({
   submitButton: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function BlogForm() {
+export default function ArticleForm() {
   const classes = useStyles();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,12 +47,12 @@ export default function BlogForm() {
   return (
     <React.Fragment>
       <Typography component='h1' variant='h3'>
-        Add your own blog
+        Add your own article
       </Typography>
       <Divider/>
       <Formik
         initialValues={{title: '', tags: [], text: ' '}}
-        validationSchema={blogValidation}
+        validationSchema={articleValidation}
         onSubmit={async (values, actions) => {
           if (!isSubmitting) {
             return;
@@ -65,7 +65,7 @@ export default function BlogForm() {
           }
           
           actions.setSubmitting(true);
-          await createBlog(values)
+          await createArticle(values)
             .then(response => {
               toast.success(response.data);
             })

@@ -17,29 +17,29 @@ namespace MyJourneys.Controllers
             _articleRepository = articleRepository;
         }
 
-        [HttpPost("blog")]
+        [HttpPost]
         [Authorize]
-        public IActionResult Create([FromBody] BlogCreationViewModel model)
+        public IActionResult Create([FromBody] ArticleFormViewModel model)
         {
             var userId = GetUserId(User);
-            _articleRepository.AddBlog(userId, model);
-            return Ok("Blog has been created successfully");
+            _articleRepository.AddArticle(userId, model);
+            return Ok("Article has been created successfully");
         }
 
-        [HttpGet("blog")]
-        public IEnumerable<BlogViewModel> Get([FromQuery] string tag, [FromQuery] int skip = 0, [FromQuery] int take = 6)
+        [HttpGet]
+        public IEnumerable<ArticleViewModel> Get([FromQuery] string tag, [FromQuery] int skip = 0, [FromQuery] int take = 6)
         {
             if (tag != null)
             {
-                return _articleRepository.GetBlogsByTag(tag, skip, take);
+                return _articleRepository.GetArticlesByTag(tag, skip, take);
             }
-            return _articleRepository.GetBlogs(skip, take);
+            return _articleRepository.GetArticles(skip, take);
         }
 
-        [HttpGet("blog/{id}")]
-        public BlogViewModel GetBlog(int id)
+        [HttpGet("{id}")]
+        public ArticleViewModel GetArticle(int id)
         {
-            return _articleRepository.GetBlog(id);
+            return _articleRepository.GetArticle(id);
         }
         
         [HttpGet("tags")]

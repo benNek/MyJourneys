@@ -22,9 +22,9 @@ export const logout = () => axios.get('/api/user/logout');
 // Sharing
 export const getTags = () => axios.get('/api/article/tags');
 export const getPopularTags = () => axios.get('/api/article/tags/popular');
-export const createBlog = data => axios.post('/api/article/blog', data);
-export const getBlogs = params => axios.get(`/api/article/blog${createParameters(params)}`);
-export const getBlog = id => axios.get(`/api/article/blog/${id}`);
+export const createArticle = data => axios.post('/api/article', data);
+export const getArticles = params => axios.get(`/api/article${createParameters(params)}`);
+export const getArticle = id => axios.get(`/api/article/${id}`);
 
 // Journeys
 export const createJourney = data => axios.post('/api/journey', data);
