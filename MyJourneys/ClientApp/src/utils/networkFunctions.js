@@ -20,7 +20,7 @@ export const login = data => axios.post('/api/user/login', data);
 export const logout = () => axios.get('/api/user/logout');
 
 // Overview
-export const uploadImage = (data) => axios.post('/api/overview', data, {
+export const uploadPhoto = (data) => axios.post('/api/overview', data, {
   'Content-Type': 'multipart/form-data'
 });
 

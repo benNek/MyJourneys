@@ -7,7 +7,7 @@ namespace MyJourneys.Controllers
     public class OverviewController : Controller
     {
         [HttpPost]
-        public IActionResult UploadImage([FromForm] IFormFile file)
+        public IActionResult UploadPhoto([FromForm] IFormFile[] file)
         {
             return Ok("not implemneted");
         }
