@@ -36,9 +36,10 @@
         <Content Include="ClientApp\src\components\Planner\Notes.jsx" />
         <Content Include="ClientApp\src\components\Planner\Places.jsx" />
         <Content Include="ClientApp\src\components\Planner\ReservationItemCard.jsx" />
-        <Content Include="ClientApp\src\components\Retrospective\Retrospective.css" />
-        <Content Include="ClientApp\src\components\Retrospective\RetrospectiveMap.jsx" />
-        <Content Include="ClientApp\src\components\Retrospective\Retrospective.jsx" />
+        <Content Include="ClientApp\src\components\Overview\Retrospective.css" />
+        <Content Include="ClientApp\src\components\Overview\RetrospectiveMap.jsx" />
+        <Content Include="ClientApp\src\components\Overview\Retrospective.jsx" />
+        <Content Include="ClientApp\src\components\Overview\UploadPhotosPage.jsx" />
         <Content Include="ClientApp\src\components\Sharing\Article.css" />
         <Content Include="ClientApp\src\components\Sharing\ArticlePreview.jsx" />
         <Content Include="ClientApp\src\components\Sharing\Articles.jsx" />

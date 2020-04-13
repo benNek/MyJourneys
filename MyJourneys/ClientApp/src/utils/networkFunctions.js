@@ -19,6 +19,11 @@ export const register = data => axios.post('/api/user/register', data);
 export const login = data => axios.post('/api/user/login', data);
 export const logout = () => axios.get('/api/user/logout');
 
+// Overview
+export const uploadImage = (data) => axios.post('/api/overview', data, {
+  'Content-Type': 'multipart/form-data'
+});
+
 // Sharing
 export const getTags = () => axios.get('/api/article/tags');
 export const getPopularTags = () => axios.get('/api/article/tags/popular');

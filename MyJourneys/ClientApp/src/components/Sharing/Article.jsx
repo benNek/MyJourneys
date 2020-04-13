@@ -7,7 +7,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Editor from "rich-markdown-editor";
 import Divider from "@material-ui/core/Divider";
-import moment, {utc} from "moment";
+import {utc} from "moment";
 import {
   EmailIcon,
   EmailShareButton,

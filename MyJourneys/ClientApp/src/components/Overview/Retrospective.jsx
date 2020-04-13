@@ -6,14 +6,17 @@ import Button from "@material-ui/core/Button";
 import {useDropzone} from "react-dropzone";
 import EXIF from "exif-js/exif";
 import {convertDMSToDD} from "../../utils/mapUtils";
+import Fab from "@material-ui/core/Fab";
+import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
+import {useHistory} from "react-router";
 
 export default function Retrospective() {
-
+  const history = useHistory();
   const [lat, setLat] = useState(42.361145);
   const [lon, setLon] = useState(-71.057083);
 
   const onDrop = useCallback(acceptedFiles => {
-    EXIF.getData(acceptedFiles[0], function() {
+    EXIF.getData(acceptedFiles[0], function () {
       var latDegree = this.exifdata.GPSLatitude[0].numerator;
       var latMinute = this.exifdata.GPSLatitude[1].numerator;
       var latSecond = this.exifdata.GPSLatitude[2].numerator / this.exifdata.GPSLatitude[2].denominator;
@@ -33,9 +36,8 @@ export default function Retrospective() {
       console.log(latFinal);
     });
     // Do something with the files
-  }, [])
-  const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
-
+  }, []);
+  const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop});
 
   return (
     <React.Fragment>
@@ -57,6 +59,10 @@ export default function Retrospective() {
         </div>
         <RetrospectiveMap lon={lon} lat={lat}/>
       </div>
+      <Fab onClick={() => history.push('/upload')} aria-label="add photos" color="primary"
+           className="FloatingActionButton">
+        <AddPhotoAlternateIcon/>
+      </Fab>
     </React.Fragment>
   )
 }
