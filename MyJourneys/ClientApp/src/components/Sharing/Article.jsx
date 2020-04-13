@@ -7,7 +7,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Editor from "rich-markdown-editor";
 import Divider from "@material-ui/core/Divider";
-import moment from "moment";
+import moment, {utc} from "moment";
 import {
   EmailIcon,
   EmailShareButton,
@@ -103,7 +103,7 @@ export default function Article() {
           </div>
           <span className={classes.social}>
             <Typography variant="caption" className={classes.date}>
-              {moment(article.createDate, 'YYYY-MM-DD').fromNow()}
+              {utc(article.createDate).fromNow()}
             </Typography>
             <EmailShareButton className={classes.socialItem} url={window.location.href}>
               <EmailIcon size={24} round={true} bgStyle={{fill: '#484848'}}/>

@@ -96,7 +96,6 @@ export default function Articles() {
           </Button>
         </Typography>
       )
-        ;
     }
 
     return articles.map(article =>

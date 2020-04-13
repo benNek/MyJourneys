@@ -58,10 +58,11 @@ namespace MyJourneys.Repositories
                 Tags = article.ArticleTags.Select(tag => tag.Tag.Name).ToList(),
                 LikesCount = article.ArticleLikes.Count,
                 CreateDate = article.CreateDate
-            });
+            }).OrderByDescending(article => article.CreateDate);
             if (!sortType.Equals(ArticleSortType.Feed))
             {
-                viewModelQuery = viewModelQuery.OrderByDescending(a => a.LikesCount);
+                viewModelQuery = viewModelQuery.OrderByDescending(a => a.LikesCount)
+                    .ThenByDescending(article => article.CreateDate);
             }
 
             return viewModelQuery.Skip(skip).Take(take).ToList();
