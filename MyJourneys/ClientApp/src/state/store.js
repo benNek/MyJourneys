@@ -6,6 +6,7 @@ const initialState = {
   journeys: [],
   popularTags: [],
   activeTag: '',
+  sortType: 'feed',
   articles: []
 };
 

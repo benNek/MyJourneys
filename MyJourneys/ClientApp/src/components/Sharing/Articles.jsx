@@ -2,7 +2,7 @@ import React, {useContext, useEffect} from "react";
 import {getArticles, getPopularTags} from "../../utils/networkFunctions";
 import Typography from "@material-ui/core/Typography";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {loadArticles, setActiveTag, setArticles, setPopularTags} from "../../state/actions";
+import {loadArticles, setActiveTag, setArticles, setPopularTags, setSortType} from "../../state/actions";
 import {Context} from "../../state/store";
 import Divider from "@material-ui/core/Divider";
 import PopularTags from "./PopularTags";
@@ -12,6 +12,7 @@ import Fab from "@material-ui/core/Fab";
 import SubjectIcon from '@material-ui/icons/Subject';
 import {useHistory} from "react-router";
 import ArticlePreview from "./ArticlePreview";
+import Filters from "./Filters";
 
 const take = 6;
 let skip = 0;
@@ -24,16 +25,23 @@ const useStyles = makeStyles(theme => ({
       flexDirection: 'row'
     },
   },
+  sorts: {
+    marginBottom: '12px'
+  },
   articles: {
     flexBasis: '70%'
   },
-  popularTags: {
+  rightSection: {
     flexBasis: '30%',
     marginBottom: '6px',
     [theme.breakpoints.up('md')]: {
       marginBottom: 0,
       marginLeft: '18px',
     },
+  },
+  clearAllBtn: {
+    marginTop: '12px',
+    display: 'block'
   }
 }));
 
@@ -41,11 +49,14 @@ export default function Articles() {
   const classes = useStyles();
   const history = useHistory();
   const [state, dispatch] = useContext(Context);
-  const {activeTag, popularTags, articles} = state;
+  const {activeTag, sortType, popularTags, articles} = state;
 
   useEffect(() => {
     if (!articles.length) {
-      getArticles({tag: activeTag}).then(res => setArticles(dispatch, res.data)).catch(err => toast.error(err));
+      getArticles({
+        tag: activeTag,
+        sortType
+      }).then(res => setArticles(dispatch, res.data)).catch(err => toast.error(err));
     }
 
     if (!popularTags.length) {
@@ -56,12 +67,10 @@ export default function Articles() {
   const handleTagClick = tag => {
     skip = 0;
     if (activeTag === tag) {
-      setActiveTag(dispatch, '');
-      getArticles().then(res => setArticles(dispatch, res.data)).catch(err => toast.error(err));
-      return;
+      tag = '';
     }
     setActiveTag(dispatch, tag);
-    getArticles({tag}).then(res => setArticles(dispatch, res.data)).catch(err => toast.error(err));
+    getArticles({tag, sortType}).then(res => setArticles(dispatch, res.data)).catch(err => toast.error(err));
   };
 
   const handleLoadMoreClick = () => {
@@ -71,13 +80,27 @@ export default function Articles() {
     }).then(res => loadArticles(dispatch, res.data)).catch(err => toast.error(err));
   };
 
+  const handleSortTypeClick = (type) => {
+    setSortType(dispatch, type);
+    getArticles({tag: activeTag, sortType: type})
+      .then(res => setArticles(dispatch, res.data)).catch(err => toast.error(err));
+  };
+
   const renderArticles = () => {
     if (!articles.length) {
-      return;
+      return (
+        <Typography variant='body1'>
+          No articles found with selected filters.
+          <Button className={classes.clearAllBtn} variant="outlined" onClick={() => handleSortTypeClick('feed')} color="primary">
+            Clear filters
+          </Button>
+        </Typography>
+      )
+        ;
     }
 
     return articles.map(article =>
-      <ArticlePreview key={article.id} article={article} activeTag={activeTag} handleTagClick={handleTagClick} />
+      <ArticlePreview key={article.id} article={article} activeTag={activeTag} handleTagClick={handleTagClick}/>
     );
   };
 
@@ -88,15 +111,16 @@ export default function Articles() {
       </Typography>
       <Divider/>
       {
-        articles.length > 0 ?
+        articles.length > 0 || sortType !== 'feed' ?
           (
             <div className={classes.container}>
               <div className={classes.articles}>
+                <Filters activeFilter={sortType} handleClick={handleSortTypeClick}/>
                 {renderArticles()}
                 {articles.length > 0 && articles.length === take + skip &&
                 <Button onClick={handleLoadMoreClick} fullWidth variant="outlined" color="primary">Load more</Button>}
               </div>
-              <div className={classes.popularTags}>
+              <div className={classes.rightSection}>
                 <PopularTags activeTag={activeTag} tags={popularTags} handleClick={handleTagClick}/>
               </div>
             </div>

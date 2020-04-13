@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyJourneys.Enums;
 using MyJourneys.Models.ViewModels;
 using MyJourneys.Repositories;
 using static MyJourneys.Utils.AuthorizationUtils;
@@ -27,15 +28,11 @@ namespace MyJourneys.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ArticleViewModel> Get([FromQuery] string tag, [FromQuery] int skip = 0,
-            [FromQuery] int take = 6)
+        public IEnumerable<ArticleViewModel> Get([FromQuery] string tag, [FromQuery] string sortType,
+            [FromQuery] int skip = 0, [FromQuery] int take = 6)
         {
-            if (tag != null)
-            {
-                return _articleRepository.GetArticlesByTag(tag, skip, take);
-            }
-
-            return _articleRepository.GetArticles(skip, take);
+            var sort = GetSortType(sortType);
+            return  _articleRepository.GetArticles(tag, sort, skip, take);
         }
 
         [HttpGet("{id}")]
@@ -69,6 +66,17 @@ namespace MyJourneys.Controllers
         {
             var userId = GetUserId(User);
             return _articleRepository.HasLiked(userId, id);
+        }
+
+        private ArticleSortType GetSortType(string sortType)
+        {
+            return sortType switch
+            {
+                "weekly" => ArticleSortType.Weekly,
+                "monthly" => ArticleSortType.Monthly,
+                "all_time" => ArticleSortType.AllTime,
+                _ => ArticleSortType.Feed
+            };
         }
     }
 }

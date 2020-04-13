@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MyJourneys.Data;
+using MyJourneys.Enums;
 using MyJourneys.Models;
 using MyJourneys.Models.ViewModels;
 
@@ -36,35 +37,47 @@ namespace MyJourneys.Repositories
                 }).FirstOrDefault();
         }
 
-        public List<ArticleViewModel> GetArticles(int skip, int take)
+        public List<ArticleViewModel> GetArticles(string tagName, ArticleSortType sortType, int skip, int take)
         {
-            return _context.Articles
-                .Select(article => new ArticleViewModel
-                {
-                    Id = article.Id,
-                    AuthorName = article.Author.UserName,
-                    Title = article.Title,
-                    Text = article.Text,
-                    Tags = article.ArticleTags.Select(tag => tag.Tag.Name).ToList(),
-                    LikesCount = article.ArticleLikes.Count,
-                    CreateDate = article.CreateDate
-                }).Skip(skip).Take(take).ToList();
+            DateTime filterDate = GetMaxDate(sortType);
+            var query = _context.Articles
+                .Where(article => article.CreateDate >= filterDate);
+
+            if (tagName != null)
+            {
+                query = query.Where(article =>
+                    article.ArticleTags.Any(articleTag => articleTag.Tag.Name.Equals(tagName)));
+            }
+
+            var viewModelQuery = query.Select(article => new ArticleViewModel
+            {
+                Id = article.Id,
+                AuthorName = article.Author.UserName,
+                Title = article.Title,
+                Text = article.Text,
+                Tags = article.ArticleTags.Select(tag => tag.Tag.Name).ToList(),
+                LikesCount = article.ArticleLikes.Count,
+                CreateDate = article.CreateDate
+            });
+            if (!sortType.Equals(ArticleSortType.Feed))
+            {
+                viewModelQuery = viewModelQuery.OrderByDescending(a => a.LikesCount);
+            }
+
+            return viewModelQuery.Skip(skip).Take(take).ToList();
         }
 
-        public List<ArticleViewModel> GetArticlesByTag(string tagName, int skip, int take)
+        private DateTime GetMaxDate(ArticleSortType sortType)
         {
-            return _context.Articles
-                .Where(article => article.ArticleTags.Any(articleTag => articleTag.Tag.Name.Equals(tagName)))
-                .Select(article => new ArticleViewModel
-                {
-                    Id = article.Id,
-                    AuthorName = _userRepository.GetUserById(article.AuthorId).UserName,
-                    Title = article.Title,
-                    Text = article.Text,
-                    Tags = article.ArticleTags.Select(tag => tag.Tag.Name).ToList(),
-                    LikesCount = article.ArticleLikes.Count,
-                    CreateDate = article.CreateDate
-                }).Skip(skip).Take(take).ToList();
+            switch (sortType)
+            {
+                case ArticleSortType.Weekly:
+                    return DateTime.Now.AddDays(-7);
+                case ArticleSortType.Monthly:
+                    return DateTime.Now.AddMonths(-1);
+                default:
+                    return DateTime.MinValue;
+            }
         }
 
         public void AddArticle(string userId, ArticleFormViewModel model)

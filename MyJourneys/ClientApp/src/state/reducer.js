@@ -20,6 +20,11 @@ const Reducer = (state, action) => {
         ...state,
         activeTag: action.payload
       };
+    case 'SET_SORT_TYPE':
+      return {
+        ...state,
+        sortType: action.payload
+      };
     case 'SET_ARTICLES':
       return {
         ...state,

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MyJourneys.Enums;
 using MyJourneys.Models;
 using MyJourneys.Models.ViewModels;
 
@@ -7,8 +8,7 @@ namespace MyJourneys.Repositories
     public interface IArticleRepository
     {
         ArticleViewModel GetArticle(int id);
-        List<ArticleViewModel> GetArticles(int skip, int take);
-        List<ArticleViewModel> GetArticlesByTag(string tag, int skip, int take);
+        List<ArticleViewModel> GetArticles(string tagName, ArticleSortType sortType, int skip, int take);
         void AddArticle(string userId, ArticleFormViewModel model);
         void AddTagsToArticle(int articleId, List<string> tags);
         Tag GetTag(string tagName);
