@@ -49,13 +49,16 @@ export default function UploadPhotosPage() {
   };
 
   const handleNext = () => {
-    const newActiveStep =
+    let newActiveStep =
       isLastStep() && !allStepsCompleted()
         ? // It's the last step, but not all steps have been completed
           // find the first step that has been completed
         steps.findIndex((step, i) => !completed.has(i))
         : activeStep + 1;
 
+    if (newActiveStep === 1 && !files.filter(file => !file.location).length) {
+      newActiveStep++;
+    }
     setActiveStep(newActiveStep);
   };
 
