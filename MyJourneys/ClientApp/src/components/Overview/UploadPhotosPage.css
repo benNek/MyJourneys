@@ -1,3 +1,11 @@
 svg.success-icon {
     fill: #4BAF50;
+    height: 36px;
+    width: 36px;
+}
+
+svg.warning-icon {
+    fill: #FE9800;
+    height: 36px;
+    width: 36px;
 }
