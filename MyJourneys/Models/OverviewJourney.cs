@@ -11,6 +11,5 @@ namespace MyJourneys.Models
 
         [ForeignKey("UserId")] public virtual User User { get; set; }
         public ICollection<LocationPhoto> LocationPhotos { get; set; }
-
     }
 }

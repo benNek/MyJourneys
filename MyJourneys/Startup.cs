@@ -35,7 +35,8 @@ namespace MyJourneys
         {
             services.AddControllersWithViews();
             services.AddDbContext<TravelContext>(o =>
-                o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")),
+                ServiceLifetime.Transient);
             AddScopes(services);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddMvc();

@@ -63,6 +63,9 @@
         <Content Include="ClientApp\src\utils\validation.js" />
         <None Remove="$(SpaRoot)**" />
         <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+        <None Remove="awtsa0mp.hht" />
+        <None Remove="ClientApp\public\photos\**" />
+        <Content Remove="ClientApp\public\photos\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -80,6 +83,11 @@
     <ItemGroup>
       <Compile Remove="Migrations\20200322170905_AddFlightItem.cs" />
       <Compile Remove="Migrations\20200322170905_AddFlightItem.Designer.cs" />
+      <Compile Remove="ClientApp\public\photos\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="ClientApp\public\photos\**" />
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

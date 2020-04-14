@@ -10,6 +10,7 @@ import UploadPhotosStep2 from "./UploadPhotosStep2";
 import UploadPhotosStep3 from "./UploadPhotosStep3";
 import WebMercatorViewport from '@math.gl/web-mercator';
 import {resolveMapBounds} from "../../utils/mapUtils";
+import {toast} from "react-toastify";
 
 function getSteps() {
   return ['Upload photos', "Add missing locations", 'Create a journey'];
@@ -46,7 +47,7 @@ export default function UploadPhotosPage() {
         offset: [0, -100]
       });
   };
-  
+
   const handleReset = () => {
     setFiles([]);
     setCompleted(new Set());
@@ -63,7 +64,11 @@ export default function UploadPhotosPage() {
       fd.append("longitudes", file.location.lon);
       fd.append("latitudes", file.location.lat);
     });
-    uploadPhoto(fd).then(r => console.log(r)).catch(err => console.log(err));
+    uploadPhoto(fd).then(response => {
+      toast.success(response.data);
+    }).catch(err => {
+      toast.error(`${err.response.data} Status code: ${err.response.status}`);
+    });
   };
 
   const handleNext = () => {

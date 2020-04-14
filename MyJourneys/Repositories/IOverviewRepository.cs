@@ -5,6 +5,6 @@ namespace MyJourneys.Repositories
 {
     public interface IOverviewRepository
     {
-        void AddJourneyOverview(string title, List<JourneyOverviewUploadViewModel> models);
+        void AddJourneyOverview(string userId, string title, List<JourneyOverviewUploadViewModel> models);
     }
 }
