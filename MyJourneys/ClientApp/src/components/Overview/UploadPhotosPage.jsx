@@ -33,19 +33,26 @@ export default function UploadPhotosPage() {
       ...updatedFiles
     ]);
   };
-  
+
   const getViewport = () => {
     const points = files.filter(file => file.date && file.location.lat && file.location.lon)
       .map(file => [file.location.lon, file.location.lat]);
     if (!points.length) {
       return {};
     }
-    
+
     return new WebMercatorViewport({width: 600, height: 400})
       .fitBounds(resolveMapBounds(points), {
         padding: 20,
         offset: [0, -100]
       });
+  };
+  
+  const handleReset = () => {
+    setFiles([]);
+    setCompleted(new Set());
+    setActiveStep(0);
+    window.scrollTo(0, 0);
   };
 
   const handleSubmit = title => {
@@ -87,7 +94,8 @@ export default function UploadPhotosPage() {
         return <UploadPhotosStep2 files={files.filter(file => !file.location)} setFiles={setInvalidFiles}
                                   calculatedViewport={getViewport()} handleBack={handleBack} handleNext={handleNext}/>;
       case 2:
-        return <UploadPhotosStep3 files={files} handleBack={handleBack} handleComplete={handleSubmit}/>;
+        return <UploadPhotosStep3 files={files} handleBack={handleBack} handleReset={handleReset}
+                                  handleComplete={handleSubmit}/>;
       default:
         return 'Unknown step';
     }

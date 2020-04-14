@@ -21,12 +21,16 @@ const useStyles = makeStyles(() => ({
   },
   submitButton: {
     marginTop: '16px'
+  },
+  reset: {
+    marginTop: '12px',
+    display: 'block'
   }
 }));
 
 export default function UploadPhotosStep3(props) {
   const classes = useStyles();
-  const {files, handleComplete} = props;
+  const {files, handleReset, handleComplete} = props;
 
   const renderPhotos = () => {
     return (
@@ -51,6 +55,19 @@ export default function UploadPhotosStep3(props) {
       </Fragment>
     )
   };
+
+  if (!files.length) {
+    return (
+      <Fragment>
+        <Typography variant="subtitle1">
+          No images were approved. Please re-upload them again.
+          <Button variant="outlined" onClick={handleReset} className={classes.reset}>
+            Start over
+          </Button>
+        </Typography>
+      </Fragment>
+    )
+  }
 
   return (
     <Fragment>
