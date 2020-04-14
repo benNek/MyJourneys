@@ -109,7 +109,7 @@ export default function UploadPhotosStep2(props) {
 
   const classes = useStyles();
 
-  const {files, setFiles, handleBack, handleNext} = props;
+  const {files, setFiles, calculatedViewport, handleBack, handleNext} = props;
 
   const [open, setOpen] = useState(false);
   const [editingPhoto, setEditingPhoto] = useState({});
@@ -118,12 +118,23 @@ export default function UploadPhotosStep2(props) {
   const [input, setInput] = useState("");
   const [date, setDate] = useState(moment().subtract(1, 'months').format('YYYY-MM-DD HH:mm'));
   const [marker, setMarker] = useState({});
+
+  const getZoom = () => {
+    if (!calculatedViewport.zoom) {
+      return 1;
+    }
+    if (calculatedViewport.zoom > 22) {
+      return 16;
+    }
+    return calculatedViewport.zoom;
+  };
+
   const [viewport, setViewport] = useState({
     width: "50vw",
     height: "50vh",
-    latitude: 42.361145,
-    longitude: -71.057083,
-    zoom: 8
+    latitude: calculatedViewport.latitude || 20,
+    longitude: calculatedViewport.longitude || 0,
+    zoom: getZoom()
   });
 
   useEffect(() => {

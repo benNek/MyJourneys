@@ -8,6 +8,8 @@ import StepButton from "@material-ui/core/StepButton";
 import UploadPhotosStep1 from "./UploadPhotosStep1";
 import UploadPhotosStep2 from "./UploadPhotosStep2";
 import UploadPhotosStep3 from "./UploadPhotosStep3";
+import WebMercatorViewport from '@math.gl/web-mercator';
+import {resolveMapBounds} from "../../utils/mapUtils";
 
 function getSteps() {
   return ['Upload photos', "Add missing locations", 'Create a journey'];
@@ -30,6 +32,20 @@ export default function UploadPhotosPage() {
       ...files.filter(file => file.location && file.date),
       ...updatedFiles
     ]);
+  };
+  
+  const getViewport = () => {
+    const points = files.filter(file => file.date && file.location.lat && file.location.lon)
+      .map(file => [file.location.lon, file.location.lat]);
+    if (!points.length) {
+      return {};
+    }
+    
+    return new WebMercatorViewport({width: 600, height: 400})
+      .fitBounds(resolveMapBounds(points), {
+        padding: 20,
+        offset: [0, -100]
+      });
   };
 
   const handleSubmit = title => {
@@ -69,7 +85,7 @@ export default function UploadPhotosPage() {
         return <UploadPhotosStep1 files={files} setFiles={setFiles} handleNext={handleNext}/>;
       case 1:
         return <UploadPhotosStep2 files={files.filter(file => !file.location)} setFiles={setInvalidFiles}
-                                  handleBack={handleBack} handleNext={handleNext}/>;
+                                  calculatedViewport={getViewport()} handleBack={handleBack} handleNext={handleNext}/>;
       case 2:
         return <UploadPhotosStep3 files={files} handleBack={handleBack} handleComplete={handleSubmit}/>;
       default:

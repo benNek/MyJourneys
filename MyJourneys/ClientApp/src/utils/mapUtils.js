@@ -18,7 +18,7 @@ export function resolveLatLon(file) {
     }
 
     if (this.exifdata.DateTime) {
-      file.dateTime = this.exifdata.DateTime;
+      file.date = this.exifdata.DateTime;
     }
 
     if (this.exifdata.GPSLatitude && this.exifdata.GPSLatitude.length > 2) {
@@ -39,4 +39,16 @@ export function resolveLatLon(file) {
     file.exifdata = undefined;
     file.iptcdata = undefined;
   });
+}
+
+export function resolveMapBounds(points) {
+  let minLon = 999, maxLon = -999, minLat = 999, maxLat = -999;
+  points.forEach(point => {
+    minLon = Math.min(minLon, point[0]);
+    maxLon = Math.max(maxLon, point[0]);
+    minLat = Math.min(minLat, point[1]);
+    maxLat = Math.max(maxLat, point[1]);
+  });
+
+  return [[minLon, minLat], [maxLon, maxLat]];
 }
