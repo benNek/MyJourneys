@@ -51,3 +51,9 @@ export const articleValidation = Yup.object().shape({
   title: Yup.string().required('Title is required'),
   text: Yup.string().required('Text is required')
 });
+
+// Overview
+
+export const pastJourneyValidation = Yup.object().shape({
+  title: Yup.string().required('Journey title is required')
+});

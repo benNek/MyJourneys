@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
     right: 0,
     bottom: 0,
     left: 0,
-    background: 'rgba(0, 0, 0, .2)',
+    background: 'rgba(0, 0, 0, .4)',
     transition: 'background .2s'
   },
   deletedContent: {

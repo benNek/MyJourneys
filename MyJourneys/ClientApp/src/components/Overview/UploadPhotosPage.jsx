@@ -7,6 +7,7 @@ import Step from "@material-ui/core/Step";
 import StepButton from "@material-ui/core/StepButton";
 import UploadPhotosStep1 from "./UploadPhotosStep1";
 import UploadPhotosStep2 from "./UploadPhotosStep2";
+import UploadPhotosStep3 from "./UploadPhotosStep3";
 
 function getSteps() {
   return ['Upload photos', "Add missing locations", 'Create a journey'];
@@ -24,42 +25,34 @@ export default function UploadPhotosPage() {
     files.forEach(file => URL.revokeObjectURL(file.preview));
   }, [files]);
 
-  const handleSubmitPhotos = () => {
-    const fd = new FormData();
-    files.forEach(file => {
-      fd.append("file", file);
-    });
-    uploadPhoto(fd).then(r => console.log(r)).catch(err => console.log(err));
+  const setInvalidFiles = updatedFiles => {
+    setFiles([
+      ...files.filter(file => file.location && file.date),
+      ...updatedFiles
+    ]);
   };
 
-  const totalSteps = () => {
-    return getSteps().length;
-  };
-
-  const completedSteps = () => {
-    return completed.size;
-  };
-
-  const allStepsCompleted = () => {
-    return completedSteps() === totalSteps();
-  };
-
-  const isLastStep = () => {
-    return activeStep === totalSteps() - 1;
+  const handleSubmit = title => {
+    console.log('submit ', title)
+    // const fd = new FormData();
+    // files.forEach(file => {
+    //   fd.append("file", file);
+    // });
+    // uploadPhoto(fd).then(r => console.log(r)).catch(err => console.log(err));
   };
 
   const handleNext = () => {
-    let newActiveStep =
-      isLastStep() && !allStepsCompleted()
-        ? // It's the last step, but not all steps have been completed
-          // find the first step that has been completed
-        steps.findIndex((step, i) => !completed.has(i))
-        : activeStep + 1;
+    completed.add(activeStep);
+    let newActiveStep = activeStep + 1;
 
     if (newActiveStep === 1 && !files.filter(file => !file.location).length) {
+      completed.add(1);
       newActiveStep++;
     }
+
+    setCompleted(completed);
     setActiveStep(newActiveStep);
+    window.scrollTo(0, 0)
   };
 
   const handleBack = () => {
@@ -75,10 +68,10 @@ export default function UploadPhotosPage() {
       case 0:
         return <UploadPhotosStep1 files={files} setFiles={setFiles} handleNext={handleNext}/>;
       case 1:
-        return <UploadPhotosStep2 files={files.filter(file => !file.location)} setFiles={setFiles}
+        return <UploadPhotosStep2 files={files.filter(file => !file.location)} setFiles={setInvalidFiles}
                                   handleBack={handleBack} handleNext={handleNext}/>;
       case 2:
-        return 'Step 3: This is the bit I really care about!';
+        return <UploadPhotosStep3 files={files} handleBack={handleBack} handleComplete={handleSubmit}/>;
       default:
         return 'Unknown step';
     }
