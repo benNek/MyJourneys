@@ -9,3 +9,16 @@ svg.warning-icon {
     height: 36px;
     width: 36px;
 }
+
+svg.regular-icon {
+    fill: white;
+    height: 72px;
+    width: 72px;
+    cursor: pointer;
+    opacity: .75;
+    transition: opacity .2s;
+}
+
+svg.regular-icon:hover {
+    opacity: 1;
+}

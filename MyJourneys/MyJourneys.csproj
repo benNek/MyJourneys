@@ -20,6 +20,7 @@
         <Content Include="ClientApp\src\components\NavBar.jsx" />
         <Content Include="ClientApp\src\components\Overview\UploadPhotosPage.css" />
         <Content Include="ClientApp\src\components\Overview\UploadPhotosStep1.jsx" />
+        <Content Include="ClientApp\src\components\Overview\UploadPhotosStep2.jsx" />
         <Content Include="ClientApp\src\components\Planner\EventItemCard.jsx" />
         <Content Include="ClientApp\src\components\Planner\FlightItemCard.jsx" />
         <Content Include="ClientApp\src\components\Planner\Forms\AddJourneyForm.jsx" />

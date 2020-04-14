@@ -13,23 +13,30 @@ export function convertDMSToDD(degrees, minutes, seconds, direction) {
 
 export function resolveLatLon(file) {
   EXIF.getData(file, function () {
-    if (!this.exifdata || !this.exifdata.GPSLatitude || !this.exifdata.GPSLatitude.length) {
+    if (!this.exifdata) {
       return;
     }
-    const latDegree = this.exifdata.GPSLatitude[0].numerator;
-    const latMinute = this.exifdata.GPSLatitude[1].numerator;
-    const latSecond = this.exifdata.GPSLatitude[2].numerator / this.exifdata.GPSLatitude[2].denominator;
-    const latDirection = this.exifdata.GPSLatitudeRef;
-    const lat = convertDMSToDD(latDegree, latMinute, latSecond, latDirection);
 
-    const lonDegree = this.exifdata.GPSLongitude[0].numerator;
-    const lonMinute = this.exifdata.GPSLongitude[1].numerator;
-    const lonSecond = this.exifdata.GPSLongitude[2].numerator / this.exifdata.GPSLongitude[2].denominator;
-    const lonDirection = this.exifdata.GPSLongitudeRef;
-    const lon = convertDMSToDD(lonDegree, lonMinute, lonSecond, lonDirection);
+    if (this.exifdata.DateTime) {
+      file.dateTime = this.exifdata.DateTime;
+    }
+
+    if (this.exifdata.GPSLatitude && this.exifdata.GPSLatitude.length > 2) {
+      const latDegree = this.exifdata.GPSLatitude[0].numerator;
+      const latMinute = this.exifdata.GPSLatitude[1].numerator;
+      const latSecond = this.exifdata.GPSLatitude[2].numerator / this.exifdata.GPSLatitude[2].denominator;
+      const latDirection = this.exifdata.GPSLatitudeRef;
+      const lat = convertDMSToDD(latDegree, latMinute, latSecond, latDirection);
+
+      const lonDegree = this.exifdata.GPSLongitude[0].numerator;
+      const lonMinute = this.exifdata.GPSLongitude[1].numerator;
+      const lonSecond = this.exifdata.GPSLongitude[2].numerator / this.exifdata.GPSLongitude[2].denominator;
+      const lonDirection = this.exifdata.GPSLongitudeRef;
+      const lon = convertDMSToDD(lonDegree, lonMinute, lonSecond, lonDirection);
+      file.location = {lat, lon};
+    }
 
     file.exifdata = undefined;
     file.iptcdata = undefined;
-    file.location = {lat, lon};
   });
 }

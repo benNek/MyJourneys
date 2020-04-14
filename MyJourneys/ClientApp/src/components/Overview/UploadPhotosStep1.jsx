@@ -1,5 +1,5 @@
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import React, {Fragment, useState} from "react";
+import React, {Fragment} from "react";
 import {useDropzone} from "react-dropzone";
 import {resolveLatLon} from "../../utils/mapUtils";
 import CheckIcon from "@material-ui/icons/Check";

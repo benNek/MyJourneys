@@ -6,6 +6,7 @@ import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepButton from "@material-ui/core/StepButton";
 import UploadPhotosStep1 from "./UploadPhotosStep1";
+import UploadPhotosStep2 from "./UploadPhotosStep2";
 
 function getSteps() {
   return ['Upload photos', "Add missing locations", 'Create a journey'];
@@ -22,7 +23,7 @@ export default function UploadPhotosPage() {
     // Make sure to revoke the data uris to avoid memory leaks
     files.forEach(file => URL.revokeObjectURL(file.preview));
   }, [files]);
-  
+
   const handleSubmitPhotos = () => {
     const fd = new FormData();
     files.forEach(file => {
@@ -61,7 +62,7 @@ export default function UploadPhotosPage() {
   const handleBack = () => {
     setActiveStep(prevActiveStep => prevActiveStep - 1);
   };
-  
+
   function isStepComplete(step) {
     return completed.has(step);
   }
@@ -71,14 +72,14 @@ export default function UploadPhotosPage() {
       case 0:
         return <UploadPhotosStep1 files={files} setFiles={setFiles} handleNext={handleNext}/>;
       case 1:
-        return 'Step 2: What is an ad group anyways?';
+        return <UploadPhotosStep2 files={files.filter(file => !file.location)} handleNext={handleNext}/>;
       case 2:
         return 'Step 3: This is the bit I really care about!';
       default:
         return 'Unknown step';
     }
   }
-  
+
   return (
     <Fragment>
       <Stepper alternativeLabel activeStep={activeStep}>
