@@ -14,5 +14,6 @@ namespace MyJourneys.Models
         public ICollection<Note> Notes { get; set; }
         public ICollection<Place> Places { get; set; }
         public ICollection<ArticleLikes> ArticleLikes { get; set; }
+        public ICollection<OverviewJourney> OverviewJourneys { get; set; }
     }
 }

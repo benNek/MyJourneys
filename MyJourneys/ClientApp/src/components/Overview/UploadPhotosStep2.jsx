@@ -109,7 +109,7 @@ export default function UploadPhotosStep2(props) {
 
   const classes = useStyles();
 
-  const {files, setFiles, calculatedViewport, handleBack, handleNext} = props;
+  const {files, updateFiles, calculatedViewport, handleBack, handleNext} = props;
 
   const [open, setOpen] = useState(false);
   const [editingPhoto, setEditingPhoto] = useState({});
@@ -140,7 +140,7 @@ export default function UploadPhotosStep2(props) {
   useEffect(() => {
     setInvalidPhotos(files);
   }, [props]);
-
+  
   const fetch = React.useMemo(
     () =>
       throttle((request, callback) => {
@@ -184,16 +184,16 @@ export default function UploadPhotosStep2(props) {
   };
 
   const handleTriggerDelete = (photo) => {
+    photo.status = deleted
     setInvalidPhotos([
-      ...invalidPhotos.filter(invalidPhoto => invalidPhoto !== photo),
-      {...photo, status: deleted}
+      ...invalidPhotos.filter(invalidPhoto => invalidPhoto !== photo), photo
     ]);
   };
 
   const handleTriggerRestore = (photo) => {
+    photo.status = undefined;
     setInvalidPhotos(_.orderBy([
-      ...invalidPhotos.filter(invalidPhoto => invalidPhoto !== photo),
-      {...photo, status: undefined}
+      ...invalidPhotos.filter(invalidPhoto => invalidPhoto !== photo), photo
     ], 'status', 'desc'));
   };
 
@@ -211,15 +211,12 @@ export default function UploadPhotosStep2(props) {
   };
 
   const handleSaveLocation = () => {
+    editingPhoto.location =  {lat: marker.latitude, lon: marker.longitude};
+    editingPhoto.date = moment(date).format();
+    editingPhoto.status = updated
     // editingPhoto.location = {lat: marker.latitude, lon: marker.longitude};
     setInvalidPhotos(_.orderBy([
-      ...invalidPhotos.filter(invalidPhoto => invalidPhoto !== editingPhoto),
-      {
-        ...editingPhoto,
-        location: {lat: marker.latitude, lon: marker.longitude},
-        date: moment(date).format(),
-        status: updated
-      }
+      ...invalidPhotos.filter(invalidPhoto => invalidPhoto !== editingPhoto), editingPhoto
     ], 'status', 'desc'));
     handleClose();
   };
@@ -227,10 +224,6 @@ export default function UploadPhotosStep2(props) {
   const canFinishStep = () => {
     return !invalidPhotos.every(photo => photo.status === deleted || (photo.status && photo.date
       && photo.location.lat && photo.location.lon));
-  };
-
-  const getApprovedPhotos = () => {
-    return invalidPhotos.filter(photo => photo.status && photo.status === updated);
   };
 
   const renderInvalidPhotoContentActions = (photo) => {
@@ -306,7 +299,7 @@ export default function UploadPhotosStep2(props) {
       </Button>
       <Button disabled={canFinishStep()} variant="outlined" className={classes.next}
               onClick={() => {
-                setFiles(getApprovedPhotos());
+                updateFiles();
                 handleNext();
               }}
       >

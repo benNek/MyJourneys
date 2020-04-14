@@ -27,10 +27,9 @@ export default function UploadPhotosPage() {
     files.forEach(file => URL.revokeObjectURL(file.preview));
   }, [files]);
 
-  const setInvalidFiles = updatedFiles => {
+  const updateValidFiles = () => {
     setFiles([
-      ...files.filter(file => file.location && file.date),
-      ...updatedFiles
+      ...files.filter(file => file.location && file.date)
     ]);
   };
 
@@ -56,12 +55,15 @@ export default function UploadPhotosPage() {
   };
 
   const handleSubmit = title => {
-    console.log('submit ', title)
-    // const fd = new FormData();
-    // files.forEach(file => {
-    //   fd.append("file", file);
-    // });
-    // uploadPhoto(fd).then(r => console.log(r)).catch(err => console.log(err));
+    const fd = new FormData();
+    fd.append("title", title);
+    files.forEach(file => {
+      fd.append("files", file);
+      fd.append("dates", file.date);
+      fd.append("longitudes", file.location.lon);
+      fd.append("latitudes", file.location.lat);
+    });
+    uploadPhoto(fd).then(r => console.log(r)).catch(err => console.log(err));
   };
 
   const handleNext = () => {
@@ -91,7 +93,7 @@ export default function UploadPhotosPage() {
       case 0:
         return <UploadPhotosStep1 files={files} setFiles={setFiles} handleNext={handleNext}/>;
       case 1:
-        return <UploadPhotosStep2 files={files.filter(file => !file.location)} setFiles={setInvalidFiles}
+        return <UploadPhotosStep2 files={files.filter(file => !file.location)} updateFiles={updateValidFiles}
                                   calculatedViewport={getViewport()} handleBack={handleBack} handleNext={handleNext}/>;
       case 2:
         return <UploadPhotosStep3 files={files} handleBack={handleBack} handleReset={handleReset}

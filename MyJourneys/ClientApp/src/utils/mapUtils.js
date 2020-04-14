@@ -1,4 +1,5 @@
 import EXIF from "exif-js/exif";
+import moment from "moment";
 
 /**
  * @return {number}
@@ -18,7 +19,7 @@ export function resolveLatLon(file) {
     }
 
     if (this.exifdata.DateTime) {
-      file.date = this.exifdata.DateTime;
+      file.date = moment(this.exifdata.DateTime, 'YYYY:MM:DD hh:mm:ss').format();
     }
 
     if (this.exifdata.GPSLatitude && this.exifdata.GPSLatitude.length > 2) {

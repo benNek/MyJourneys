@@ -19,6 +19,8 @@ namespace MyJourneys.Data
         public DbSet<EventItem> EventItems { get; set; }
         public DbSet<Note> Notes { get; set; }
         public DbSet<Place> Places { get; set; }
+        public DbSet<OverviewJourney> OverviewJourneys { get; set; }
+        public DbSet<LocationPhoto> LocationPhotos { get; set; }
 
         public TravelContext()
         {
