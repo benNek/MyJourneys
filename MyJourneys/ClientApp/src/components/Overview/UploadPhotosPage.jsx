@@ -72,7 +72,8 @@ export default function UploadPhotosPage() {
       case 0:
         return <UploadPhotosStep1 files={files} setFiles={setFiles} handleNext={handleNext}/>;
       case 1:
-        return <UploadPhotosStep2 files={files.filter(file => !file.location)} handleNext={handleNext}/>;
+        return <UploadPhotosStep2 files={files.filter(file => !file.location)} setFiles={setFiles}
+                                  handleBack={handleBack} handleNext={handleNext}/>;
       case 2:
         return 'Step 3: This is the bit I really care about!';
       default:

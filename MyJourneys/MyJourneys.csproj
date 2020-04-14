@@ -17,6 +17,7 @@
         <Content Include="ClientApp\src\components\Authentication\Login.jsx" />
         <Content Include="ClientApp\src\components\Authentication\Logout.jsx" />
         <Content Include="ClientApp\src\components\Authentication\Register.jsx" />
+        <Content Include="ClientApp\src\components\MapPin.jsx" />
         <Content Include="ClientApp\src\components\NavBar.jsx" />
         <Content Include="ClientApp\src\components\Overview\UploadPhotosPage.css" />
         <Content Include="ClientApp\src\components\Overview\UploadPhotosStep1.jsx" />

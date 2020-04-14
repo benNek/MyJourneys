@@ -7,11 +7,25 @@ import CardMedia from "@material-ui/core/CardMedia";
 import {CardContent} from "@material-ui/core";
 import EditLocationIcon from '@material-ui/icons/EditLocation';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import RestoreFromTrashIcon from '@material-ui/icons/RestoreFromTrash';
+import ClearIcon from '@material-ui/icons/Clear';
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import Divider from "@material-ui/core/Divider";
-import ReactMapGL, {Marker} from "react-map-gl";
+import ReactMapGL, {FlyToInterpolator, Marker} from "react-map-gl";
+import TextField from "@material-ui/core/TextField";
+import LocationOnIcon from "@material-ui/icons/LocationOn";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import {throttle} from "lodash";
+import mbxClient from "@mapbox/mapbox-sdk";
+import mbxGeoCoding from "@mapbox/mapbox-sdk/services/geocoding";
+import MapPin from "../MapPin";
+import {easeCubic} from "d3-ease";
+import Button from "@material-ui/core/Button";
+import _ from 'lodash';
+import {DateTimePicker} from "@material-ui/pickers";
+import moment from "moment";
 
 const useStyles = makeStyles(theme => ({
   cards: {
@@ -32,7 +46,32 @@ const useStyles = makeStyles(theme => ({
     right: 0,
     bottom: 0,
     left: 0,
-    background: 'rgba(0, 0, 0, .4)'
+    background: 'rgba(0, 0, 0, .2)',
+    transition: 'background .2s'
+  },
+  deletedContent: {
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    background: 'rgba(244, 67, 53, .7)',
+    transition: 'background .2s'
+  },
+  updatedContent: {
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    background: 'rgba(75, 175, 80, .7)',
+    transition: 'background .2s'
   },
   modal: {
     display: 'flex',
@@ -42,18 +81,42 @@ const useStyles = makeStyles(theme => ({
   paper: {
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[3],
-    padding: theme.spacing(2, 4, 3),
+    padding: theme.spacing(4),
     outline: 'none'
+  },
+  note: {
+    marginBottom: '10px'
+  },
+  icon: {
+    color: theme.palette.text.secondary,
+    marginRight: theme.spacing(2),
+  },
+  back: {
+    marginTop: '12px',
+    marginRight: '6px'
+  },
+  next: {
+    marginTop: '12px'
   }
 }));
 
+const deleted = 'deleted';
+const updated = 'updated';
+
 export default function UploadPhotosStep2(props) {
+  const baseClient = mbxClient({accessToken: process.env.REACT_APP_MAPBOX_TOKEN});
+  const geoCodingClient = mbxGeoCoding(baseClient);
+
   const classes = useStyles();
-  const {files, handleNext} = props;
+
+  const {files, setFiles, handleBack, handleNext} = props;
+
   const [open, setOpen] = useState(false);
   const [editingPhoto, setEditingPhoto] = useState({});
   const [invalidPhotos, setInvalidPhotos] = useState([]);
-  const [map, setMap] = useState({});
+  const [options, setOptions] = React.useState([]);
+  const [input, setInput] = useState("");
+  const [date, setDate] = useState(moment().subtract(1, 'months').format('YYYY-MM-DD HH:mm'));
   const [marker, setMarker] = useState({});
   const [viewport, setViewport] = useState({
     width: "50vw",
@@ -67,14 +130,60 @@ export default function UploadPhotosStep2(props) {
     setInvalidPhotos(files);
   }, [props]);
 
+  const fetch = React.useMemo(
+    () =>
+      throttle((request, callback) => {
+        if (request.input.length < 3) {
+          return;
+        }
+        geoCodingClient.forwardGeocode({
+          query: request.input
+        })
+          .send()
+          .then(response => {
+            callback(response.body.features)
+          });
+      }, 200),
+    [],
+  );
+
+  useEffect(() => {
+    let active = true;
+
+    if (input === '') {
+      setOptions([]);
+      return undefined;
+    }
+
+    fetch({input: input}, (results) => {
+      if (active) {
+        setOptions(results || []);
+      }
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [input, fetch]);
+
   const handleTriggerEdit = (photo) => {
+    setMarker({});
     setEditingPhoto(photo);
     setOpen(true);
-    // map.resize();
   };
 
   const handleTriggerDelete = (photo) => {
-    setInvalidPhotos(invalidPhotos.filter(invalidPhoto => invalidPhoto !== photo));
+    setInvalidPhotos([
+      ...invalidPhotos.filter(invalidPhoto => invalidPhoto !== photo),
+      {...photo, status: deleted}
+    ]);
+  };
+
+  const handleTriggerRestore = (photo) => {
+    setInvalidPhotos(_.orderBy([
+      ...invalidPhotos.filter(invalidPhoto => invalidPhoto !== photo),
+      {...photo, status: undefined}
+    ], 'status', 'desc'));
   };
 
   const handleClose = () => {
@@ -82,13 +191,60 @@ export default function UploadPhotosStep2(props) {
     setOpen(false);
   };
 
-  const handleMapLoad = map => {
-    setMap(map);
+  const handleInputChange = event => {
+    setInput(event.target.value);
   };
 
   const handleMapClick = e => {
-    console.log(e.lngLat)
     setMarker({longitude: e.lngLat[0], latitude: e.lngLat[1]});
+  };
+
+  const handleSaveLocation = () => {
+    // editingPhoto.location = {lat: marker.latitude, lon: marker.longitude};
+    setInvalidPhotos(_.orderBy([
+      ...invalidPhotos.filter(invalidPhoto => invalidPhoto !== editingPhoto),
+      {
+        ...editingPhoto,
+        location: {lat: marker.latitude, lon: marker.longitude},
+        date: moment(date).format(),
+        status: updated
+      }
+    ], 'status', 'desc'));
+    handleClose();
+  };
+
+  const canFinishStep = () => {
+    return !invalidPhotos.every(photo => photo.status === deleted || (photo.status && photo.date
+      && photo.location.lat && photo.location.lon));
+  };
+
+  const getApprovedPhotos = () => {
+    return invalidPhotos.filter(photo => photo.status && photo.status === updated);
+  };
+
+  const renderInvalidPhotoContentActions = (photo) => {
+    if (photo.status === deleted) {
+      return (
+        <CardContent className={classes.deletedContent}>
+          <RestoreFromTrashIcon onClick={() => handleTriggerRestore(photo)} className="regular-icon"/>
+        </CardContent>
+      )
+    }
+
+    if (photo.status === updated) {
+      return (
+        <CardContent className={classes.updatedContent}>
+          <ClearIcon onClick={() => handleTriggerRestore(photo)} className="regular-icon"/>
+        </CardContent>
+      )
+    }
+
+    return (
+      <CardContent className={classes.content}>
+        <EditLocationIcon onClick={() => handleTriggerEdit(photo)} className="regular-icon"/>
+        <DeleteForeverIcon onClick={() => handleTriggerDelete(photo)} className="regular-icon"/>
+      </CardContent>
+    );
   };
 
   const renderInvalidPhotos = () => {
@@ -105,13 +261,22 @@ export default function UploadPhotosStep2(props) {
             title={photo.path}
             component="img"
           />
-          <CardContent className={classes.content}>
-            <EditLocationIcon onClick={() => handleTriggerEdit(photo)} className="regular-icon"/>
-            <DeleteForeverIcon onClick={() => handleTriggerDelete(photo)} className="regular-icon"/>
-          </CardContent>
+          {renderInvalidPhotoContentActions(photo)}
         </Card>
       </Grid>
     ));
+  };
+
+  const renderMapMarker = () => {
+    if (!marker || !marker.longitude || !marker.latitude) {
+      return;
+    }
+
+    return (
+      <Marker longitude={marker.longitude} latitude={marker.latitude}>
+        <MapPin/>
+      </Marker>
+    )
   };
 
   return (
@@ -125,6 +290,17 @@ export default function UploadPhotosStep2(props) {
       <Grid className={classes.cards} container spacing={2}>
         {renderInvalidPhotos()}
       </Grid>
+      <Button variant="outlined" className={classes.back} onClick={handleBack}>
+        Back
+      </Button>
+      <Button disabled={canFinishStep()} variant="outlined" className={classes.next}
+              onClick={() => {
+                setFiles(getApprovedPhotos());
+                handleNext();
+              }}
+      >
+        Next
+      </Button>
 
       <Modal
         aria-labelledby="transition-modal-title"
@@ -140,21 +316,101 @@ export default function UploadPhotosStep2(props) {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <div>
-              Enter address
-              <input type="text"/>
-            </div>
+            <Typography variant="body2" className={classes.note}>
+              Enter the date of picture:
+            </Typography>
+            <DateTimePicker
+              id="date"
+              name="date"
+              label="Picture date"
+              variant="outlined"
+              inputVariant="outlined"
+              fullWidth
+              required
+              value={date}
+              format="YYYY-MM-DD HH:mm"
+              onChange={value => {
+                setDate(moment(value).format('YYYY-MM-DD HH:mm'));
+              }}
+            />
             <Divider/>
+            <Typography variant="body2" className={classes.note}>
+              Enter either location name or address:
+            </Typography>
+            <Autocomplete
+              style={{width: "100%"}}
+              getOptionLabel={(option) => (typeof option === 'string' ? option : option.place_name)}
+              filterOptions={(x) => x}
+              options={options}
+              autoComplete
+              includeInputInList
+              onChange={e => {
+                if (!e.currentTarget || !e.currentTarget.children || !e.currentTarget.children[0]) {
+                  return;
+                }
+                const data = e.currentTarget.children[0].dataset;
+                const longitude = parseFloat(data.lon);
+                const latitude = parseFloat(data.lat);
+                setMarker({longitude, latitude})
+                setViewport({
+                  ...viewport,
+                  longitude,
+                  latitude,
+                  zoom: 12,
+                  transitionDuration: 3000,
+                  transitionInterpolator: new FlyToInterpolator(),
+                  transitionEasing: easeCubic
+                });
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Place"
+                  variant="outlined"
+                  fullWidth
+                  onChange={handleInputChange}
+                />
+              )}
+              renderOption={(option) => {
+                const address = option.properties.address ? option.properties.address : option.place_name;
+                return (
+                  <Grid container alignItems="center" data-lon={option.center[0]} data-lat={option.center[1]}>
+                    <Grid item>
+                      <LocationOnIcon className={classes.icon}/>
+                    </Grid>
+                    <Grid item xs>
+                    <span>
+                      {option.text}
+                    </span>
+                      <Typography variant="body2" color="textSecondary">
+                        {address}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                );
+              }}
+            />
+            <div className="separator">
+              OR
+            </div>
+            <Typography variant="body2" className={classes.note}>
+              Click on map to select the location:
+            </Typography>
             <ReactMapGL
               {...viewport}
               onViewportChange={(viewport) => setViewport(viewport)}
               mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
-              onLoad={handleMapLoad}
               onClick={handleMapClick}
             >
-              <Marker longitude={-71.057083} latitude={42.361145}/>
-              {console.log(marker) && marker ? <Marker longitude={marker.longitude} latitude={marker.latitude}/> : null}
+              {renderMapMarker()}
             </ReactMapGL>
+            <Divider/>
+            <Button onClick={handleSaveLocation}
+                    fullWidth
+                    disabled={!marker.latitude || !marker.longitude}
+                    variant="outlined">
+              Save
+            </Button>
           </div>
         </Fade>
       </Modal>
