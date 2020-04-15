@@ -21,6 +21,8 @@ namespace MyJourneys.Data
         public DbSet<Place> Places { get; set; }
         public DbSet<OverviewJourney> OverviewJourneys { get; set; }
         public DbSet<LocationPhoto> LocationPhotos { get; set; }
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<OverviewJourneysCountries> OverviewJourneysCountries { get; set; }
 
         public TravelContext()
         {

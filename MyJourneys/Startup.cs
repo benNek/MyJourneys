@@ -88,6 +88,7 @@ namespace MyJourneys
             });
 
             Task.Run(() => CreateRoles(serviceProvider)).GetAwaiter().GetResult();
+            Task.Run(() => new CountriesSeed().Seed()).GetAwaiter().GetResult();
         }
 
         private void SetupAuth(IServiceCollection services)

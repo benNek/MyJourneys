@@ -23,6 +23,7 @@ export const logout = () => axios.get('/api/user/logout');
 export const uploadPhoto = data => axios.post('/api/overview', data, {
   'Content-Type': 'multipart/form-data'
 });
+export const getVisitedCountries = () => axios.get('/api/overview/countries');
 
 // Sharing
 export const getTags = () => axios.get('/api/article/tags');

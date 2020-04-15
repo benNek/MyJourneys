@@ -1,10 +1,14 @@
 using System.Collections.Generic;
+using MyJourneys.Models;
 using MyJourneys.Models.ViewModels;
 
 namespace MyJourneys.Repositories
 {
     public interface IOverviewRepository
     {
-        void AddJourneyOverview(string userId, string title, List<JourneyOverviewUploadViewModel> models);
+        void AddJourneyOverview(string userId, string title, List<Country> countries,
+            List<JourneyOverviewUploadViewModel> models);
+        Country GetCountry(string alpha2);
+        List<string> GetVisitedCountries(string userId);
     }
 }

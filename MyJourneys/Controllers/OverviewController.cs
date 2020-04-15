@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using MyJourneys.Models;
 using MyJourneys.Models.ViewModels;
 using MyJourneys.Repositories;
 using MyJourneys.Utils;
@@ -27,11 +28,12 @@ namespace MyJourneys.Controllers
         [HttpPost]
         [Authorize]
         public IActionResult UploadPhoto([FromForm] string title, [FromForm] IFormFile[] files,
-            [FromForm] string[] dates, [FromForm] string[] latitudes, [FromForm] string[] longitudes)
+            [FromForm] string[] dates, [FromForm] string[] latitudes, [FromForm] string[] longitudes,
+            [FromForm] string[] countries)
         {
             var maxSize = _config.GetValue<long>("FileStorage:SizeLimit");
             var allowedExtensions = new List<string>(_config["FileStorage:AllowedExtensions"].Split(','));
-
+            
             var userId = GetUserId(User);
             int length = files.Length;
             length = Math.Min(length, dates.Length);
@@ -47,20 +49,20 @@ namespace MyJourneys.Controllers
                     return StatusCode(413,
                         $"Single file ({file.FileName}) exceeds the limit ({formattedMaxSize} megabytes)");
                 }
-
+            
                 var extension = Path.GetExtension(file.FileName);
                 if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
                 {
                     return StatusCode(422,
                         $"File extension is not whitelisted for file ({file.FileName})! only .jpg and .png are allowed");
                 }
-
+            
                 if (!FileUtils.IsValidImageSignature(file))
                 {
                     return StatusCode(422,
                         $"Failed to match file ({file.FileName}) signature to any of known file extensions");
                 }
-
+            
                 try
                 {
                     models.Add(new JourneyOverviewUploadViewModel(file, Convert.ToDateTime(dates[i]),
@@ -72,8 +74,26 @@ namespace MyJourneys.Controllers
                 }
             }
 
-            _overviewRepository.AddJourneyOverview(userId, title, models);
+            List<Country> countryList = new List<Country>();
+            foreach (var countryCode in countries)
+            {
+                var country = _overviewRepository.GetCountry(countryCode);
+                if (country != null)
+                {
+                    countryList.Add(country);
+                }
+            }
+            
+            _overviewRepository.AddJourneyOverview(userId, title, countryList, models);
             return Ok("Photos have been uploaded successfully");
+        }
+
+        [HttpGet("countries")]
+        [Authorize]
+        public List<string> GetVisitedCountries()
+        {
+            var userId = GetUserId(User);
+            return _overviewRepository.GetVisitedCountries(userId);
         }
     }
 }

@@ -11,12 +11,18 @@ import UploadPhotosStep3 from "./UploadPhotosStep3";
 import WebMercatorViewport from '@math.gl/web-mercator';
 import {resolveMapBounds} from "../../utils/mapUtils";
 import {toast} from "react-toastify";
+import mbxClient from "@mapbox/mapbox-sdk";
+import mbxGeoCoding from "@mapbox/mapbox-sdk/services/geocoding";
+import _ from 'lodash';
 
 function getSteps() {
   return ['Upload photos', "Add missing locations", 'Create a journey'];
 }
 
 export default function UploadPhotosPage() {
+  const baseClient = mbxClient({accessToken: process.env.REACT_APP_MAPBOX_TOKEN});
+  const geoCodingClient = mbxGeoCoding(baseClient);
+
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState(new Set());
   const [files, setFiles] = useState([]);
@@ -55,9 +61,25 @@ export default function UploadPhotosPage() {
     window.scrollTo(0, 0);
   };
 
-  const handleSubmit = title => {
+  const getCountries = async () => {
+    const responses = await Promise.all(files.map(file => {
+      return geoCodingClient.reverseGeocode({
+        query: [file.location.lon, file.location.lat],
+        types: ["country"]
+      }).send();
+    }));
+    return _.uniq(responses
+      .filter(response => response.body.features.length)
+      .map(response => response.body.features[0].properties.short_code.toUpperCase()));
+  };
+
+  const handleSubmit = async title => {
+    const countries = await getCountries();
     const fd = new FormData();
     fd.append("title", title);
+    countries.forEach(country => {
+      fd.append("countries", country);
+    });
     files.forEach(file => {
       fd.append("files", file);
       fd.append("dates", file.date);
