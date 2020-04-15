@@ -1,66 +1,93 @@
-import React, {useCallback, useState} from 'react';
-import RetrospectiveMap from "./RetrospectiveMap";
-import Typography from "@material-ui/core/Typography";
+import React, {useEffect, useState} from 'react';
 import './Retrospective.css';
-import Button from "@material-ui/core/Button";
-import {useDropzone} from "react-dropzone";
-import EXIF from "exif-js/exif";
-import {convertDMSToDD} from "../../utils/mapUtils";
 import Fab from "@material-ui/core/Fab";
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import {useHistory} from "react-router";
+import ReactMapGL from "react-map-gl";
+import _ from "lodash";
 
 export default function Retrospective() {
+  const defaultOpacity = 0.4;
+
   const history = useHistory();
   const [lat, setLat] = useState(42.361145);
   const [lon, setLon] = useState(-71.057083);
 
-  const onDrop = useCallback(acceptedFiles => {
-    EXIF.getData(acceptedFiles[0], function () {
-      var latDegree = this.exifdata.GPSLatitude[0].numerator;
-      var latMinute = this.exifdata.GPSLatitude[1].numerator;
-      var latSecond = this.exifdata.GPSLatitude[2].numerator / this.exifdata.GPSLatitude[2].denominator;
-      var latDirection = this.exifdata.GPSLatitudeRef;
+  const [viewport, setViewport] = useState({
+    width: "100%",
+    height: "100%",
+    latitude: lat || 42.361145,
+    longitude: lon || -71.057083,
+    zoom: 8
+  });
 
-      var latFinal = convertDMSToDD(latDegree, latMinute, latSecond, latDirection);
+  const [visitedCountries, setVisitedCountries] = useState([]);
+  const [map, setMap] = useState({});
 
-      var lonDegree = this.exifdata.GPSLongitude[0].numerator;
-      var lonMinute = this.exifdata.GPSLongitude[1].numerator;
-      var lonSecond = this.exifdata.GPSLongitude[2].numerator / this.exifdata.GPSLongitude[2].denominator;
-      var lonDirection = this.exifdata.GPSLongitudeRef;
+  const addVisitedCountry = (countryCode) => {
+    if (_.includes(visitedCountries, countryCode)) {
+      return;
+    }
+    setVisitedCountries([
+      ...visitedCountries, countryCode
+    ]);
+  };
 
-      var lonFinal = convertDMSToDD(lonDegree, lonMinute, lonSecond, lonDirection);
-      setLat(latFinal);
-      setLon(lonFinal);
-      console.log(lonFinal);
-      console.log(latFinal);
+  useEffect(() => {
+    if (Object.entries(map).length === 0 && map.constructor === Object) {
+      return;
+    }
+
+    const activeCountries = visitedCountries.map(country => [country, defaultOpacity]).flat();
+    map.setPaintProperty('countries', 'fill-opacity', [
+      'match',
+      ['get', 'ADM0_A3_IS'],
+      ...activeCountries,
+      0
+    ]);
+  }, [visitedCountries]);
+
+  const loadLayers = (map) => {
+    setMap(map.target);
+    map.target.addLayer({
+      'id': 'countries',
+      'source': {
+        'type': 'vector',
+        'url': 'mapbox://byfrost-articles.74qv0xp0'
+      },
+      'source-layer': 'ne_10m_admin_0_countries-76t9ly',
+      'type': 'fill',
+      'paint': {
+        'fill-color': '#fbb03b',
+        'fill-outline-color': '#F2F2F2',
+        'fill-opacity': 0
+      }
     });
-    // Do something with the files
-  }, []);
-  const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop});
+  };
+
+  const clickCountry = (area) => {
+    const country = _.find(area.features, ['source', 'countries']);
+    if (!country || !country.properties) {
+      return;
+    }
+
+    const code = country.properties.ADM0_A3_IS;
+    addVisitedCountry(code);
+  };
 
   return (
     <React.Fragment>
-      <Typography className="Retrospective__Title" variant="h3" component="h1">Your past journeys</Typography>
-      <div className="Retrospective__Container">
-        <div className="Retrospective__Cards">
-          <Typography className="Retrospective__NotFound" variant="body1">No journeys found!</Typography>
-          <Button variant="contained" color="primary">
-            Add new journey
-          </Button>
-          <div {...getRootProps()}>
-            <input {...getInputProps()} />
-            {
-              isDragActive ?
-                <p>Drop the files here ...</p> :
-                <p>Drag 'n' drop some files here, or click to select files</p>
-            }
-          </div>
-        </div>
-        <RetrospectiveMap lon={lon} lat={lat}/>
+      <div className="map__container">
+        <ReactMapGL
+          {...viewport}
+          onViewportChange={(viewport) => setViewport(viewport)}
+          mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+          onLoad={loadLayers}
+          onClick={clickCountry}
+        />
       </div>
-      <Fab onClick={() => history.push('/upload')} aria-label="add photos" color="primary"
-           className="FloatingActionButton">
+
+      <Fab onClick={() => history.push('/upload')} aria-label="add photos" className="FloatingActionButton">
         <AddPhotoAlternateIcon/>
       </Fab>
     </React.Fragment>

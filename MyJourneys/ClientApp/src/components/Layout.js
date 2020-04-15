@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import NavBar from "./NavBar";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -27,7 +27,7 @@ export default function Layout(props) {
   const classes = useStyles();
 
   return (
-    <div>
+    <Fragment>
       <NavBar/>
       <ToastContainer
         position="top-right"
@@ -43,6 +43,6 @@ export default function Layout(props) {
       <Container maxWidth="md" className={classes.container}>
         {props.children}
       </Container>
-    </div>
+    </Fragment>
   );
 }
