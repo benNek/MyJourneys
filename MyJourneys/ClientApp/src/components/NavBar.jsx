@@ -2,7 +2,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import React, {useContext, useState} from "react";
-import Typography from "@material-ui/core/Typography";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import MenuIcon from '@material-ui/icons/Menu';
 import {grey} from "@material-ui/core/colors";
@@ -53,6 +52,9 @@ const useStyles = makeStyles(theme => ({
   },
   rightAlign: {
     marginLeft: 'auto'
+  },
+  logo: {
+    height: '64px'
   }
 }));
 
@@ -116,9 +118,9 @@ export default function NavBar() {
           >
             <MenuIcon/>
           </IconButton>
-          <Typography variant="h6" noWrap>
-            MyJourneys
-          </Typography>
+          <Link to="/">
+            <img className={classes.logo} src={"/images/logo.png"} alt="MyJourneys"/>
+          </Link>
           <div className={classes.rightAlign}>
             {authControls}
           </div>

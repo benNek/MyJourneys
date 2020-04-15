@@ -13,6 +13,8 @@
         <!-- Don't publish the SPA source files, but do show them in the project files list -->
         <Content Remove="$(SpaRoot)**" />
         <Content Include="ClientApp\.env.local" />
+        <Content Include="ClientApp\public\favicon.ico" />
+        <Content Include="ClientApp\public\images\logo.png" />
         <Content Include="ClientApp\public\styles.css" />
         <Content Include="ClientApp\src\components\Authentication\Login.jsx" />
         <Content Include="ClientApp\src\components\Authentication\Logout.jsx" />
