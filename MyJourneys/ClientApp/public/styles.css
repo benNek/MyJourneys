@@ -55,3 +55,8 @@ div.Loader {
 .dropzone.dz-small {
     height: 75px;
 }
+
+#fullScreenMap {
+    height: 100%;
+    width: 100%;
+}
