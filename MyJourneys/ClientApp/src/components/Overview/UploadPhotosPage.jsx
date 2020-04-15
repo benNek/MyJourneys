@@ -35,7 +35,7 @@ export default function UploadPhotosPage() {
   };
 
   const getViewport = () => {
-    const points = files.filter(file => file.date && file.location.lat && file.location.lon)
+    const points = files.filter(file => file.date && file.location && file.location.lat && file.location.lon)
       .map(file => [file.location.lon, file.location.lat]);
     if (!points.length) {
       return {};

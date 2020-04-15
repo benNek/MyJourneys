@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using MyJourneys.Models.ViewModels;
 using MyJourneys.Repositories;
+using MyJourneys.Utils;
 using static MyJourneys.Utils.AuthorizationUtils;
 
 namespace MyJourneys.Controllers
@@ -13,10 +16,12 @@ namespace MyJourneys.Controllers
     public class OverviewController : Controller
     {
         private readonly IOverviewRepository _overviewRepository;
+        private readonly IConfiguration _config;
 
-        public OverviewController(IOverviewRepository overviewRepository)
+        public OverviewController(IOverviewRepository overviewRepository, IConfiguration configuration)
         {
             _overviewRepository = overviewRepository;
+            _config = configuration;
         }
 
         [HttpPost]
@@ -24,6 +29,9 @@ namespace MyJourneys.Controllers
         public IActionResult UploadPhoto([FromForm] string title, [FromForm] IFormFile[] files,
             [FromForm] string[] dates, [FromForm] string[] latitudes, [FromForm] string[] longitudes)
         {
+            var maxSize = _config.GetValue<long>("FileStorage:SizeLimit");
+            var allowedExtensions = new List<string>(_config["FileStorage:AllowedExtensions"].Split(','));
+
             var userId = GetUserId(User);
             int length = files.Length;
             length = Math.Min(length, dates.Length);
@@ -32,9 +40,30 @@ namespace MyJourneys.Controllers
             List<JourneyOverviewUploadViewModel> models = new List<JourneyOverviewUploadViewModel>();
             for (int i = 0; i < length; i++)
             {
+                var file = files[i];
+                if (file.Length > maxSize)
+                {
+                    var formattedMaxSize = FileUtils.ConvertBytesToMegaBytes(maxSize);
+                    return StatusCode(413,
+                        $"Single file ({file.FileName}) exceeds the limit ({formattedMaxSize} megabytes)");
+                }
+
+                var extension = Path.GetExtension(file.FileName);
+                if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
+                {
+                    return StatusCode(422,
+                        $"File extension is not whitelisted for file ({file.FileName})! only .jpg and .png are allowed");
+                }
+
+                if (!FileUtils.IsValidImageSignature(file))
+                {
+                    return StatusCode(422,
+                        $"Failed to match file ({file.FileName}) signature to any of known file extensions");
+                }
+
                 try
                 {
-                    models.Add(new JourneyOverviewUploadViewModel(files[i], Convert.ToDateTime(dates[i]),
+                    models.Add(new JourneyOverviewUploadViewModel(file, Convert.ToDateTime(dates[i]),
                         Double.Parse(latitudes[i]), Double.Parse(longitudes[i])));
                 }
                 catch (Exception)
