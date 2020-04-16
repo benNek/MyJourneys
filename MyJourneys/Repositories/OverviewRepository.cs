@@ -21,6 +21,23 @@ namespace MyJourneys.Repositories
             _config = configuration;
         }
 
+        public List<OverviewJourneyPreviewViewModel> GetJourneyOverviews(string userId, int year)
+        {
+            var query = _context.OverviewJourneys.Where(journey => journey.UserId.Equals(userId));
+            if (year != 0)
+            {
+                query = query.Where(journey => journey.LocationPhotos.Any(photo => photo.Date.Year == year));
+            }
+
+            return query.Select(journey => new OverviewJourneyPreviewViewModel
+                {
+                    Title = journey.Title,
+                    CoverPhoto = journey.LocationPhotos.FirstOrDefault()
+                })
+                .Where(journey => journey.CoverPhoto != null)
+                .ToList();
+        }
+
         public void AddJourneyOverview(string userId, string title, List<Country> countries,
             List<JourneyOverviewUploadViewModel> models)
         {
@@ -73,7 +90,7 @@ namespace MyJourneys.Repositories
         {
             using (var stream = File.Create(path))
             {
-                file.CopyToAsync(stream);
+                file.CopyTo(stream);
             }
         }
 
@@ -81,7 +98,7 @@ namespace MyJourneys.Repositories
         {
             return _context.Countries.FirstOrDefault(country => country.Alpha2.Equals(alpha2));
         }
-        
+
         public List<string> GetVisitedCountries(string userId, int year)
         {
             var query = _context.OverviewJourneys.Where(journey => journey.UserId.Equals(userId));

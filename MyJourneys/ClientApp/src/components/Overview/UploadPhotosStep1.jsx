@@ -34,7 +34,8 @@ const useStyles = makeStyles(theme => ({
   },
   card: {
     display: 'flex',
-    marginBottom: '12px'
+    marginBottom: '12px',
+    maxHeight: '76px'
   },
   preview: {
     width: '80px',

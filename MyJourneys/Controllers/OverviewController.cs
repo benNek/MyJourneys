@@ -25,6 +25,15 @@ namespace MyJourneys.Controllers
             _config = configuration;
         }
 
+        [HttpGet]
+        [Authorize]
+        public IEnumerable<OverviewJourneyPreviewViewModel> GetOverviewJourneys([FromQuery] int year = 0)
+        {
+            // Year 0 represents all years
+            var userId = GetUserId(User);
+            return _overviewRepository.GetJourneyOverviews(userId, year);
+        }
+
         [HttpPost]
         [Authorize]
         public IActionResult UploadPhoto([FromForm] string title, [FromForm] IFormFile[] files,
@@ -33,7 +42,7 @@ namespace MyJourneys.Controllers
         {
             var maxSize = _config.GetValue<long>("FileStorage:SizeLimit");
             var allowedExtensions = new List<string>(_config["FileStorage:AllowedExtensions"].Split(','));
-            
+
             var userId = GetUserId(User);
             int length = files.Length;
             length = Math.Min(length, dates.Length);
@@ -49,20 +58,20 @@ namespace MyJourneys.Controllers
                     return StatusCode(413,
                         $"Single file ({file.FileName}) exceeds the limit ({formattedMaxSize} megabytes)");
                 }
-            
+
                 var extension = Path.GetExtension(file.FileName);
                 if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
                 {
                     return StatusCode(422,
                         $"File extension is not whitelisted for file ({file.FileName})! only .jpg and .png are allowed");
                 }
-            
+
                 if (!FileUtils.IsValidImageSignature(file))
                 {
                     return StatusCode(422,
                         $"Failed to match file ({file.FileName}) signature to any of known file extensions");
                 }
-            
+
                 try
                 {
                     models.Add(new JourneyOverviewUploadViewModel(file, Convert.ToDateTime(dates[i]),
@@ -83,7 +92,7 @@ namespace MyJourneys.Controllers
                     countryList.Add(country);
                 }
             }
-            
+
             _overviewRepository.AddJourneyOverview(userId, title, countryList, models);
             return Ok("Photos have been uploaded successfully");
         }

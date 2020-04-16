@@ -51,7 +51,7 @@ export default function Login() {
 
   return (
     <React.Fragment>
-      <Button color="inherit" onClick={handleOpen}>Login</Button>
+      <Button onClick={handleOpen}>Login</Button>
 
       <Modal
         aria-labelledby="transition-modal-title"

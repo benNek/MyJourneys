@@ -57,3 +57,7 @@ export function resolveMapBounds(points) {
 export function getMapStyle(darkMode) {
   return darkMode ? "mapbox://styles/bennek/ck91w6y191la41kpmgetqg8ce" : "mapbox://styles/bennek/ck91vtkwy02bu1ioifdod49tt";
 }
+
+export function getPhotoUrl(path) {
+  return window.location.origin + "/" + path.split('/public/')[1];
+}
