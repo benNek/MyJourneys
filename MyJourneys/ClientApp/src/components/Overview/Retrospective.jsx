@@ -8,16 +8,47 @@ import {getOverviewJourneys, getTravelingYears, getVisitedCountries} from "../..
 import Select from "@material-ui/core/Select";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import FormControl from "@material-ui/core/FormControl";
+import Button from "@material-ui/core/Button";
+import OverviewJourneysList from "./OverviewJourneysList";
+import Fade from "@material-ui/core/Fade";
 
 const useStyles = makeStyles(theme => ({
+  allJourneysBtn: {
+    position: 'absolute',
+    left: '8px',
+    top: '20px',
+    background: theme.palette.background.paper,
+    [theme.breakpoints.up('sm')]: {
+      left: '20px',
+      top: '24px'
+    }
+  },
+  journeysList: {
+    position: 'absolute',
+    left: '8px',
+    top: '68px',
+    [theme.breakpoints.up('sm')]: {
+      left: '20px',
+      top: '82px'
+    }
+  },
   yearForm: {
     position: 'absolute',
-    right: '24px',
-    top: '24px'
+    right: '8px',
+    top: '20px',
+    [theme.breakpoints.up('sm')]: {
+      right: '20px',
+      top: '24px'
+    }
   },
   yearSelect: {
     height: '36px',
     background: theme.palette.background.paper
+  },
+  fab: {
+    color: theme.palette.text.primary,
+    background: theme.palette.background.paper,
+    bottom: '42px !important'
   }
 }));
 
@@ -28,6 +59,8 @@ export default function Retrospective() {
   const [journeys, setJourneys] = useState([]);
   const [countries, setCountries] = useState([]);
   const [allYears, setAllYears] = useState([]);
+
+  const [listOpen, setListOpen] = useState(false);
   const [year, setYear] = useState(0);
 
   useEffect(() => {
@@ -43,6 +76,10 @@ export default function Retrospective() {
     getOverviewJourneys({year}).then(res => setJourneys(res.data)).catch(err => console.error(err));
     getVisitedCountries({year}).then(res => setCountries(res.data)).catch(err => console.error(err));
   }, [year]);
+
+  const handleTriggerListClick = () => {
+    setListOpen(!listOpen);
+  };
 
   const handleYearChange = event => {
     setYear(event.target.value);
@@ -62,6 +99,14 @@ export default function Retrospective() {
     <React.Fragment>
       <div className="map__container">
         <RetrospectiveMap countries={countries} journeys={journeys}/>
+        {journeys.length > 0 &&
+        <Button onClick={handleTriggerListClick} className={classes.allJourneysBtn} variant="outlined">
+          {listOpen ? "Close" : "Open"} list
+        </Button>
+        }
+        {listOpen && <Fade in={listOpen}>
+          <div className={classes.journeysList}><OverviewJourneysList journeys={journeys}/></div>
+        </Fade>}
         {allYears.length > 0 &&
         <FormControl variant="outlined" className={classes.yearForm}>
           <Select
@@ -78,7 +123,8 @@ export default function Retrospective() {
         </FormControl>
         }
       </div>
-      <Fab onClick={() => history.push('/upload')} aria-label="add photos" className="FloatingActionButton">
+      <Fab onClick={() => history.push('/upload')} aria-label="add photos"
+           className={`${classes.fab} FloatingActionButton`}>
         <AddPhotoAlternateIcon/>
       </Fab>
     </React.Fragment>

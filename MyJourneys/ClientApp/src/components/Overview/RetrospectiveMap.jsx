@@ -44,7 +44,8 @@ export default function RetrospectiveMap(props) {
       container: 'fullScreenMap',
       style: getMapStyle(darkMode),
       center: [0, 30],
-      zoom: 2
+      zoom: 2,
+      minZoom: 1.8
     });
 
     map.on('load', () => {

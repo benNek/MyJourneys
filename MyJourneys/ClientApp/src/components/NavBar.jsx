@@ -41,6 +41,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
   },
   menuButton: {
+    color: theme.palette.text.primary,
     marginRight: theme.spacing(2),
     [theme.breakpoints.up('md')]: {
       display: 'none',

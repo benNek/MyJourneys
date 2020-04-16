@@ -31,6 +31,7 @@ namespace MyJourneys.Repositories
 
             return query.Select(journey => new OverviewJourneyPreviewViewModel
                 {
+                    Id = journey.Id,
                     Title = journey.Title,
                     CoverPhoto = journey.LocationPhotos.FirstOrDefault()
                 })
