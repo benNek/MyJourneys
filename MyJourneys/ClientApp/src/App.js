@@ -13,24 +13,40 @@ import MomentUtils from "@date-io/moment";
 import ArticleForm from "./components/Sharing/ArticleForm";
 import Article from "./components/Sharing/Article";
 import UploadPhotosPage from "./components/Overview/UploadPhotosPage";
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import {CssBaseline} from "@material-ui/core";
+
+const darkTheme = createMuiTheme({
+  palette: {
+    type: "dark",
+    primary: {
+      main: "#FFF"
+    }
+  }
+});
 
 export default function App() {
-  const dispatch = useContext(Context)[1];
+  const [state, dispatch] = useContext(Context);
+  const {darkMode} = state;
+  
   useEffect(() => {
     setUser(dispatch, parseUser());
   }, [dispatch]);
-
+  
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
-      <Layout>
-        <Route exact path='/' component={Retrospective}/>
-        <Route exact path='/journeys' component={Journeys}/>
-        <Route exact path='/journeys/:location.:id' component={Journey}/>
-        <Route exact path='/articles' component={Articles}/>
-        <Route exact path='/article' component={ArticleForm}/>
-        <Route exact path='/articles/:id' component={Article}/>
-        <Route exact path='/upload' component={UploadPhotosPage}/>
-      </Layout>
+      <ThemeProvider theme={darkMode ? darkTheme : createMuiTheme()}>
+        <CssBaseline/>
+        <Layout>
+          <Route exact path='/' component={Retrospective}/>
+          <Route exact path='/journeys' component={Journeys}/>
+          <Route exact path='/journeys/:location.:id' component={Journey}/>
+          <Route exact path='/articles' component={Articles}/>
+          <Route exact path='/article' component={ArticleForm}/>
+          <Route exact path='/articles/:id' component={Article}/>
+          <Route exact path='/upload' component={UploadPhotosPage}/>
+        </Layout>
+      </ThemeProvider>
     </MuiPickersUtilsProvider>
   );
 }

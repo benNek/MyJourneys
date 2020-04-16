@@ -1,7 +1,6 @@
-import 'bootstrap/dist/css/bootstrap.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import {BrowserRouter} from 'react-router-dom';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import Store from "./state/store";
@@ -14,7 +13,7 @@ const rootElement = document.getElementById('root');
 ReactDOM.render(
   <BrowserRouter basename={baseUrl}>
     <Store>
-      <App />
+      <App/>
     </Store>
   </BrowserRouter>,
   rootElement);

@@ -21,6 +21,6 @@ export default function Logout() {
   };
 
   return (
-    <Button color="inherit" onClick={handleLogout}>Logout</Button>
+    <Button onClick={handleLogout}>Logout</Button>
   )
 }

@@ -46,7 +46,7 @@ export default function Register() {
 
   return (
     <React.Fragment>
-      <Button color="inherit" onClick={handleOpen}>Register</Button>
+      <Button onClick={handleOpen}>Register</Button>
 
       <Modal
         aria-labelledby="transition-modal-title"

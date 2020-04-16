@@ -4,7 +4,6 @@ import IconButton from "@material-ui/core/IconButton";
 import React, {useContext, useState} from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import MenuIcon from '@material-ui/icons/Menu';
-import {grey} from "@material-ui/core/colors";
 import Register from "./Authentication/Register";
 import Login from "./Authentication/Login";
 import Logout from "./Authentication/Logout";
@@ -21,6 +20,9 @@ import WorkIcon from '@material-ui/icons/Work';
 import {Link} from "react-router-dom";
 import useTheme from "@material-ui/core/styles/useTheme";
 import {Context} from "../state/store";
+import Button from "@material-ui/core/Button";
+import {setDarkMode} from "../state/actions";
+import InvertColorsIcon from '@material-ui/icons/InvertColors';
 
 const drawerWidth = 240;
 
@@ -36,8 +38,7 @@ const useStyles = makeStyles(theme => ({
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    backgroundColor: '#fff',
-    color: grey[900],
+    backgroundColor: theme.palette.background.paper,
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -62,8 +63,8 @@ export default function NavBar() {
   const classes = useStyles();
   const theme = useTheme();
 
-  const [state] = useContext(Context);
-  const {user} = state;
+  const [state, dispatch] = useContext(Context);
+  const {user, darkMode} = state;
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -75,6 +76,10 @@ export default function NavBar() {
     if (theme.breakpoints.values['md'] >= window.innerWidth) {
       setMobileOpen(false);
     }
+  };
+  
+  const handleThemeChange = () => {
+    setDarkMode(dispatch, !darkMode);
   };
 
   let authControls;
@@ -122,6 +127,7 @@ export default function NavBar() {
             <img className={classes.logo} src={"/images/logo.png"} alt="MyJourneys"/>
           </Link>
           <div className={classes.rightAlign}>
+            <Button onClick={handleThemeChange}><InvertColorsIcon/></Button>
             {authControls}
           </div>
         </Toolbar>
