@@ -90,10 +90,19 @@ namespace MyJourneys.Controllers
 
         [HttpGet("countries")]
         [Authorize]
-        public List<string> GetVisitedCountries()
+        public List<string> GetVisitedCountries([FromQuery] int year = 0)
+        {
+            // Year 0 represents all years
+            var userId = GetUserId(User);
+            return _overviewRepository.GetVisitedCountries(userId, year);
+        }
+
+        [HttpGet("years")]
+        [Authorize]
+        public List<int> GetTravelingYears()
         {
             var userId = GetUserId(User);
-            return _overviewRepository.GetVisitedCountries(userId);
+            return _overviewRepository.GetTravelingYears(userId);
         }
     }
 }

@@ -12,7 +12,23 @@ import CardMedia from "@material-ui/core/CardMedia";
 import {CardContent} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
+  dropzone: {
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '20px',
+    borderWidth: '2px',
+    borRadius: '2px',
+    borderColor: theme.palette.text.secondary,
+    borderStyle: 'dashed',
+    backgroundColor: theme.palette.background.default,
+    color: theme.palette.text.secondary,
+    outline: 'none',
+    transition: 'border .24s ease-in-out, height .24s ease-in-out'
+  },
   acceptedTitle: {
     marginBottom: '12px'
   },
@@ -21,7 +37,10 @@ const useStyles = makeStyles(() => ({
     marginBottom: '12px'
   },
   preview: {
-    width: '40px'
+    width: '80px',
+    [theme.breakpoints.up('sm')]: {
+      width: '120px'
+    },
   },
   cardContent: {
     width: '100%',
@@ -98,7 +117,7 @@ export default function UploadPhotosStep1(props) {
 
   return (
     <Fragment>
-      <div {...getRootProps({className: `dropzone ${files.length ? 'dz-small' : 'dz-tall'}`})}>
+      <div {...getRootProps({className: `${classes.dropzone} dropzone ${files.length ? 'dz-small' : 'dz-tall'}`})}>
         <input {...getInputProps()} />
         <p>Click to select photos</p>
       </div>

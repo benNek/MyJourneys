@@ -1,25 +1,22 @@
 import React, {Fragment, useContext, useEffect, useState} from "react";
 import mapboxgl from 'mapbox-gl';
 import {Context} from "../../state/store";
+import {getMapStyle} from "../../utils/mapUtils";
 
 export default function RetrospectiveMap(props) {
-  const defaultOpacity = 0.4;
-
   const [state] = useContext(Context);
   const {darkMode} = state;
 
+  const defaultOpacity = darkMode ? .2 : .4;
+  
   const [map, setMap] = useState({});
   const [visitedCountries, setVisitedCountries] = useState(props.countries);
-
-  const getMapStyle = () => {
-    return darkMode ? "mapbox://styles/bennek/ck91w6y191la41kpmgetqg8ce" : "mapbox://styles/bennek/ck91vtkwy02bu1ioifdod49tt";
-  };
 
   useEffect(() => {
     mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
     const map = new mapboxgl.Map({
       container: 'fullScreenMap',
-      style: getMapStyle(),
+      style: getMapStyle(darkMode),
       center: [0, 30],
       zoom: 2
     });
@@ -33,7 +30,7 @@ export default function RetrospectiveMap(props) {
     if (Object.entries(map).length === 0 && map.constructor === Object) {
       return;
     }
-    map.setStyle(getMapStyle());
+    map.setStyle(getMapStyle(darkMode));
     // TODO should update visited countries
   }, [darkMode]);
 
@@ -55,6 +52,7 @@ export default function RetrospectiveMap(props) {
     }
 
     if (!visitedCountries.length) {
+      map.setPaintProperty('countries', 'fill-opacity', 0);
       return;
     }
 

@@ -1,19 +1,24 @@
 import React from "react";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
-const pinStyle = {
-  cursor: 'pointer',
-  fill: '#052828',
-  stroke: 'none'
-};
+const useStyles = makeStyles(theme => ({
+  pin: {
+    cursor: 'pointer',
+    fill: theme.palette.action.active,
+    stroke: 'none'
+  }
+}));
 
 export default function CityPin(props) {
+  const classes = useStyles();
   const {size = 36, onClick} = props;
 
   return (
     <svg
       height={size}
       viewBox="0 0 24 24"
-      style={{...pinStyle, transform: `translate(${-size / 2}px,${-size}px)`}}
+      className={classes.pin}
+      style={{transform: `translate(${-size / 2}px,${-size}px)`}}
       onClick={onClick}
     >
       <path d={`M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 

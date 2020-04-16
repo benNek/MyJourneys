@@ -9,6 +9,7 @@ namespace MyJourneys.Repositories
         void AddJourneyOverview(string userId, string title, List<Country> countries,
             List<JourneyOverviewUploadViewModel> models);
         Country GetCountry(string alpha2);
-        List<string> GetVisitedCountries(string userId);
+        List<string> GetVisitedCountries(string userId, int year);
+        List<int> GetTravelingYears(string userId);
     }
 }

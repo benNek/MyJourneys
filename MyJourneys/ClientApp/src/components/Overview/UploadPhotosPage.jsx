@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useState} from "react";
+import React, {Fragment, useState} from "react";
 import {uploadPhoto} from "../../utils/networkFunctions";
 import Divider from "@material-ui/core/Divider";
 import './UploadPhotosPage.css';
@@ -29,12 +29,9 @@ export default function UploadPhotosPage() {
 
   const steps = getSteps();
 
-  useEffect(() => () => {
-    // Make sure to revoke the data uris to avoid memory leaks
-    files.forEach(file => URL.revokeObjectURL(file.preview));
-  }, [files]);
-
   const updateValidFiles = () => {
+    files.filter(file => !file.location && !file.date).forEach(file => URL.revokeObjectURL(file.preview));
+    
     setFiles([
       ...files.filter(file => file.location && file.date)
     ]);
@@ -91,6 +88,8 @@ export default function UploadPhotosPage() {
     }).catch(err => {
       toast.error(`${err.response.data} Status code: ${err.response.status}`);
     });
+
+    files.forEach(file => URL.revokeObjectURL(file.preview));
   };
 
   const handleNext = () => {

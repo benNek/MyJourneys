@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using MyJourneys.Data;
 using MyJourneys.Models;
 using MyJourneys.Models.ViewModels;
-using Microsoft.EntityFrameworkCore;
 
 namespace MyJourneys.Repositories
 {
@@ -34,7 +34,7 @@ namespace MyJourneys.Repositories
 
             AddCountriesToJourney(journey.Id, countries);
 
-            models.ForEach(async model =>
+            models.ForEach(model =>
             {
                 var file = model.File;
                 if (file.Length <= 0) return;
@@ -42,11 +42,7 @@ namespace MyJourneys.Repositories
                 var filePath = Path.Combine(_config["FileStorage:Path"],
                     Guid.NewGuid() + Path.GetExtension(file.FileName));
 
-                await using (var stream = File.Create(filePath))
-                {
-                    await file.CopyToAsync(stream);
-                }
-
+                SaveFile(file, filePath);
                 _context.LocationPhotos.Add(new LocationPhoto
                 {
                     Path = filePath,
@@ -73,18 +69,38 @@ namespace MyJourneys.Repositories
             _context.SaveChanges();
         }
 
+        private void SaveFile(IFormFile file, string path)
+        {
+            using (var stream = File.Create(path))
+            {
+                file.CopyToAsync(stream);
+            }
+        }
+
         public Country GetCountry(string alpha2)
         {
             return _context.Countries.FirstOrDefault(country => country.Alpha2.Equals(alpha2));
         }
-
-        public List<string> GetVisitedCountries(string userId)
+        
+        public List<string> GetVisitedCountries(string userId, int year)
         {
-            return _context.OverviewJourneys.Where(journey => journey.UserId.Equals(userId))
+            var query = _context.OverviewJourneys.Where(journey => journey.UserId.Equals(userId));
+
+            if (year != 0)
+            {
+                query = query.Where(journey => journey.LocationPhotos.Any(photo => photo.Date.Year == year));
+            }
+
+            return query
                 .SelectMany(journey => journey.OverviewJourneysCountries)
                 .Select(journeyCountries => journeyCountries.Country.Alpha3)
                 .Distinct()
                 .ToList();
+        }
+
+        public List<int> GetTravelingYears(string userId)
+        {
+            return _context.LocationPhotos.Select(photo => photo.Date.Year).Distinct().ToList();
         }
     }
 }

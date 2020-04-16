@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useState} from "react";
+import React, {Fragment, useContext, useEffect, useState} from "react";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
@@ -26,6 +26,8 @@ import Button from "@material-ui/core/Button";
 import _ from 'lodash';
 import {DateTimePicker} from "@material-ui/pickers";
 import moment from "moment";
+import {Context} from "../../state/store";
+import {getMapStyle} from "../../utils/mapUtils";
 
 const useStyles = makeStyles(theme => ({
   cards: {
@@ -85,7 +87,7 @@ const useStyles = makeStyles(theme => ({
     outline: 'none'
   },
   note: {
-    marginBottom: '10px'
+    marginBottom: '12px'
   },
   icon: {
     color: theme.palette.text.secondary,
@@ -111,6 +113,9 @@ export default function UploadPhotosStep2(props) {
 
   const {files, updateFiles, calculatedViewport, handleBack, handleNext} = props;
 
+  const [state] = useContext(Context);
+  const {darkMode} = state;
+  
   const [open, setOpen] = useState(false);
   const [editingPhoto, setEditingPhoto] = useState({});
   const [invalidPhotos, setInvalidPhotos] = useState([]);
@@ -404,6 +409,7 @@ export default function UploadPhotosStep2(props) {
               {...viewport}
               onViewportChange={(viewport) => setViewport(viewport)}
               mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+              mapStyle={getMapStyle(darkMode)}
               onClick={handleMapClick}
             >
               {renderMapMarker()}

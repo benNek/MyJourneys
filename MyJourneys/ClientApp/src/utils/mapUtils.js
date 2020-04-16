@@ -53,3 +53,7 @@ export function resolveMapBounds(points) {
 
   return [[minLon, minLat], [maxLon, maxLat]];
 }
+
+export function getMapStyle(darkMode) {
+  return darkMode ? "mapbox://styles/bennek/ck91w6y191la41kpmgetqg8ce" : "mapbox://styles/bennek/ck91vtkwy02bu1ioifdod49tt";
+}
