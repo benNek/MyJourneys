@@ -39,6 +39,18 @@ namespace MyJourneys.Repositories
                 .ToList();
         }
 
+        public OverviewJourneyViewModel GetJourneyOverview(string userId, int journeyId)
+        {
+            return _context.OverviewJourneys.Where(journey => journey.Id == journeyId && journey.UserId.Equals(userId))
+                .Select(journey => new OverviewJourneyViewModel
+                {
+                    Id = journey.Id,
+                    Title = journey.Title,
+                    Photos = journey.LocationPhotos
+                })
+                .FirstOrDefault();
+        }
+
         public void AddJourneyOverview(string userId, string title, List<Country> countries,
             List<JourneyOverviewUploadViewModel> models)
         {

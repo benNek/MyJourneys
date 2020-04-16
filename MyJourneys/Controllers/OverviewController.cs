@@ -34,6 +34,14 @@ namespace MyJourneys.Controllers
             return _overviewRepository.GetJourneyOverviews(userId, year);
         }
 
+        [HttpGet("{id}")]
+        [Authorize]
+        public OverviewJourneyViewModel GetOverviewJourney(int id)
+        {
+            var userId = GetUserId(User);
+            return _overviewRepository.GetJourneyOverview(userId, id);
+        }
+
         [HttpPost]
         [Authorize]
         public IActionResult UploadPhoto([FromForm] string title, [FromForm] IFormFile[] files,

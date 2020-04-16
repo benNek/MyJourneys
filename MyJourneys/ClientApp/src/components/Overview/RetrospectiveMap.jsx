@@ -31,6 +31,8 @@ export default function RetrospectiveMap(props) {
   const [state] = useContext(Context);
   const {darkMode} = state;
 
+  const {onJourneyClick} = props;
+
   const defaultOpacity = darkMode ? .2 : .4;
 
   const [map, setMap] = useState({});
@@ -110,12 +112,16 @@ export default function RetrospectiveMap(props) {
     journeys.forEach(journey => {
       const el = document.createElement('div');
       el.className = classes.coverCard;
-      
+      el.dataset.id = journey.id;
+      el.addEventListener('click', e => {
+        onJourneyClick(e.currentTarget.dataset.id);
+      });
+
       const img = document.createElement('img');
       img.setAttribute('src', getPhotoUrl(journey.coverPhoto.path));
       img.className = classes.coverPhoto;
       el.appendChild(img);
-      
+
       const heading = document.createElement('p');
       heading.className = classes.coverTitle;
       heading.innerText = journey.title;

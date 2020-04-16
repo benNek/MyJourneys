@@ -7,6 +7,7 @@ namespace MyJourneys.Repositories
     public interface IOverviewRepository
     {
         List<OverviewJourneyPreviewViewModel> GetJourneyOverviews(string userId, int year);
+        OverviewJourneyViewModel GetJourneyOverview(string userId, int journeyId);
         void AddJourneyOverview(string userId, string title, List<Country> countries,
             List<JourneyOverviewUploadViewModel> models);
         Country GetCountry(string alpha2);

@@ -40,17 +40,16 @@ const useStyles = makeStyles(theme => ({
 
 export default function OverviewJourneysList(props) {
   const classes = useStyles();
-  const {journeys} = props;
+  const {journeys, onClick} = props;
 
   if (!journeys.length) {
     return;
   }
-
-  console.log(journeys);
+  
   return (
     <div className={classes.root}>
       {journeys.map(journey => (
-        <Card className={classes.card} key={journey.id}>
+        <Card className={classes.card} key={journey.id} onClick={() => onClick(journey.id)}>
           <CardMedia src={getPhotoUrl(journey.coverPhoto.path)} component="img" className={classes.photo}/>
           <CardContent className={classes.content}>
             <Typography variant='body1'>

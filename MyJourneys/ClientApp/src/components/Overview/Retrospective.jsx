@@ -4,7 +4,12 @@ import Fab from "@material-ui/core/Fab";
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import {useHistory} from "react-router";
 import RetrospectiveMap from "./RetrospectiveMap";
-import {getOverviewJourneys, getTravelingYears, getVisitedCountries} from "../../utils/networkFunctions";
+import {
+  getOverviewJourney,
+  getOverviewJourneys,
+  getTravelingYears,
+  getVisitedCountries
+} from "../../utils/networkFunctions";
 import Select from "@material-ui/core/Select";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import FormControl from "@material-ui/core/FormControl";
@@ -57,6 +62,7 @@ export default function Retrospective() {
   const history = useHistory();
 
   const [journeys, setJourneys] = useState([]);
+  const [currentJourney, setCurrentJourney] = useState({});
   const [countries, setCountries] = useState([]);
   const [allYears, setAllYears] = useState([]);
 
@@ -76,6 +82,10 @@ export default function Retrospective() {
     getOverviewJourneys({year}).then(res => setJourneys(res.data)).catch(err => console.error(err));
     getVisitedCountries({year}).then(res => setCountries(res.data)).catch(err => console.error(err));
   }, [year]);
+  
+  useEffect(() => {
+    console.log(currentJourney);
+  }, [currentJourney]);
 
   const handleTriggerListClick = () => {
     setListOpen(!listOpen);
@@ -83,6 +93,10 @@ export default function Retrospective() {
 
   const handleYearChange = event => {
     setYear(event.target.value);
+  };
+  
+  const handleJourneyClick = journeyId => {
+    getOverviewJourney(journeyId).then(res => setCurrentJourney(res.data)).catch(err => console.error(err));
   };
 
   const renderYears = () => {
@@ -98,14 +112,16 @@ export default function Retrospective() {
   return (
     <React.Fragment>
       <div className="map__container">
-        <RetrospectiveMap countries={countries} journeys={journeys}/>
+        <RetrospectiveMap countries={countries} journeys={journeys} onJourneyClick={handleJourneyClick}/>
         {journeys.length > 0 &&
         <Button onClick={handleTriggerListClick} className={classes.allJourneysBtn} variant="outlined">
           {listOpen ? "Close" : "Open"} list
         </Button>
         }
         {listOpen && <Fade in={listOpen}>
-          <div className={classes.journeysList}><OverviewJourneysList journeys={journeys}/></div>
+          <div className={classes.journeysList}>
+            <OverviewJourneysList journeys={journeys} onClick={handleJourneyClick}/>
+          </div>
         </Fade>}
         {allYears.length > 0 &&
         <FormControl variant="outlined" className={classes.yearForm}>
