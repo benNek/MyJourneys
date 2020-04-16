@@ -290,8 +290,10 @@ export default function UploadPhotosStep2(props) {
 
   return (
     <Fragment>
-      <Typography variant="body1">
-        We have failed to determine information about the following images. It might have happened because of X.
+      <Typography variant="body1" className={classes.note}>
+        We have failed to determine information about the following images. 
+        Most popular reasons why it might have happened, is because location was not turned on when photo also taken. 
+        Also, the image might have been downloaded from the Internet.
       </Typography>
       <Typography variant="body1">
         Every photo should be revised and information filled in manually, alternatively, photo can be removed.
