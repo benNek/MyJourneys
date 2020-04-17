@@ -89,7 +89,7 @@ export default function RetrospectiveMap(props) {
       }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
 
       map.fitBounds(bounds, {
-        padding: 200,
+        padding: 40,
         linear: true
       });
     }

@@ -27,10 +27,10 @@ export default function Retrospective() {
   const history = useHistory();
 
   const [journeys, setJourneys] = useState([]);
-  
+
   const [currentJourney, setCurrentJourney] = useState({});
   const [viewMode, setViewMode] = useState('map');
-  
+
   const [countries, setCountries] = useState([]);
   const [allYears, setAllYears] = useState([]);
 
@@ -54,11 +54,11 @@ export default function Retrospective() {
   const handleGoBackClick = () => {
     setCurrentJourney({});
   };
-  
+
   const handleViewModeChange = (event, mode) => {
     setViewMode(mode);
   };
-  
+
   const handleTriggerListClick = () => {
     setListOpen(!listOpen);
   };
@@ -68,7 +68,10 @@ export default function Retrospective() {
   };
 
   const handleJourneyClick = journeyId => {
-    getOverviewJourney(journeyId).then(res => setCurrentJourney(res.data)).catch(err => console.error(err));
+    getOverviewJourney(journeyId).then(res => {
+      setCurrentJourney(res.data);
+      setListOpen(false);
+    }).catch(err => console.error(err));
   };
 
   return (
