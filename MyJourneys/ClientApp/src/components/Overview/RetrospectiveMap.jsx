@@ -31,7 +31,7 @@ export default function RetrospectiveMap(props) {
   const [state] = useContext(Context);
   const {darkMode} = state;
 
-  const {onJourneyClick} = props;
+  const {currentJourney, onJourneyClick} = props;
 
   const defaultOpacity = darkMode ? .2 : .4;
 
@@ -69,6 +69,33 @@ export default function RetrospectiveMap(props) {
   }, [props]);
 
   useEffect(() => {
+    // changing mode from overall view -> single journey view
+    if (currentJourney.id) {
+      removeMapCountries();
+      removeMapJourneys();
+      addPhotoMarkers();
+    } else {
+      updateMapCountries();
+      updateMapJourneys();
+    }
+  }, [currentJourney]);
+
+
+  useEffect(() => {
+    if (currentJourney.id) {
+      const coordinates = currentJourney.photos.map(photo => [photo.longitude, photo.latitude]);
+      const bounds = coordinates.reduce(function (bounds, coordinate) {
+        return bounds.extend(coordinate);
+      }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+
+      map.fitBounds(bounds, {
+        padding: 200,
+        linear: true
+      });
+    }
+  }, [currentJourney]);
+
+  useEffect(() => {
     updateMapCountries();
     updateMapJourneys();
   }, [map]);
@@ -80,6 +107,13 @@ export default function RetrospectiveMap(props) {
   useEffect(() => {
     updateMapJourneys();
   }, [journeys]);
+
+  const removeMapCountries = () => {
+    if (Object.entries(map).length === 0 && map.constructor === Object) {
+      return;
+    }
+    map.setPaintProperty('countries', 'fill-opacity', 0);
+  };
 
   const updateMapCountries = () => {
     if (Object.entries(map).length === 0 && map.constructor === Object) {
@@ -100,6 +134,15 @@ export default function RetrospectiveMap(props) {
     ]);
   };
 
+  const removeMapJourneys = () => {
+    if (Object.entries(map).length === 0 && map.constructor === Object) {
+      return;
+    }
+    markers.forEach(marker => {
+      marker.remove();
+    });
+  };
+
   const updateMapJourneys = () => {
     if (Object.entries(map).length === 0 && map.constructor === Object) {
       return;
@@ -110,17 +153,7 @@ export default function RetrospectiveMap(props) {
 
     const createdMarkers = [];
     journeys.forEach(journey => {
-      const el = document.createElement('div');
-      el.className = classes.coverCard;
-      el.dataset.id = journey.id;
-      el.addEventListener('click', e => {
-        onJourneyClick(e.currentTarget.dataset.id);
-      });
-
-      const img = document.createElement('img');
-      img.setAttribute('src', getPhotoUrl(journey.coverPhoto.path));
-      img.className = classes.coverPhoto;
-      el.appendChild(img);
+      const el = renderPhotoCard(journey.id, journey.coverPhoto.path, e => onJourneyClick(e.currentTarget.dataset.id));
 
       const heading = document.createElement('p');
       heading.className = classes.coverTitle;
@@ -133,6 +166,40 @@ export default function RetrospectiveMap(props) {
       createdMarkers.push(marker);
     });
     setMarkers(createdMarkers);
+  };
+
+  const addPhotoMarkers = () => {
+    if (Object.entries(map).length === 0 && map.constructor === Object) {
+      return;
+    }
+    markers.forEach(marker => {
+      marker.remove();
+    });
+
+    const createdMarkers = [];
+    currentJourney.photos.forEach(photo => {
+      const el = renderPhotoCard(undefined, photo.path)
+      const marker = new mapboxgl.Marker(el)
+        .setLngLat([photo.longitude, photo.latitude])
+        .addTo(map);
+      createdMarkers.push(marker);
+    });
+    setMarkers(createdMarkers);
+  };
+
+  const renderPhotoCard = (id, photo, onClick) => {
+    const el = document.createElement('div');
+    el.className = classes.coverCard;
+    if (id) {
+      el.dataset.id = id;
+    }
+    el.addEventListener('click', onClick);
+
+    const img = document.createElement('img');
+    img.setAttribute('src', getPhotoUrl(photo));
+    img.className = classes.coverPhoto;
+    el.appendChild(img);
+    return el;
   };
 
   return (

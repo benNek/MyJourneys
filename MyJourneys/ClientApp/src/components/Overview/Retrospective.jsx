@@ -10,46 +10,11 @@ import {
   getTravelingYears,
   getVisitedCountries
 } from "../../utils/networkFunctions";
-import Select from "@material-ui/core/Select";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import FormControl from "@material-ui/core/FormControl";
-import Button from "@material-ui/core/Button";
-import OverviewJourneysList from "./OverviewJourneysList";
-import Fade from "@material-ui/core/Fade";
+import OverviewActions from "./OverviewActions";
+import SingleJourneyActions from "./SingleJourneyActions";
 
 const useStyles = makeStyles(theme => ({
-  allJourneysBtn: {
-    position: 'absolute',
-    left: '8px',
-    top: '20px',
-    background: theme.palette.background.paper,
-    [theme.breakpoints.up('sm')]: {
-      left: '20px',
-      top: '24px'
-    }
-  },
-  journeysList: {
-    position: 'absolute',
-    left: '8px',
-    top: '68px',
-    [theme.breakpoints.up('sm')]: {
-      left: '20px',
-      top: '82px'
-    }
-  },
-  yearForm: {
-    position: 'absolute',
-    right: '8px',
-    top: '20px',
-    [theme.breakpoints.up('sm')]: {
-      right: '20px',
-      top: '24px'
-    }
-  },
-  yearSelect: {
-    height: '36px',
-    background: theme.palette.background.paper
-  },
   fab: {
     color: theme.palette.text.primary,
     background: theme.palette.background.paper,
@@ -62,7 +27,10 @@ export default function Retrospective() {
   const history = useHistory();
 
   const [journeys, setJourneys] = useState([]);
+  
   const [currentJourney, setCurrentJourney] = useState({});
+  const [viewMode, setViewMode] = useState('map');
+  
   const [countries, setCountries] = useState([]);
   const [allYears, setAllYears] = useState([]);
 
@@ -82,11 +50,15 @@ export default function Retrospective() {
     getOverviewJourneys({year}).then(res => setJourneys(res.data)).catch(err => console.error(err));
     getVisitedCountries({year}).then(res => setCountries(res.data)).catch(err => console.error(err));
   }, [year]);
-  
-  useEffect(() => {
-    console.log(currentJourney);
-  }, [currentJourney]);
 
+  const handleGoBackClick = () => {
+    setCurrentJourney({});
+  };
+  
+  const handleViewModeChange = (event, mode) => {
+    setViewMode(mode);
+  };
+  
   const handleTriggerListClick = () => {
     setListOpen(!listOpen);
   };
@@ -94,49 +66,23 @@ export default function Retrospective() {
   const handleYearChange = event => {
     setYear(event.target.value);
   };
-  
+
   const handleJourneyClick = journeyId => {
     getOverviewJourney(journeyId).then(res => setCurrentJourney(res.data)).catch(err => console.error(err));
-  };
-
-  const renderYears = () => {
-    if (!allYears.length) {
-      return;
-    }
-
-    return allYears.map(year => (
-      <option key={year} value={year}>{year === 0 ? "All" : year}</option>
-    ));
   };
 
   return (
     <React.Fragment>
       <div className="map__container">
-        <RetrospectiveMap countries={countries} journeys={journeys} onJourneyClick={handleJourneyClick}/>
-        {journeys.length > 0 &&
-        <Button onClick={handleTriggerListClick} className={classes.allJourneysBtn} variant="outlined">
-          {listOpen ? "Close" : "Open"} list
-        </Button>
-        }
-        {listOpen && <Fade in={listOpen}>
-          <div className={classes.journeysList}>
-            <OverviewJourneysList journeys={journeys} onClick={handleJourneyClick}/>
-          </div>
-        </Fade>}
-        {allYears.length > 0 &&
-        <FormControl variant="outlined" className={classes.yearForm}>
-          <Select
-            native
-            className={classes.yearSelect}
-            value={year}
-            onChange={handleYearChange}
-            inputProps={{
-              name: 'year',
-            }}
-          >
-            {renderYears()}
-          </Select>
-        </FormControl>
+        <RetrospectiveMap countries={countries} journeys={journeys}
+                          currentJourney={currentJourney} onJourneyClick={handleJourneyClick}/>
+        {!!currentJourney.id ?
+          <SingleJourneyActions handleGoBackClick={handleGoBackClick}
+                                viewMode={viewMode} handleViewModeChange={handleViewModeChange}/>
+          :
+          <OverviewActions journeys={journeys} year={year} allYears={allYears} isListOpen={listOpen}
+                           handleTriggerListClick={handleTriggerListClick} handleJourneyClick={handleJourneyClick}
+                           handleYearChange={handleYearChange}/>
         }
       </div>
       <Fab onClick={() => history.push('/upload')} aria-label="add photos"
