@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {Fragment, useContext, useEffect, useState} from "react";
 import mapboxgl from 'mapbox-gl';
 import {Context} from "../../state/store";
 import {getMapStyle, getPhotoUrl} from "../../utils/mapUtils";
@@ -31,7 +31,7 @@ export default function RetrospectiveMap(props) {
   const [state] = useContext(Context);
   const {darkMode} = state;
 
-  const {currentJourney, onJourneyClick} = props;
+  const {currentJourney, onJourneyClick, viewMode} = props;
 
   const defaultOpacity = darkMode ? .2 : .4;
 
@@ -88,9 +88,9 @@ export default function RetrospectiveMap(props) {
         return bounds.extend(coordinate);
       }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
 
+      const desktop = window.innerWidth > 768;
       map.fitBounds(bounds, {
-        padding: 40,
-        linear: true
+        padding: desktop ? 160 : 60
       });
     }
   }, [currentJourney]);
@@ -107,6 +107,16 @@ export default function RetrospectiveMap(props) {
   useEffect(() => {
     updateMapJourneys();
   }, [journeys]);
+
+  useEffect(() => {
+    if (Object.entries(map).length === 0 && map.constructor === Object) {
+      return;
+    }
+    setTimeout(() => {
+      map.resize();
+      
+    }, 100)
+  }, [viewMode]);
 
   const removeMapCountries = () => {
     if (Object.entries(map).length === 0 && map.constructor === Object) {
@@ -203,6 +213,8 @@ export default function RetrospectiveMap(props) {
   };
 
   return (
-    <div id="fullScreenMap"/>
+    <Fragment>
+      <div id="fullScreenMap" className={!!currentJourney.id && viewMode === 'gallery' ? 'map--hidden' : undefined}/>
+    </Fragment>
   )
 }

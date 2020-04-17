@@ -76,11 +76,11 @@ export default function Retrospective() {
 
   return (
     <React.Fragment>
-      <div className="map__container">
-        <RetrospectiveMap countries={countries} journeys={journeys}
+      <div className={`map__container ${viewMode === 'gallery' && 'map__container--gallery'}`}>
+        <RetrospectiveMap countries={countries} journeys={journeys} viewMode={viewMode}
                           currentJourney={currentJourney} onJourneyClick={handleJourneyClick}/>
         {!!currentJourney.id ?
-          <SingleJourneyActions handleGoBackClick={handleGoBackClick}
+          <SingleJourneyActions handleGoBackClick={handleGoBackClick} journey={currentJourney}
                                 viewMode={viewMode} handleViewModeChange={handleViewModeChange}/>
           :
           <OverviewActions journeys={journeys} year={year} allYears={allYears} isListOpen={listOpen}
