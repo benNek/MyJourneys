@@ -55,6 +55,7 @@
         <Content Include="ClientApp\src\components\Sharing\Articles.jsx" />
         <Content Include="ClientApp\src\components\Sharing\Article.jsx" />
         <Content Include="ClientApp\src\components\Sharing\ArticleForm.jsx" />
+        <Content Include="ClientApp\src\components\Sharing\ArticleSearch.jsx" />
         <Content Include="ClientApp\src\components\Sharing\Filters.jsx" />
         <Content Include="ClientApp\src\components\Sharing\PopularTags.jsx" />
         <Content Include="ClientApp\src\state\actions.js" />

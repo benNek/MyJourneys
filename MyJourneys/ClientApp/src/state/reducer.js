@@ -16,21 +16,6 @@ const Reducer = (state, action) => {
         ...state,
         journeys: action.payload
       };
-    case 'SET_POPULAR_TAGS':
-      return {
-        ...state,
-        popularTags: action.payload
-      };
-    case 'SET_ACTIVE_TAG':
-      return {
-        ...state,
-        activeTag: action.payload
-      };
-    case 'SET_SORT_TYPE':
-      return {
-        ...state,
-        sortType: action.payload
-      };
     case 'SET_ARTICLES':
       return {
         ...state,

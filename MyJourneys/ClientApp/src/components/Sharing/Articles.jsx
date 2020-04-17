@@ -1,8 +1,8 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {getArticles, getPopularTags} from "../../utils/networkFunctions";
 import Typography from "@material-ui/core/Typography";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {loadArticles, setActiveTag, setArticles, setPopularTags, setSortType} from "../../state/actions";
+import {loadArticles, setArticles} from "../../state/actions";
 import {Context} from "../../state/store";
 import Divider from "@material-ui/core/Divider";
 import PopularTags from "./PopularTags";
@@ -13,6 +13,7 @@ import SubjectIcon from '@material-ui/icons/Subject';
 import {useHistory} from "react-router";
 import ArticlePreview from "./ArticlePreview";
 import Filters from "./Filters";
+import ArticleSearch from "./ArticleSearch";
 
 const take = 6;
 let skip = 0;
@@ -49,18 +50,24 @@ export default function Articles() {
   const classes = useStyles();
   const history = useHistory();
   const [state, dispatch] = useContext(Context);
-  const {activeTag, sortType, popularTags, articles} = state;
+  const {articles} = state;
+
+  const [popularTags, setPopularTags] = useState([]);
+  const [sortType, setSortType] = useState('feed');
+  const [search, setSearch] = useState('');
+  const [activeTag, setActiveTag] = useState('');
 
   useEffect(() => {
     if (!articles.length) {
       getArticles({
         tag: activeTag,
-        sortType
+        sortType,
+        search
       }).then(res => setArticles(dispatch, res.data)).catch(err => toast.error(err));
     }
 
     if (!popularTags.length) {
-      getPopularTags().then(res => setPopularTags(dispatch, res.data)).catch(err => toast.error(err));
+      getPopularTags().then(res => setPopularTags(res.data)).catch(err => toast.error(err));
     }
   }, [dispatch]);
 
@@ -69,21 +76,45 @@ export default function Articles() {
     if (activeTag === tag) {
       tag = '';
     }
-    setActiveTag(dispatch, tag);
-    getArticles({tag, sortType}).then(res => setArticles(dispatch, res.data)).catch(err => toast.error(err));
+    setActiveTag(tag);
+    getArticles({tag, sortType, search}).then(res => setArticles(dispatch, res.data)).catch(err => toast.error(err));
   };
 
   const handleLoadMoreClick = () => {
     skip += take;
     getArticles({
-      tag: activeTag, skip, take
+      tag: activeTag, search, skip, take
     }).then(res => loadArticles(dispatch, res.data)).catch(err => toast.error(err));
   };
 
   const handleSortTypeClick = (type) => {
-    setSortType(dispatch, type);
-    getArticles({tag: activeTag, sortType: type})
+    setSortType(type);
+    getArticles({tag: activeTag, sortType: type, search})
       .then(res => setArticles(dispatch, res.data)).catch(err => toast.error(err));
+  };
+
+  const handleSearchChange = value => {
+    if (value.length === 0 && search.length >= 3) {
+      getArticles({tag: activeTag, sortType, search: value})
+        .then(res => {
+          setSearch(value);
+          setArticles(dispatch, res.data);
+        }).catch(err => toast.error(err));
+    } else if (value.length >= 3) {
+      setSearch(value);
+      getArticles({tag: activeTag, sortType, search: value})
+        .then(res => setArticles(dispatch, res.data)).catch(err => toast.error(err));
+    }
+  };
+
+  const handleClearAll = () => {
+    getArticles({tag: null, sortType: 'feed', search: null})
+      .then(res => {
+        setActiveTag('');
+        setSearch('');
+        setSortType('feed');
+        setArticles(dispatch, res.data)
+      }).catch(err => toast.error(err));
   };
 
   const renderArticles = () => {
@@ -91,7 +122,7 @@ export default function Articles() {
       return (
         <Typography variant='body1'>
           No articles found with selected filters.
-          <Button className={classes.clearAllBtn} variant="outlined" onClick={() => handleSortTypeClick('feed')} color="primary">
+          <Button className={classes.clearAllBtn} variant="outlined" onClick={handleClearAll} color="primary">
             Clear filters
           </Button>
         </Typography>
@@ -110,7 +141,7 @@ export default function Articles() {
       </Typography>
       <Divider/>
       {
-        articles.length > 0 || sortType !== 'feed' ?
+        articles.length > 0 || sortType !== 'feed' || search ?
           (
             <div className={classes.container}>
               <div className={classes.articles}>
@@ -120,6 +151,7 @@ export default function Articles() {
                 <Button onClick={handleLoadMoreClick} fullWidth variant="outlined" color="primary">Load more</Button>}
               </div>
               <div className={classes.rightSection}>
+                <ArticleSearch onChange={handleSearchChange}/>
                 <PopularTags activeTag={activeTag} tags={popularTags} handleClick={handleTagClick}/>
               </div>
             </div>

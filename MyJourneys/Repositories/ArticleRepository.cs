@@ -37,7 +37,8 @@ namespace MyJourneys.Repositories
                 }).FirstOrDefault();
         }
 
-        public List<ArticleViewModel> GetArticles(string tagName, ArticleSortType sortType, int skip, int take)
+        public List<ArticleViewModel> GetArticles(string tagName, ArticleSortType sortType, string search,
+            int skip, int take)
         {
             DateTime filterDate = GetMaxDate(sortType);
             var query = _context.Articles
@@ -47,6 +48,11 @@ namespace MyJourneys.Repositories
             {
                 query = query.Where(article =>
                     article.ArticleTags.Any(articleTag => articleTag.Tag.Name.Equals(tagName)));
+            }
+
+            if (search != null)
+            {
+                query = query.Where(article => article.Title.Contains(search));
             }
 
             var viewModelQuery = query.Select(article => new ArticleViewModel

@@ -2,14 +2,11 @@ import React, {createContext, useReducer} from "react";
 import Reducer from './reducer';
 
 const savedDarkMode = localStorage.getItem('theme') && localStorage.getItem('theme') === 'dark';
-const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 const initialState = {
   darkMode: savedDarkMode || (!localStorage.getItem('theme') && prefersDarkMode),
   user: null,
   journeys: [],
-  popularTags: [],
-  activeTag: '',
-  sortType: 'feed',
   articles: []
 };
 

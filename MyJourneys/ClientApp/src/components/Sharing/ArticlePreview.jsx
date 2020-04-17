@@ -26,7 +26,8 @@ const useStyles = makeStyles(theme => ({
   },
   readMore: {
     display: 'inline-block',
-    marginTop: '12px'
+    marginTop: '12px',
+    color: theme.palette.info.dark
   },
   tags: {
     marginTop: '-8px',

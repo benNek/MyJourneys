@@ -29,10 +29,10 @@ namespace MyJourneys.Controllers
 
         [HttpGet]
         public IEnumerable<ArticleViewModel> Get([FromQuery] string tag, [FromQuery] string sortType,
-            [FromQuery] int skip = 0, [FromQuery] int take = 6)
+            [FromQuery] string search, [FromQuery] int skip = 0, [FromQuery] int take = 6)
         {
             var sort = GetSortType(sortType);
-            return  _articleRepository.GetArticles(tag, sort, skip, take);
+            return  _articleRepository.GetArticles(tag, sort, search, skip, take);
         }
 
         [HttpGet("{id}")]
