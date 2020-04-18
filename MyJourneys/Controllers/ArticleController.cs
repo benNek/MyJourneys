@@ -23,8 +23,7 @@ namespace MyJourneys.Controllers
         public IActionResult Create([FromBody] ArticleFormViewModel model)
         {
             var userId = GetUserId(User);
-            _articleRepository.AddArticle(userId, model);
-            return Ok("Article has been created successfully");
+            return Ok(_articleRepository.AddArticle(userId, model));
         }
 
         [HttpGet]
@@ -32,7 +31,7 @@ namespace MyJourneys.Controllers
             [FromQuery] string search, [FromQuery] int skip = 0, [FromQuery] int take = 6)
         {
             var sort = GetSortType(sortType);
-            return  _articleRepository.GetArticles(tag, sort, search, skip, take);
+            return _articleRepository.GetArticles(tag, sort, search, skip, take);
         }
 
         [HttpGet("{id}")]
@@ -60,7 +59,7 @@ namespace MyJourneys.Controllers
             _articleRepository.LikeArticle(userId, id);
             return Ok();
         }
-        
+
         [HttpGet("{id}/like")]
         public bool HasLiked(int id)
         {

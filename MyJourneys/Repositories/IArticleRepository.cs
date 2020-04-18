@@ -9,7 +9,7 @@ namespace MyJourneys.Repositories
     {
         ArticleViewModel GetArticle(int id);
         List<ArticleViewModel> GetArticles(string tagName, ArticleSortType sortType, string search, int skip, int take);
-        void AddArticle(string userId, ArticleFormViewModel model);
+        Article AddArticle(string userId, ArticleFormViewModel model);
         void AddTagsToArticle(int articleId, List<string> tags);
         Tag GetTag(string tagName);
         List<string> GetTags();

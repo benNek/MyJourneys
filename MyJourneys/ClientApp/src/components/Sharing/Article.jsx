@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {useParams} from "react-router";
 import {getArticle, hasLikedArticle, likeArticle} from "../../utils/networkFunctions";
@@ -19,6 +19,7 @@ import {
 import FavoriteTwoToneIcon from '@material-ui/icons/FavoriteTwoTone';
 
 import './Article.css';
+import {Context} from "../../state/store";
 
 const useStyles = makeStyles({
   divider: {
@@ -27,6 +28,10 @@ const useStyles = makeStyles({
   bottom: {
     display: 'flex',
     justifyContent: 'space-between'
+  },
+  likes: {
+    display: 'flex',
+    alignItems: 'center'
   },
   likesCount: {
     display: 'inline-block',
@@ -51,6 +56,9 @@ export default function Article() {
   const classes = useStyles();
   const [article, setArticle] = useState(undefined);
   const [hasLiked, setHasLiked] = useState(false);
+
+  const [state] = useContext(Context);
+  const {darkMode} = state;
 
   let {id} = useParams();
 
@@ -89,10 +97,11 @@ export default function Article() {
         <Editor
           readOnly={true}
           defaultValue={article.text}
+          dark={darkMode}
         />
         <Divider className={classes.divider}/>
         <Typography className={classes.bottom} variant="caption">
-          <div>
+          <div className={classes.likes}>
             <FavoriteTwoToneIcon
               onClick={handleLikeClick}
               className={`Article__heartIcon${hasLiked ? '--active' : ''}`}

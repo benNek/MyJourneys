@@ -87,7 +87,7 @@ namespace MyJourneys.Repositories
             }
         }
 
-        public void AddArticle(string userId, ArticleFormViewModel model)
+        public Article AddArticle(string userId, ArticleFormViewModel model)
         {
             var article = new Article
             {
@@ -100,6 +100,7 @@ namespace MyJourneys.Repositories
             _context.Articles.Add(article);
             _context.SaveChanges();
             AddTagsToArticle(article.Id, model.Tags);
+            return article;
         }
 
         public void AddTagsToArticle(int articleId, List<string> tags)

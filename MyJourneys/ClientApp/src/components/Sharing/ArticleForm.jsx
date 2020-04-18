@@ -1,4 +1,4 @@
-import React, {createRef, useEffect, useState} from "react";
+import React, {createRef, Fragment, useContext, useEffect, useState} from "react";
 import {Form, Formik} from "formik";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
@@ -15,25 +15,48 @@ import Popover from "@material-ui/core/Popover";
 import removeMd from "remove-markdown";
 import {createArticle, getTags} from "../../utils/networkFunctions";
 import {articleValidation} from "../../utils/validation";
+import {Context} from "../../state/store";
+import Success from "../Success";
+import VisibilityOutlinedIcon from '@material-ui/icons/VisibilityOutlined';
+import SpeakerNotesIcon from '@material-ui/icons/SpeakerNotes';
+import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
+import RecommendedAction from "../RecommendedAction";
 
 const useStyles = makeStyles(theme => ({
+  successContainer: {
+    textAlign: 'center'
+  },
   submitButton: {
     marginTop: '16px',
     width: '120px',
   },
+  link: {
+    color: theme.palette.info.dark
+  },
+  recommendedActionsTitle: {
+    marginTop: '24px'
+  },
+  recommendedActions: {
+    marginTop: '0px'
+  }
 }));
 
 export default function ArticleForm() {
   const classes = useStyles();
 
+  const [state] = useContext(Context);
+  const {darkMode} = state;
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [tags, setTags] = useState([]);
+  const [createdId, setCreatedId] = useState(0);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     getTags().then(res => setTags(res.data)).catch(err => console.error(err));
   }, []);
-  
+
   const editorRef = createRef();
 
   const handleOpenPopover = element => {
@@ -44,10 +67,35 @@ export default function ArticleForm() {
     setAnchorEl(null);
   };
 
+  if (success) {
+    return (
+      <div className={classes.successContainer}>
+        <Success/>
+        <Typography component='h1' variant='h4'>
+          Article published sucessfully!
+        </Typography>
+        <Typography variant='subtitle1' className={classes.recommendedActionsTitle}>
+          Recommended actions:
+        </Typography>
+        <Grid container spacing={4} className={classes.recommendedActions}>
+          <Grid item xs={12} sm={6} md={4}>
+            <RecommendedAction Icon={VisibilityOutlinedIcon} text="Preview article" link={`/articles/${createdId}`}/>
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <RecommendedAction Icon={SpeakerNotesIcon} text="All articles" link='/articles'/>
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <RecommendedAction Icon={CreateOutlinedIcon} text="Publish another article" link='/article'/>
+          </Grid>
+        </Grid>
+      </div>
+    )
+  }
+
   return (
-    <React.Fragment>
+    <Fragment>
       <Typography component='h1' variant='h3'>
-        Add your own article
+        Publish your article
       </Typography>
       <Divider/>
       <Formik
@@ -57,17 +105,18 @@ export default function ArticleForm() {
           if (!isSubmitting) {
             return;
           }
-          
+
           const strippedText = removeMd(values['text']).replace('\\', '').trim();
           if (!strippedText) {
             handleOpenPopover(editorRef.current.element);
             return;
           }
-          
+
           actions.setSubmitting(true);
           await createArticle(values)
             .then(response => {
-              toast.success(response.data);
+              setCreatedId(response.data.id);
+              setSuccess(true);
             })
             .catch(err => {
               toast.error(`${err.response.data} Status code: ${err.response.status}`);
@@ -122,6 +171,7 @@ export default function ArticleForm() {
                     ref={editorRef}
                     bodyPlaceholder="Express your thoughts in here!"
                     onChange={value => setFieldValue('text', value())}
+                    dark={darkMode}
                   />
                   <Popover
                     anchorOrigin={{
@@ -155,6 +205,6 @@ export default function ArticleForm() {
           );
         }}
       </Formik>
-    </React.Fragment>
+    </Fragment>
   )
 }

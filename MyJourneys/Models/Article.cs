@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace MyJourneys.Models
 {
@@ -13,8 +14,11 @@ namespace MyJourneys.Models
         public DateTime CreateDate { get; set; }
         public DateTime ModifyDate { get; set; }
 
+        [JsonIgnore]
         [ForeignKey("AuthorId")] public virtual User Author { get; set; }
+        [JsonIgnore]
         public virtual ICollection<ArticleTags> ArticleTags { get; set; }
+        [JsonIgnore]
         public virtual ICollection<ArticleLikes> ArticleLikes { get; set; }
     }
 }
