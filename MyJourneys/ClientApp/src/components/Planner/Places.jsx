@@ -12,13 +12,11 @@ import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import Card from "@material-ui/core/Card";
 import Link from "@material-ui/core/Link";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import Button from "@material-ui/core/Button";
 import {reorderPlaces} from "../../utils/networkFunctions";
-
+import Grid from "@material-ui/core/Grid";
+import RecommendedAction from "../RecommendedAction";
+import MapIcon from '@material-ui/icons/Map';
+import RotateRightIcon from '@material-ui/icons/RotateRight';
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -34,12 +32,7 @@ const useStyles = makeStyles(theme => ({
   card: {
     marginBottom: '12px'
   },
-  formControl: {
-    marginBottom: '12px',
-    minWidth: '150px'
-  },
-  routeLink: {
-    display: 'block',
+  recommendedActions: {
     marginBottom: '12px'
   },
   link: {
@@ -53,7 +46,6 @@ export default function Places(props) {
 
   const classes = useStyles();
   const [modalOpen, setModalOpen] = useState(false);
-  const [travelType, setTravelType] = useState('auto');
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -63,10 +55,6 @@ export default function Places(props) {
     setModalOpen(false);
   };
 
-  const handleTravelTypeChange = (event) => {
-    setTravelType(event.target.value);
-  };
-  
   const handleReorderPlacesClick = () => {
     reorderPlaces(id).then(result => console.log(result.data));
   };
@@ -86,30 +74,14 @@ export default function Places(props) {
     return (
       <React.Fragment>
         {routeUrl &&
-        <React.Fragment>
-          <FormControl className={classes.formControl}>
-            <InputLabel id="transit-type-label">Travel Type</InputLabel>
-            <Select
-              labelId="travel-type-label"
-              id="travel-type"
-              value={travelType}
-              onChange={handleTravelTypeChange}
-              label="Travel type"
-            >
-              <MenuItem value='auto'>Recommended</MenuItem>
-              <MenuItem value='driving'>Driving</MenuItem>
-              <MenuItem value='walking'>Walking</MenuItem>
-              <MenuItem value='bicycling'>Bicycling</MenuItem>
-              <MenuItem value='transit'>Transit</MenuItem>
-            </Select>
-          </FormControl>
-          <Link href={routeUrl} target="_blank" rel="noopener" className={classes.routeLink}>
-            Show route on maps
-          </Link>
-          <Button onClick={handleReorderPlacesClick} variant="contained" color="primary">
-            Reorder places for best route
-          </Button>
-        </React.Fragment>
+        <Grid container spacing={2} className={classes.recommendedActions}>
+          <Grid item xs={12} sm={6}>
+            <RecommendedAction Icon={MapIcon} text="Show route on maps" link={routeUrl} target="_blank"/>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <RecommendedAction Icon={RotateRightIcon} text="Reorder based on best route" onClick={handleReorderPlacesClick}/>
+          </Grid>
+        </Grid>
         }
         {renderPlaces()}
       </React.Fragment>
@@ -132,9 +104,8 @@ export default function Places(props) {
     const originUrl = origin ? `&origin=${origin.latitude},${origin.longitude}` : '';
     const destinationUrl = destination ? `&destination=${destination.latitude},${destination.longitude}` : '';
     const waypointsUrl = waypoints ? `&waypoints=${waypoints}` : '';
-    const travelTypeUrl = travelType && travelType !== 'auto' ? `&travelmode=${travelType}` : '';
 
-    const url = `${baseUrl}${originUrl}${destinationUrl}${travelTypeUrl}${waypointsUrl}`;
+    const url = `${baseUrl}${originUrl}${destinationUrl}${waypointsUrl}`;
     if (!url.includes('origin') || !url.includes('destination')) {
       return '';
     }

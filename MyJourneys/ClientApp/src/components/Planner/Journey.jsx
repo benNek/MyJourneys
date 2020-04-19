@@ -11,8 +11,17 @@ import {getJourneyItems, getNotes, getPlaces} from "../../utils/networkFunctions
 import {toast} from "react-toastify";
 import Notes from "./Notes";
 import Places from "./Places";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+
+const useStyles = makeStyles(theme => ({
+  title: {
+    marginBottom: '12px',
+    textAlign: 'center'
+  }
+}));
 
 export default function Journey() {
+  const classes = useStyles();
   let {location, id} = useParams();
   const [tab, setTab] = React.useState(0);
   const [items, setItems] = useState([]);
@@ -48,7 +57,7 @@ export default function Journey() {
 
   return (
     <React.Fragment>
-      <Typography component='h1' variant='h3'>
+      <Typography component='h1' variant='h3' className={classes.title}>
         {location}
         <span>
           <OfflinePinIcon/>
