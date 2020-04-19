@@ -15,6 +15,7 @@ import Article from "./components/Sharing/Article";
 import UploadPhotosPage from "./components/Overview/UploadPhotosPage";
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import {CssBaseline} from "@material-ui/core";
+import PrivateRoute from "./components/PrivateRoute";
 
 const darkTheme = createMuiTheme({
   palette: {
@@ -39,12 +40,12 @@ export default function App() {
         <CssBaseline/>
         <Layout>
           <Route exact path='/' component={Retrospective}/>
-          <Route exact path='/journeys' component={Journeys}/>
-          <Route exact path='/journeys/:location.:id' component={Journey}/>
+          <PrivateRoute exact path='/journeys' component={Journeys}/>
+          <PrivateRoute exact path='/journeys/:location.:id' component={Journey}/>
           <Route exact path='/articles' component={Articles}/>
-          <Route exact path='/article' component={ArticleForm}/>
+          <PrivateRoute Route exact path='/article' component={ArticleForm}/>
           <Route exact path='/articles/:id' component={Article}/>
-          <Route exact path='/upload' component={UploadPhotosPage}/>
+          <PrivateRoute Route exact path='/upload' component={UploadPhotosPage}/>
         </Layout>
       </ThemeProvider>
     </MuiPickersUtilsProvider>

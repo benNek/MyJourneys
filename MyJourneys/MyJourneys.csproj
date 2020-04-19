@@ -51,6 +51,7 @@
         <Content Include="ClientApp\src\components\Overview\Retrospective.css" />
         <Content Include="ClientApp\src\components\Overview\Retrospective.jsx" />
         <Content Include="ClientApp\src\components\Overview\UploadPhotosPage.jsx" />
+        <Content Include="ClientApp\src\components\PrivateRoute.jsx" />
         <Content Include="ClientApp\src\components\RecommendedAction.jsx" />
         <Content Include="ClientApp\src\components\Sharing\Article.css" />
         <Content Include="ClientApp\src\components\Sharing\ArticlePreview.jsx" />

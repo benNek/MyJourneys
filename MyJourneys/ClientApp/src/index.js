@@ -20,11 +20,11 @@ ReactDOM.render(
 
 if ('serviceWorker' in navigator) {
   console.log('CLIENT: service worker registration in progress.');
-  navigator.serviceWorker.register('/sw.js').then(function() {
-    console.log('CLIENT: service worker registration complete.');
-  }, function() {
-    console.log('CLIENT: service worker registration failure.');
-  });
+  // navigator.serviceWorker.register('/sw.js').then(function() {
+  //   console.log('CLIENT: service worker registration complete.');
+  // }, function() {
+  //   console.log('CLIENT: service worker registration failure.');
+  // });
 } else {
   console.log('CLIENT: service worker is not supported.');
 }
