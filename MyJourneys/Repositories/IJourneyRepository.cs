@@ -6,7 +6,7 @@ namespace MyJourneys.Repositories
 {
     public interface IJourneyRepository
     {
-        void AddJourney(User user, JourneyCreationViewModel model);
+        void AddJourney(string userId, JourneyCreationViewModel model);
         List<JourneyViewModel> GetJourneys(string userId);
         bool IsUsersJourney(string userId, int journeyId);
         List<JourneyItemViewModel> GetJourneyItems(string userId, int journeyId);

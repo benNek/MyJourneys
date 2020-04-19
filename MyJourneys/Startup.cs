@@ -35,7 +35,7 @@ namespace MyJourneys
         {
             services.AddControllersWithViews();
             services.AddDbContext<TravelContext>(o =>
-                o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")),
+                    o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")),
                 ServiceLifetime.Transient);
             AddScopes(services);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -66,7 +66,7 @@ namespace MyJourneys
             app.UseSpaStaticFiles();
 
             app.UseRouting();
-            
+
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -89,6 +89,7 @@ namespace MyJourneys
 
             Task.Run(() => CreateRoles(serviceProvider)).GetAwaiter().GetResult();
             Task.Run(() => new CountriesSeed().Seed()).GetAwaiter().GetResult();
+            CreateFolders();
         }
 
         private void SetupAuth(IServiceCollection services)
@@ -105,7 +106,7 @@ namespace MyJourneys
                 })
                 .AddEntityFrameworkStores<TravelContext>()
                 .AddDefaultTokenProviders();
-            
+
             services
                 .AddAuthentication(options =>
                 {
@@ -146,6 +147,7 @@ namespace MyJourneys
             services.AddScoped<IArticleRepository, ArticleRepository>();
             services.AddScoped<IJourneyRepository, JourneyRepository>();
             services.AddScoped<IOverviewRepository, OverviewRepository>();
+            services.AddScoped<IPhotoRepository, PhotoRepository>();
         }
 
         private async Task CreateRoles(IServiceProvider serviceProvider)
@@ -161,6 +163,12 @@ namespace MyJourneys
                     await roleManager.CreateAsync(new IdentityRole(roleName));
                 }
             }
+        }
+
+        private void CreateFolders()
+        {
+            System.IO.Directory.CreateDirectory(Configuration["FileStorage:OverviewPath"]);
+            System.IO.Directory.CreateDirectory(Configuration["FileStorage:LocationPath"]);
         }
     }
 }

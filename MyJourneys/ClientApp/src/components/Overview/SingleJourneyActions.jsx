@@ -7,7 +7,7 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import {getPhotoUrl} from "../../utils/mapUtils";
+import {getPhotoUrl} from "../../utils/photoUtils";
 
 const useStyles = makeStyles(theme => ({
   goBackBtn: {

@@ -69,7 +69,7 @@ namespace MyJourneys.Repositories
                 var file = model.File;
                 if (file.Length <= 0) return;
 
-                var filePath = Path.Combine(_config["FileStorage:Path"],
+                var filePath = Path.Combine(_config["FileStorage:OverviewPath"],
                     Guid.NewGuid() + Path.GetExtension(file.FileName));
 
                 SaveFile(file, filePath);

@@ -1,8 +1,9 @@
 import React, {Fragment, useContext, useEffect, useState} from "react";
 import mapboxgl from 'mapbox-gl';
 import {Context} from "../../state/store";
-import {getMapStyle, getPhotoUrl} from "../../utils/mapUtils";
+import {getMapStyle} from "../../utils/mapUtils";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import {getPhotoUrl} from "../../utils/photoUtils";
 
 const useStyles = makeStyles(theme => ({
   coverCard: {

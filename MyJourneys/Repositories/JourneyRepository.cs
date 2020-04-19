@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using MyJourneys.Data;
 using MyJourneys.Enums;
 using MyJourneys.Models;
@@ -10,18 +13,24 @@ namespace MyJourneys.Repositories
     public class JourneyRepository : IJourneyRepository
     {
         private readonly TravelContext _context;
+        private readonly IPhotoRepository _photoRepository;
+        private readonly IConfiguration _config;
 
-        public JourneyRepository()
+        public JourneyRepository(IPhotoRepository photoRepository, IConfiguration configuration)
         {
             _context = new TravelContext();
+            _photoRepository = photoRepository;
+            _config = configuration;
         }
 
-        public void AddJourney(User user, JourneyCreationViewModel model)
+        public void AddJourney(string userId, JourneyCreationViewModel model)
         {
+            var photoPath = GetPhotoPath(model.Location).Result;
             _context.Journeys.Add(new Journey
             {
-                UserId = user.Id,
+                UserId = userId,
                 Location = model.Location,
+                PhotoPath = photoPath,
                 StartDate = model.StartDate,
                 EndDate = model.EndDate
             });
@@ -36,6 +45,7 @@ namespace MyJourneys.Repositories
                 {
                     Id = journey.Id,
                     Location = journey.Location,
+                    PhotoPath = journey.PhotoPath,
                     StartDate = journey.StartDate,
                     EndDate = journey.EndDate
                 })
@@ -234,6 +244,17 @@ namespace MyJourneys.Repositories
                 Text = model.Text
             });
             _context.SaveChanges();
+        }
+
+        private async Task<string> GetPhotoPath(string location)
+        {
+            var path = Path.Combine(_config["FileStorage:LocationPath"], location.ToLower() + ".jpg");
+            if (File.Exists(path))
+            {
+                return path;
+            }
+            bool success = await _photoRepository.SaveLocationPhoto(location.ToLower());
+            return success ? path : null;
         }
     }
 }

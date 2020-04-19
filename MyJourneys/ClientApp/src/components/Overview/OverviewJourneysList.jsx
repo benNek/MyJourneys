@@ -2,9 +2,9 @@ import React from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
-import {getPhotoUrl} from "../../utils/mapUtils";
 import {CardContent} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
+import {getPhotoUrl} from "../../utils/photoUtils";
 
 const useStyles = makeStyles(theme => ({
   root: {

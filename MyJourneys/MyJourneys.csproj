@@ -31,7 +31,7 @@
         <Content Include="ClientApp\src\components\Overview\UploadPhotosStep3.jsx" />
         <Content Include="ClientApp\src\components\Planner\EventItemCard.jsx" />
         <Content Include="ClientApp\src\components\Planner\FlightItemCard.jsx" />
-        <Content Include="ClientApp\src\components\Planner\Forms\AddJourneyForm.jsx" />
+        <Content Include="ClientApp\src\components\Planner\Forms\JourneyForm.jsx" />
         <Content Include="ClientApp\src\components\Planner\Forms\EventItemForm.jsx" />
         <Content Include="ClientApp\src\components\Planner\Forms\FlightItemForm.jsx" />
         <Content Include="ClientApp\src\components\Planner\Forms\HotelItemForm.jsx" />
@@ -68,6 +68,7 @@
         <Content Include="ClientApp\src\utils\auth.js" />
         <Content Include="ClientApp\src\utils\mapUtils.js" />
         <Content Include="ClientApp\src\utils\networkFunctions.js" />
+        <Content Include="ClientApp\src\utils\photoUtils.js" />
         <Content Include="ClientApp\src\utils\readingTime.js" />
         <Content Include="ClientApp\src\utils\validation.js" />
         <None Remove="$(SpaRoot)**" />
@@ -88,6 +89,7 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.2" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
       <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+      <PackageReference Include="UnsplashClient" Version="2.2.1" />
     </ItemGroup>
 
     <ItemGroup>

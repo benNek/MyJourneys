@@ -8,12 +8,12 @@ import AddIcon from '@material-ui/icons/Add';
 import Fade from "@material-ui/core/Fade";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop/Backdrop";
-import AddJourneyForm from "./Forms/AddJourneyForm";
 import {Context} from "../../state/store";
 import {getJourneys} from "../../utils/networkFunctions";
 import {setJourneys} from "../../state/actions";
 import {toast} from "react-toastify";
 import JourneyCard from "./JourneyCard";
+import JourneyForm from "./Forms/JourneyForm";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -28,6 +28,10 @@ const useStyles = makeStyles(theme => ({
   },
   journey: {
     marginBottom: '12px'
+  },
+  disclaimer: {
+    marginTop: '6px',
+    opacity: .6
   }
 }));
 
@@ -42,11 +46,11 @@ export default function Journeys() {
     if (journeys.length) {
       setLoading(false);
     }
-    
+
     if (!journeys.length) {
       getJourneys().then(res => {
         setLoading(false);
-        setJourneys(dispatch, res.data)
+        setJourneys(dispatch, res.data);
       }).catch(err => toast.error(err));
     }
   }, [dispatch]);
@@ -71,7 +75,7 @@ export default function Journeys() {
     }
 
     return journeys.map(journey =>
-      <JourneyCard className={classes.journey} key={journey.id} journey={journey} />
+      <JourneyCard className={classes.journey} key={journey.id} journey={journey}/>
     )
   };
 
@@ -79,6 +83,9 @@ export default function Journeys() {
     <React.Fragment>
       <Typography component='h1' variant='h3'>
         Journey planner
+      </Typography>
+      <Typography variant="subtitle2" className={classes.disclaimer}>
+        Photos provided by Unsplash
       </Typography>
       <Divider/>
       {content()}
@@ -99,7 +106,7 @@ export default function Journeys() {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <AddJourneyForm onSubmit={handleClose}/>
+            <JourneyForm onSubmit={handleClose}/>
           </div>
         </Fade>
       </Modal>

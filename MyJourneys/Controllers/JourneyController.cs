@@ -39,13 +39,8 @@ namespace MyJourneys.Controllers
                 return StatusCode(422, "Start date is later than end date");
             }
 
-            var user = _userRepository.GetUserById(model.UserId);
-            if (user == null)
-            {
-                return StatusCode(422, "Failed to fetch user");
-            }
-
-            _journeyRepository.AddJourney(user, model);
+            var userId = GetUserId(User);
+            _journeyRepository.AddJourney(userId, model);
             return Ok("Journey has been created successfully");
         }
 

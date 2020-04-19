@@ -3,13 +3,12 @@ import {toast} from "react-toastify";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import React, {useContext} from "react";
+import React from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Typography from "@material-ui/core/Typography";
 import moment from "moment";
 import {journeyValidation} from "../../../utils/validation";
 import {createJourney} from "../../../utils/networkFunctions";
-import {Context} from "../../../state/store";
 
 const useStyles = makeStyles(theme => ({
   formTitle: {
@@ -20,11 +19,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function AddJourneyForm(props) {
+export default function JourneyForm(props) {
   const classes = useStyles();
-
-  const [state] = useContext(Context);
-  const { user } = state;
 
   return (
     <Formik
@@ -41,7 +37,6 @@ export default function AddJourneyForm(props) {
           props.onSubmit();
         }
         
-        values['userId'] = user.id;
         await createJourney(values)
           .then(response => {
             toast.success(response.data);

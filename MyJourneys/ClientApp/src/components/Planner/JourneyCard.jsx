@@ -6,6 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import {useHistory} from "react-router";
 import moment from "moment";
+import {getPhotoUrl} from "../../utils/photoUtils";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,12 +33,19 @@ export default function Journeys(props) {
   const formatDate = date => {
     return moment(date).format('YYYY-MM-DD');
   };
+  
+  const getImage = path => {
+    if (!path) {
+      return "https://lp-cms-production.imgix.net/2019-06/c81f09d36451a030f40f459726f31a96-barcelona.jpeg?fit=crop&q=40&sharp=10&vib=20&auto=format&ixlib=react-8.6";
+    }
+    return getPhotoUrl(path);
+  };
 
   return (
     <Card onClick={handleClick} className={`${classes.root} ${props.className}`}>
       <CardMedia
         className={classes.locationImage}
-        image="https://lp-cms-production.imgix.net/2019-06/c81f09d36451a030f40f459726f31a96-barcelona.jpeg?fit=crop&q=40&sharp=10&vib=20&auto=format&ixlib=react-8.6.4"
+        image={getImage(journey.photoPath)}
         title={journey.location}
       />
       <CardContent>
