@@ -111,6 +111,8 @@ export default function NavBar() {
     </div>
   );
 
+  const logo = darkMode ? "/images/logo_dark.png" : "/images/logo.png";
+  
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
@@ -125,7 +127,7 @@ export default function NavBar() {
             <MenuIcon/>
           </IconButton>
           <Link to="/">
-            <img className={classes.logo} src={"/images/logo.png"} alt="MyJourneys"/>
+            <img className={classes.logo} src={logo} alt="MyJourneys"/>
           </Link>
           <div className={classes.rightAlign}>
             <Button onClick={handleThemeChange}><InvertColorsIcon/></Button>
