@@ -207,6 +207,22 @@ namespace MyJourneys.Controllers
             var userId = GetUserId(User);
             return Ok(_journeyRepository.AddNoteItem(userId, model));
         }
+        
+        [HttpPut("note/{id}")]
+        [Authorize]
+        public IActionResult AddNote(int id, [FromBody] NoteFormViewModel model)
+        {
+            var userId = GetUserId(User);
+            return Ok(_journeyRepository.UpdateNoteItem(userId, id, model));
+        }
+        
+        [HttpDelete("note/{id}")]
+        [Authorize]
+        public IActionResult DeleteNote(int id)
+        {
+            var userId = GetUserId(User);
+            return Ok(_journeyRepository.DeleteNoteItem(userId, id));
+        }
 
         [HttpGet("{id}/notes")]
         [Authorize]

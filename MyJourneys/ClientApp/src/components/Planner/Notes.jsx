@@ -30,10 +30,11 @@ const useStyles = makeStyles(theme => ({
 
 export default function Notes(props) {
   let {id} = useParams();
-  const {journey, notes, onNoteAdd} = props;
+  const {journey, notes, onNoteAdd, onNoteUpdate, onNoteDelete} = props;
 
   const classes = useStyles();
   const [modalOpen, setModalOpen] = useState(false);
+  const [editingNote, setEditingNote] = useState(null);
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -41,6 +42,7 @@ export default function Notes(props) {
 
   const handleModalClose = () => {
     setModalOpen(false);
+    setTimeout(() => setEditingNote(null), 500);
   };
 
   const renderNotes = () => {
@@ -56,10 +58,13 @@ export default function Notes(props) {
             </Typography>
           </CardContent>
           <CardActions>
-            <Button size="small" color="primary">
+            <Button size="small" color="primary" onClick={() => {
+              setEditingNote(note);
+              setModalOpen(true);
+            }}>
               Edit
             </Button>
-            <Button size="small" color="primary">
+            <Button size="small" color="primary" onClick={() => onNoteDelete(note.id)}>
               Delete
             </Button>
           </CardActions>
@@ -101,7 +106,8 @@ export default function Notes(props) {
       >
         <Fade in={modalOpen}>
           <div className={classes.paper}>
-            <NoteForm onSubmit={handleModalClose} onSuccess={onNoteAdd} journeyId={id}/>
+            <NoteForm onSubmit={handleModalClose} editingNote={editingNote} onAdd={onNoteAdd} onUpdate={onNoteUpdate}
+                      journeyId={id}/>
           </div>
         </Fade>
       </Modal>

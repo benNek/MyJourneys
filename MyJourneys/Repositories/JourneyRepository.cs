@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MyJourneys.Data;
 using MyJourneys.Enums;
@@ -349,6 +349,34 @@ namespace MyJourneys.Repositories
             _context.Notes.Add(note);
             _context.SaveChanges();
             return note;
+        }
+
+        public Note UpdateNoteItem(string userId, int noteId, NoteFormViewModel model)
+        {
+            var note = _context.Notes.FirstOrDefault(n => n.UserId.Equals(userId) && n.Id == noteId);
+            if (note == null)
+            {
+                return null;
+            }
+
+            note.Title = model.Title;
+            note.Text = model.Text;
+            _context.Entry(note).State = EntityState.Modified;
+            _context.SaveChanges();
+            return note;
+        }
+
+        public int DeleteNoteItem(string userId, int noteId)
+        {
+            var note = _context.Notes.FirstOrDefault(n => n.UserId.Equals(userId) && n.Id == noteId);
+            if (note == null)
+            {
+                return -1;
+            }
+
+            _context.Notes.Remove(note);
+            _context.SaveChanges();
+            return note.Id;
         }
 
         private static bool IsExpired(DateTime date)

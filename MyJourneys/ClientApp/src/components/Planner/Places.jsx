@@ -153,12 +153,12 @@ export default function Places(props) {
           <div className={classes.buttons}>
             <Button onClick={() => onSetStart(place.id)} disabled={place.start || (!place.start && place.finish)}
                     variant={place.start ? "contained" : "outlined"}
-                    startIcon={<FirstPageIcon/>} className={classes.button}>
+                    startIcon={<FirstPageIcon/>} className={classes.button} size="small">
               Start point
             </Button>
             <Button onClick={() => onSetFinish(place.id)} disabled={place.finish || (place.start && !place.finish)}
                     variant={place.finish ? "contained" : "outlined"}
-                    startIcon={<LastPageIcon/>} className={classes.button}>
+                    startIcon={<LastPageIcon/>} className={classes.button} size="small">
               Finish point
             </Button>
           </div>

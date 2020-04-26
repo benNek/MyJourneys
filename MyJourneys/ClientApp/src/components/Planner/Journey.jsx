@@ -8,6 +8,7 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import Itinerary from "./Itinerary";
 import {
+  deleteNote,
   getJourney,
   getJourneyItems,
   getNotes,
@@ -19,6 +20,8 @@ import {toast} from "react-toastify";
 import Notes from "./Notes";
 import Places from "./Places";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import _ from 'lodash';
+import update from 'immutability-helper';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -54,11 +57,11 @@ export default function Journey() {
       setPlaces([...places, data]);
     }
   };
-  
+
   const handleSetStartPlace = id => {
     setStartPlace(journey.id, id).then(res => setPlaces(res.data)).catch(err => console.error(err));
   };
-  
+
   const handleSetFinishPlace = id => {
     setFinishPlace(journey.id, id).then(res => setPlaces(res.data)).catch(err => console.error(err));
   };
@@ -67,8 +70,22 @@ export default function Journey() {
     setPlaces(data);
   };
 
-  const handleAddNote = data => {
-    setNotes([...notes, data]);
+  const handleAddNote = note => {
+    setNotes([...notes, note]);
+  };
+
+  const handleUpdateNote = note => {
+    const index = _.findIndex(notes, ['id', note.id]);
+    const newNotes = update(notes, {
+      [index]: {
+        $set: note
+      }
+    });
+    setNotes(newNotes);
+  };
+  
+  const handleDeleteNote = id => {
+    deleteNote(id).then(res => setNotes(notes.filter(note => note.id !== res.data))).catch(err => console.error(err));
   };
 
   const handleAddItem = data => {
@@ -121,7 +138,8 @@ export default function Journey() {
                 onSetStart={handleSetStartPlace} onSetFinish={handleSetFinishPlace}/>
       </TabPanel>
       <TabPanel value={tab} index={2}>
-        <Notes journey={journey} notes={notes} onNoteAdd={handleAddNote}/>
+        <Notes journey={journey} notes={notes} onNoteAdd={handleAddNote} onNoteUpdate={handleUpdateNote}
+               onNoteDelete={handleDeleteNote}/>
       </TabPanel>
     </React.Fragment>
   )

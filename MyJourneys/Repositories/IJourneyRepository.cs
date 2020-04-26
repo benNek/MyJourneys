@@ -23,5 +23,7 @@ namespace MyJourneys.Repositories
         void SetStartPlace(string userId, int journeyId, int placeId);
         void SetFinishPlace(string userId, int journeyId, int placeId);
         Note AddNoteItem(string userId, NoteFormViewModel model);
+        Note UpdateNoteItem(string userId, int noteId, NoteFormViewModel model);
+        int DeleteNoteItem(string userId, int noteId);
     }
 }
