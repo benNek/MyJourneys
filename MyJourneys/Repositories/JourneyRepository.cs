@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using MyJourneys.Data;
@@ -306,6 +307,34 @@ namespace MyJourneys.Repositories
             _context.Places.Add(place);
             _context.SaveChanges();
             return place;
+        }
+
+        public void SetStartPlace(string userId, int journeyId, int placeId)
+        {
+            var places = GetPlaceObjects(userId, journeyId);
+            var startPlace = places.FirstOrDefault(place => place.Id == placeId);
+            if (startPlace == null)
+            {
+                return;
+            }
+            
+            places.ForEach(place => place.Start = false);
+            startPlace.Start = true;
+            _context.SaveChanges();
+        }
+
+        public void SetFinishPlace(string userId, int journeyId, int placeId)
+        {
+            var places = GetPlaceObjects(userId, journeyId);
+            var finishPlace = places.FirstOrDefault(place => place.Id == placeId);
+            if (finishPlace == null)
+            {
+                return;
+            }
+            
+            places.ForEach(place => place.Finish = false);
+            finishPlace.Finish = true;
+            _context.SaveChanges();
         }
 
         public Note AddNoteItem(string userId, NoteFormViewModel model)

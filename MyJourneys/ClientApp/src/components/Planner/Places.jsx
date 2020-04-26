@@ -56,7 +56,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Places(props) {
   let {id} = useParams();
-  const {journey, places, onPlaceAdd, onReorder} = props;
+  const {journey, places, onPlaceAdd, onReorder, onSetStart, onSetFinish} = props;
 
   const classes = useStyles();
   const [modalOpen, setModalOpen] = useState(false);
@@ -151,10 +151,14 @@ export default function Places(props) {
             Find on maps
           </Link>
           <div className={classes.buttons}>
-            <Button disabled={place.start} variant={place.start ? "contained" : "outlined"} startIcon={<FirstPageIcon/>} className={classes.button}>
+            <Button onClick={() => onSetStart(place.id)} disabled={place.start || (!place.start && place.finish)}
+                    variant={place.start ? "contained" : "outlined"}
+                    startIcon={<FirstPageIcon/>} className={classes.button}>
               Start point
             </Button>
-            <Button disabled={place.finish} variant={place.finish ? "contained" : "outlined"} startIcon={<LastPageIcon/>} className={classes.button}>
+            <Button onClick={() => onSetFinish(place.id)} disabled={place.finish || (place.start && !place.finish)}
+                    variant={place.finish ? "contained" : "outlined"}
+                    startIcon={<LastPageIcon/>} className={classes.button}>
               Finish point
             </Button>
           </div>

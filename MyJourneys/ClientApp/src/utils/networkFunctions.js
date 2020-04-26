@@ -51,5 +51,7 @@ export const createHotelItem = data => axios.post('/api/journey/hotel', data);
 export const createReservationItem = data => axios.post('/api/journey/reservation', data);
 export const createEventItem = data => axios.post('/api/journey/event', data);
 export const createPlace = data => axios.post('/api/journey/place', data);
+export const setStartPlace = (journeyId, placeId) => axios.get(`/api/journey/${journeyId}/places/${placeId}/start`);
+export const setFinishPlace = (journeyId, placeId) => axios.get(`/api/journey/${journeyId}/places/${placeId}/finish`);
 export const reorderPlaces = id => axios.get(`/api/journey/${id}/places/reorder`);
 export const createNote = data => axios.post('/api/journey/note', data);
