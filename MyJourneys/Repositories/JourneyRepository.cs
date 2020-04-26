@@ -309,6 +309,19 @@ namespace MyJourneys.Repositories
             return place;
         }
 
+        public int DeletePlaceItem(string userId, int placeId)
+        {
+            var place = _context.Places.FirstOrDefault(p => p.UserId.Equals(userId) && p.Id == placeId);
+            if (place == null)
+            {
+                return -1;
+            }
+
+            _context.Places.Remove(place);
+            _context.SaveChanges();
+            return place.Id;
+        }
+
         public void SetStartPlace(string userId, int journeyId, int placeId)
         {
             var places = GetPlaceObjects(userId, journeyId);

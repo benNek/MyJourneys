@@ -161,6 +161,14 @@ namespace MyJourneys.Controllers
             return Ok(_journeyRepository.AddPlaceItem(userId, model));
         }
 
+        [HttpDelete("place/{id}")]
+        [Authorize]
+        public IActionResult DeletePlace(int id)
+        {
+            var userId = GetUserId(User);
+            return Ok(_journeyRepository.DeletePlaceItem(userId, id));
+        }
+
         [HttpGet("{id}/places/{placeId}/start")]
         [Authorize]
         public IActionResult SetStartPlace(int id, int placeId)

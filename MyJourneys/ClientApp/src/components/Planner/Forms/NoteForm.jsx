@@ -33,7 +33,7 @@ export default function NoteForm(props) {
       initialValues={initialValues}
       validationSchema={noteValidation}
       onSubmit={async (values, actions) => {
-        actions.setSubmitting(true);+
+        actions.setSubmitting(true);
         onSubmit();
 
         values['journeyId'] = parseInt(journeyId, 10);

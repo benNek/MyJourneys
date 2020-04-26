@@ -22,6 +22,8 @@ import _ from "lodash";
 import Button from "@material-ui/core/Button";
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import LastPageIcon from '@material-ui/icons/LastPage';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import IconButton from "@material-ui/core/IconButton";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -40,6 +42,10 @@ const useStyles = makeStyles(theme => ({
   recommendedActions: {
     marginBottom: '12px'
   },
+  heading: {
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
   link: {
     padding: '6px 8px'
   },
@@ -56,7 +62,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Places(props) {
   let {id} = useParams();
-  const {journey, places, onPlaceAdd, onReorder, onSetStart, onSetFinish} = props;
+  const {journey, places, onPlaceAdd, onPlaceDelete, onReorder, onSetStart, onSetFinish} = props;
 
   const classes = useStyles();
   const [modalOpen, setModalOpen] = useState(false);
@@ -134,9 +140,14 @@ export default function Places(props) {
     return places.map(place =>
       <Card key={place.id} className={classes.card}>
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            {place.location}
-          </Typography>
+          <div className={classes.heading}>
+            <Typography gutterBottom variant="h5" component="h2">
+              {place.location}
+            </Typography>
+            <IconButton disabled={place.start || place.finish} onClick={() => onPlaceDelete(place.id)} variant="outlined">
+              <DeleteForeverIcon/>
+            </IconButton>
+          </div>
           <Typography variant="body2" color="textSecondary" component="p">
             {place.address}
           </Typography>

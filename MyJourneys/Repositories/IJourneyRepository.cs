@@ -20,6 +20,7 @@ namespace MyJourneys.Repositories
         JourneyItemViewModel AddReservationItem(string userId, CommonItemCreationViewModel model);
         JourneyItemViewModel AddEventItem(string userId, CommonItemCreationViewModel model);
         Place AddPlaceItem(string userId, PlaceFormViewModel model);
+        int DeletePlaceItem(string userId, int placeId);
         void SetStartPlace(string userId, int journeyId, int placeId);
         void SetFinishPlace(string userId, int journeyId, int placeId);
         Note AddNoteItem(string userId, NoteFormViewModel model);

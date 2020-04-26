@@ -8,7 +8,7 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import Itinerary from "./Itinerary";
 import {
-  deleteNote,
+  deleteNote, deletePlace,
   getJourney,
   getJourneyItems,
   getNotes,
@@ -58,6 +58,10 @@ export default function Journey() {
     }
   };
 
+  const handleDeletePlace = id => {
+    deletePlace(id).then(res => setPlaces(places.filter(p => p.id !== res.data))).catch(err => console.error(err));
+  };
+
   const handleSetStartPlace = id => {
     setStartPlace(journey.id, id).then(res => setPlaces(res.data)).catch(err => console.error(err));
   };
@@ -83,7 +87,7 @@ export default function Journey() {
     });
     setNotes(newNotes);
   };
-  
+
   const handleDeleteNote = id => {
     deleteNote(id).then(res => setNotes(notes.filter(note => note.id !== res.data))).catch(err => console.error(err));
   };
@@ -134,8 +138,8 @@ export default function Journey() {
         <Itinerary journey={journey} items={items} onItemAdd={handleAddItem}/>
       </TabPanel>
       <TabPanel value={tab} index={1}>
-        <Places journey={journey} places={places} onPlaceAdd={handleAddPlace} onReorder={handlePlacesReorder}
-                onSetStart={handleSetStartPlace} onSetFinish={handleSetFinishPlace}/>
+        <Places journey={journey} places={places} onPlaceAdd={handleAddPlace} onPlaceDelete={handleDeletePlace}
+                onReorder={handlePlacesReorder} onSetStart={handleSetStartPlace} onSetFinish={handleSetFinishPlace}/>
       </TabPanel>
       <TabPanel value={tab} index={2}>
         <Notes journey={journey} notes={notes} onNoteAdd={handleAddNote} onNoteUpdate={handleUpdateNote}
