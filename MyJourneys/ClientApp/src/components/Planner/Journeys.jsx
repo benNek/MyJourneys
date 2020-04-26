@@ -91,7 +91,7 @@ export default function Journeys() {
 
       return (
         <div key={expired}>
-          {expired === 'false' && <Fragment>
+          {expired === 'true' && <Fragment>
             <Typography className={classes.expired} variant="h5">Expired</Typography><Divider/>
           </Fragment>}
           {items}

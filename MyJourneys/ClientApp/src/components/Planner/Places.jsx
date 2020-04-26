@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {Fragment, useState} from "react";
 import Fab from "@material-ui/core/Fab";
 import AddLocationIcon from '@material-ui/icons/AddLocation';
 import Modal from "@material-ui/core/Modal";
@@ -18,6 +18,7 @@ import RecommendedAction from "../RecommendedAction";
 import MapIcon from '@material-ui/icons/Map';
 import RotateRightIcon from '@material-ui/icons/RotateRight';
 import {toast} from "react-toastify";
+import _ from "lodash";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -43,7 +44,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Places(props) {
   let {id} = useParams();
-  const {places, onPlaceAdd, onReorder} = props;
+  const {journey, places, onPlaceAdd, onReorder} = props;
 
   const classes = useStyles();
   const [modalOpen, setModalOpen] = useState(false);
@@ -83,7 +84,8 @@ export default function Places(props) {
             <RecommendedAction Icon={MapIcon} text="Show route on maps" link={routeUrl} target="_blank"/>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <RecommendedAction Icon={RotateRightIcon} text="Reorder based on best route" onClick={handleReorderPlacesClick}/>
+            <RecommendedAction Icon={RotateRightIcon} text="Reorder based on best route"
+                               onClick={handleReorderPlacesClick}/>
           </Grid>
         </Grid>
         }
@@ -141,12 +143,18 @@ export default function Places(props) {
     )
   };
 
+  if (_.isEmpty(journey)) {
+    return (<Fragment/>);
+  }
+
   return (
     <React.Fragment>
       {renderContent()}
+      {!journey.expired &&
       <Fab onClick={handleModalOpen} aria-label="add note" color="primary" className="FloatingActionButton">
         <AddLocationIcon/>
       </Fab>
+      }
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

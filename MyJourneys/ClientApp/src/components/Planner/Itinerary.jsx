@@ -1,7 +1,7 @@
 import Typography from "@material-ui/core/Typography";
 import _ from "lodash";
 import moment from "moment";
-import React from "react";
+import React, {Fragment} from "react";
 import {ITEM_TYPE_EVENT, ITEM_TYPE_FLIGHT, ITEM_TYPE_HOTEL, ITEM_TYPE_RESERVATION} from "../../types/journeyItemTypes";
 import FlightItemCard from "./FlightItemCard";
 import HotelItemCard from "./HotelItemCard";
@@ -128,11 +128,15 @@ export default function Itinerary(props) {
     });
   };
 
+  if (_.isEmpty(journey)) {
+    return (<Fragment/>);
+  }
+  
   return (
-    <React.Fragment>
+    <Fragment>
       {renderItems()}
-      <JourneyItemsSpeedDial journey={journey} onItemAdd={onItemAdd}/>
-    </React.Fragment>
+      {!journey.expired && <JourneyItemsSpeedDial journey={journey} onItemAdd={onItemAdd}/>}
+    </Fragment>
   )
 
 }

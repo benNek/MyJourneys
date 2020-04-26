@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {Fragment, useState} from "react";
 import Fab from "@material-ui/core/Fab";
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import Modal from "@material-ui/core/Modal";
@@ -13,6 +13,7 @@ import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import _ from "lodash";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -29,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Notes(props) {
   let {id} = useParams();
-  const {notes, onNoteAdd} = props;
+  const {journey, notes, onNoteAdd} = props;
 
   const classes = useStyles();
   const [modalOpen, setModalOpen] = useState(false);
@@ -67,6 +68,10 @@ export default function Notes(props) {
     )
   };
 
+  if (_.isEmpty(journey)) {
+    return (<Fragment/>);
+  }
+
   return (
     <React.Fragment>
       {notes.length === 0 ?
@@ -77,9 +82,11 @@ export default function Notes(props) {
           {renderNotes()}
         </Grid>
       }
+      {!journey.expired &&
       <Fab onClick={handleModalOpen} aria-label="add note" color="primary" className="FloatingActionButton">
         <NoteAddIcon/>
       </Fab>
+      }
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"

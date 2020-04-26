@@ -89,6 +89,7 @@ export default function JourneyItemsSpeedDial(props) {
         onClose={handleClose}
         onOpen={handleOpen}
         open={open}
+        transitionDuration={0}
       >
         {actions.map(action => (
           <SpeedDialAction

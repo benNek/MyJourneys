@@ -52,7 +52,7 @@ namespace MyJourneys.Repositories
                     PhotoPath = journey.PhotoPath,
                     StartDate = journey.StartDate,
                     EndDate = journey.EndDate,
-                    Expired =  GetJourneyStatus(journey.EndDate)
+                    Expired =  IsExpired(journey.EndDate)
                 })
                 .OrderBy(journey => journey.StartDate)
                 .ToList();
@@ -69,7 +69,7 @@ namespace MyJourneys.Repositories
                     PhotoPath = journey.PhotoPath,
                     StartDate = journey.StartDate,
                     EndDate = journey.EndDate,
-                    Expired =  GetJourneyStatus(journey.EndDate)
+                    Expired =  IsExpired(journey.EndDate)
                 })
                 .FirstOrDefault();
         }
@@ -311,10 +311,10 @@ namespace MyJourneys.Repositories
             return note;
         }
 
-        private static bool GetJourneyStatus(DateTime date)
+        private static bool IsExpired(DateTime date)
         {
             DateTime now = DateTime.Today;
-            return now.CompareTo(date) < 0;
+            return date.CompareTo(now) < 0;
         }
 
         private async Task<string> GetPhotoPath(string location)
