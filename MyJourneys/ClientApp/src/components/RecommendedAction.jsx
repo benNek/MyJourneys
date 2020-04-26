@@ -25,9 +25,14 @@ export default function RecommendedActions(props) {
   const classes = useStyles();
   const history = useHistory();
 
-  const {Icon, text, link, target, onClick} = props;
+  const {Icon, text, link, target, onClick, reload} = props;
 
   const handleClick = () => {
+    if (reload) {
+      window.location.reload();
+      return;
+    }
+    
     if (link) {
       if (target === '_blank') {
         window.open(link);

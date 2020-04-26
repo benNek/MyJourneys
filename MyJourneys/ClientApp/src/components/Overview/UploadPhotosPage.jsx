@@ -14,18 +14,41 @@ import {toast} from "react-toastify";
 import mbxClient from "@mapbox/mapbox-sdk";
 import mbxGeoCoding from "@mapbox/mapbox-sdk/services/geocoding";
 import _ from 'lodash';
+import Success from "../Success";
+import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
+import RecommendedAction from "../RecommendedAction";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
+import MapIcon from '@material-ui/icons/Map';
 
 function getSteps() {
   return ['Upload photos', "Add missing locations", 'Create a journey'];
 }
 
+const useStyles = makeStyles(() => ({
+  successContainer: {
+    textAlign: 'center'
+  },
+  recommendedActionsTitle: {
+    marginTop: '24px'
+  },
+  recommendedActions: {
+    marginTop: '0px',
+    justifyContent: 'center'
+  }
+}));
+
 export default function UploadPhotosPage() {
+  const classes = useStyles();
+
   const baseClient = mbxClient({accessToken: process.env.REACT_APP_MAPBOX_TOKEN});
   const geoCodingClient = mbxGeoCoding(baseClient);
 
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState(new Set());
   const [files, setFiles] = useState([]);
+  const [success, setSuccess] = useState(false);
 
   const steps = getSteps();
 
@@ -83,9 +106,7 @@ export default function UploadPhotosPage() {
       fd.append("longitudes", file.location.lon);
       fd.append("latitudes", file.location.lat);
     });
-    uploadPhoto(fd).then(response => {
-      toast.success(response.data);
-    }).catch(err => {
+    uploadPhoto(fd).then(() => setSuccess(true)).catch(err => {
       toast.error(`${err.response.data} Status code: ${err.response.status}`);
     });
 
@@ -127,6 +148,28 @@ export default function UploadPhotosPage() {
       default:
         return 'Unknown step';
     }
+  }
+
+  if (success) {
+    return (
+      <div className={classes.successContainer}>
+        <Success/>
+        <Typography component='h1' variant='h4'>
+          Article published sucessfully!
+        </Typography>
+        <Typography variant='subtitle1' className={classes.recommendedActionsTitle}>
+          Recommended actions:
+        </Typography>
+        <Grid container spacing={4} className={classes.recommendedActions}>
+          <Grid item xs={12} sm={6} md={4}>
+            <RecommendedAction Icon={AddAPhotoIcon} text="Add more photos" reload={true}/>
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <RecommendedAction Icon={MapIcon} text="View the map" link='/'/>
+          </Grid>
+        </Grid>
+      </div>
+    )
   }
 
   return (
