@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,6 +8,7 @@ using MyJourneys.Data;
 using MyJourneys.Enums;
 using MyJourneys.Models;
 using MyJourneys.Models.ViewModels;
+using Newtonsoft.Json.Bson;
 
 namespace MyJourneys.Repositories
 {
@@ -49,8 +51,10 @@ namespace MyJourneys.Repositories
                     Location = journey.Location,
                     PhotoPath = journey.PhotoPath,
                     StartDate = journey.StartDate,
-                    EndDate = journey.EndDate
+                    EndDate = journey.EndDate,
+                    Expired =  GetJourneyStatus(journey.EndDate)
                 })
+                .OrderBy(journey => journey.StartDate)
                 .ToList();
         }
 
@@ -64,7 +68,8 @@ namespace MyJourneys.Repositories
                     Location = journey.Location,
                     PhotoPath = journey.PhotoPath,
                     StartDate = journey.StartDate,
-                    EndDate = journey.EndDate
+                    EndDate = journey.EndDate,
+                    Expired =  GetJourneyStatus(journey.EndDate)
                 })
                 .FirstOrDefault();
         }
@@ -304,6 +309,12 @@ namespace MyJourneys.Repositories
             _context.Notes.Add(note);
             _context.SaveChanges();
             return note;
+        }
+
+        private static bool GetJourneyStatus(DateTime date)
+        {
+            DateTime now = DateTime.Today;
+            return now.CompareTo(date) < 0;
         }
 
         private async Task<string> GetPhotoPath(string location)

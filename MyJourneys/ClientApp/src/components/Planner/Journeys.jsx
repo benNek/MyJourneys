@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {Fragment, useContext, useEffect, useState} from "react";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -14,6 +14,7 @@ import {setJourneys} from "../../state/actions";
 import {toast} from "react-toastify";
 import JourneyCard from "./JourneyCard";
 import JourneyForm from "./Forms/JourneyForm";
+import _ from "lodash";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -32,6 +33,9 @@ const useStyles = makeStyles(theme => ({
   disclaimer: {
     marginTop: '6px',
     opacity: .6
+  },
+  expired: {
+    marginTop: '24px'
   }
 }));
 
@@ -62,8 +66,9 @@ export default function Journeys() {
   const handleClose = () => {
     setOpen(false);
   };
-  
+
   const handleAddJourney = (data) => {
+    data.expired = false;
     setJourneys(dispatch, [...journeys, data]);
   };
 
@@ -78,9 +83,21 @@ export default function Journeys() {
       )
     }
 
-    return journeys.map(journey =>
-      <JourneyCard className={classes.journey} key={journey.id} journey={journey}/>
-    )
+    const groupedJourneys = _.groupBy(journeys, journey => journey.expired);
+    return Object.keys(groupedJourneys).reverse().map(expired => {
+      const items = groupedJourneys[expired].map(journey =>
+        <JourneyCard className={classes.journey} key={journey.id} journey={journey}/>
+      );
+
+      return (
+        <div key={expired}>
+          {expired === 'false' && <Fragment>
+            <Typography className={classes.expired} variant="h5">Expired</Typography><Divider/>
+          </Fragment>}
+          {items}
+        </div>
+      )
+    })
   };
 
   return (

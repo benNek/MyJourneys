@@ -9,6 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import moment from "moment";
 import {journeyValidation} from "../../../utils/validation";
 import {createJourney} from "../../../utils/networkFunctions";
+import {DatePicker} from "@material-ui/pickers";
 
 const useStyles = makeStyles(theme => ({
   formTitle: {
@@ -48,7 +49,7 @@ export default function JourneyForm(props) {
       }}
     >
       {(formProps) => {
-        const {handleChange, setFieldTouched, errors, touched} = formProps;
+        const {handleChange, setFieldTouched, setFieldValue, values, errors, touched} = formProps;
         const change = (name, e) => {
           e.persist();
           handleChange(e);
@@ -76,35 +77,40 @@ export default function JourneyForm(props) {
                 />
               </Grid>
               <Grid item xs={6}>
-                <TextField
+                <DatePicker
                   id="startDate"
                   label="Start date"
                   variant="outlined"
-                  type="date"
-                  defaultValue={moment().format('YYYY-MM-DD')}
+                  inputVariant="outlined"
                   fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
+                  value={values['startDate']}
+                  format="YYYY-MM-DD"
                   error={errors.startDate && touched.startDate}
                   helperText={(errors.startDate && touched.startDate) && errors.startDate}
-                  onChange={change.bind(null, "startDate")}
+                  onChange={value => {
+                    setFieldValue('startDate', moment(value).format('YYYY-MM-DD'));
+                    const endDate = moment(values['endDate']);
+                    if (endDate.isBefore(value, 'day')) {
+                      setFieldValue('endDate', value.add(7, 'day'));
+                    }
+                  }}
                 />
               </Grid>
               <Grid item xs={6}>
-                <TextField
+                <DatePicker
                   id="endDate"
                   label="End date"
                   variant="outlined"
-                  type="date"
-                  defaultValue={moment().add(7, 'days').format('YYYY-MM-DD')}
+                  inputVariant="outlined"
                   fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
+                  minDate={values['startDate']}
+                  value={values['endDate']}
+                  format="YYYY-MM-DD"
                   error={errors.endDate && touched.endDate}
                   helperText={(errors.endDate && touched.endDate) && errors.endDate}
-                  onChange={change.bind(null, "endDate")}
+                  onChange={value => {
+                    setFieldValue("endDate", moment(value).format('YYYY-MM-DD'));
+                  }}
                 />
               </Grid>
             </Grid>

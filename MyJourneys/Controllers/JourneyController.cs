@@ -28,10 +28,9 @@ namespace MyJourneys.Controllers
         [Authorize]
         public IActionResult Create([FromBody] JourneyCreationViewModel model)
         {
-            if (model.StartDate.Year < Now.Year ||
-                (model.StartDate.Year >= Now.Year && model.StartDate.DayOfYear < Now.DayOfYear))
+            if (model.EndDate < Today)
             {
-                return StatusCode(422, "Start date must not be in the past");
+                return StatusCode(422, "End date must not be in the past");
             }
 
             if (model.StartDate.CompareTo(model.EndDate) > 0)

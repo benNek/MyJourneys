@@ -1,4 +1,5 @@
 using System;
+using MyJourneys.Enums;
 
 namespace MyJourneys.Models.ViewModels
 {
@@ -9,5 +10,6 @@ namespace MyJourneys.Models.ViewModels
         public string PhotoPath { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public bool Expired { get; set; }
     }
 }

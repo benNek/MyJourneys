@@ -4,13 +4,14 @@ import moment from "moment";
 // Planner
 
 const yesterday = moment().subtract(1, 'days').toDate();
+const today = moment().toDate();
 
 export const journeyValidation = Yup.object().shape({
   location: Yup.string().required('Location name is required'),
-  startDate: Yup.date().required('Start date is required').min(yesterday, 'Start date cannot be in the past')
+  startDate: Yup.date().required('Start date is required')
     .max(Yup.ref('endDate'), 'Start date should be before end date'),
   endDate: Yup.date().required('End date is required')
-    .min(Yup.ref('startDate'), 'End date should be after start date')
+    .min(today, 'End date should not be in the past')
 });
 
 export const flightItemValidation = Yup.object().shape({
