@@ -146,9 +146,13 @@ namespace MyJourneys.Repositories
                     Address = place.Address,
                     Latitude = place.Latitude,
                     Longitude = place.Longitude,
-                    Rank = place.Rank
+                    Rank = place.Rank,
+                    Start = place.Start,
+                    Finish = place.Finish
                 })
-                .OrderByDescending(place => place.Rank)
+                .OrderByDescending(place => place.Start)
+                .ThenBy(place => place.Finish)
+                .ThenByDescending(place => place.Rank)
                 .ThenBy(place => place.Id)
                 .ToList();
         }
@@ -283,6 +287,11 @@ namespace MyJourneys.Repositories
 
         public Place AddPlaceItem(string userId, PlaceFormViewModel model)
         {
+            var hasStart = _context.Places
+                .Any(p => p.UserId.Equals(userId) && p.JourneyId == model.JourneyId && p.Start);
+            var hasFinish = _context.Places
+                .Any(p => p.UserId.Equals(userId) && p.JourneyId == model.JourneyId && p.Finish);
+            
             var place = new Place
             {
                 UserId = userId,
@@ -290,7 +299,9 @@ namespace MyJourneys.Repositories
                 Location = model.Location,
                 Address = model.Address,
                 Latitude = model.Latitude,
-                Longitude = model.Longitude
+                Longitude = model.Longitude,
+                Start = !hasStart,
+                Finish = hasStart && !hasFinish
             };
             _context.Places.Add(place);
             _context.SaveChanges();

@@ -41,7 +41,11 @@ export default function Journey() {
   };
 
   const handleAddPlace = data => {
-    setPlaces([...places, data]);
+    if (places.length > 2) {
+      setPlaces([...places.slice(0, places.length - 1), data, ...places.slice(places.length - 1)]);
+    } else {
+      setPlaces([...places, data]);
+    }
   };
 
   const handlePlacesReorder = data => {

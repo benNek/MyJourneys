@@ -19,6 +19,9 @@ import MapIcon from '@material-ui/icons/Map';
 import RotateRightIcon from '@material-ui/icons/RotateRight';
 import {toast} from "react-toastify";
 import _ from "lodash";
+import Button from "@material-ui/core/Button";
+import FirstPageIcon from '@material-ui/icons/FirstPage';
+import LastPageIcon from '@material-ui/icons/LastPage';
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -39,6 +42,15 @@ const useStyles = makeStyles(theme => ({
   },
   link: {
     padding: '6px 8px'
+  },
+  actions: {
+    justifyContent: 'space-between',
+    flexWrap: 'wrap'
+  },
+  button: {
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: '8px'
+    },
   }
 }));
 
@@ -129,7 +141,7 @@ export default function Places(props) {
             {place.address}
           </Typography>
         </CardContent>
-        <CardActions>
+        <CardActions className={classes.actions}>
           <Link
             href={`https://www.google.com/maps/place/${place.latitude}+${place.longitude}/@${place.latitude},${place.longitude},15z`}
             className={classes.link}
@@ -138,6 +150,14 @@ export default function Places(props) {
           >
             Find on maps
           </Link>
+          <div className={classes.buttons}>
+            <Button disabled={place.start} variant={place.start ? "contained" : "outlined"} startIcon={<FirstPageIcon/>} className={classes.button}>
+              Start point
+            </Button>
+            <Button disabled={place.finish} variant={place.finish ? "contained" : "outlined"} startIcon={<LastPageIcon/>} className={classes.button}>
+              Finish point
+            </Button>
+          </div>
         </CardActions>
       </Card>
     )

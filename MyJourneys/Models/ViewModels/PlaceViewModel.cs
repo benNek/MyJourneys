@@ -8,5 +8,7 @@ namespace MyJourneys.Models.ViewModels
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public int Rank { get; set; }
+        public bool Start { get; set; }
+        public bool Finish { get; set; }
     }
 }
