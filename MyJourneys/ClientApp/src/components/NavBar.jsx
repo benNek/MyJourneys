@@ -29,6 +29,7 @@ const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
+    height: '64px'
   },
   drawer: {
     [theme.breakpoints.up('md')]: {
@@ -56,7 +57,11 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 'auto'
   },
   logo: {
-    height: '64px'
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      height: '64px',
+      display: 'block'
+    },
   }
 }));
 
