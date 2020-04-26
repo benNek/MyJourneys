@@ -53,6 +53,14 @@ namespace MyJourneys.Controllers
 
         [HttpGet("{id}")]
         [Authorize]
+        public JourneyViewModel GetJourney(int id)
+        {
+            var userId = GetUserId(User);
+            return _journeyRepository.GetJourney(userId, id);
+        }
+        
+        [HttpGet("{id}/itinerary")]
+        [Authorize]
         public IEnumerable<JourneyItemViewModel> GetJourneyItems(int id)
         {
             var userId = GetUserId(User);

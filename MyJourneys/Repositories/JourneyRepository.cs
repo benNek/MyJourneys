@@ -54,6 +54,21 @@ namespace MyJourneys.Repositories
                 .ToList();
         }
 
+        public JourneyViewModel GetJourney(string userId, int journeyId)
+        {
+            return _context.Journeys
+                .Where(journey => journey.UserId.Equals(userId) && journey.Id == journeyId)
+                .Select(journey => new JourneyViewModel
+                {
+                    Id = journey.Id,
+                    Location = journey.Location,
+                    PhotoPath = journey.PhotoPath,
+                    StartDate = journey.StartDate,
+                    EndDate = journey.EndDate
+                })
+                .FirstOrDefault();
+        }
+
         public bool IsUsersJourney(string userId, int journeyId)
         {
             return _context.Journeys.Any(journey => journey.Id == journeyId && journey.UserId.Equals(userId));

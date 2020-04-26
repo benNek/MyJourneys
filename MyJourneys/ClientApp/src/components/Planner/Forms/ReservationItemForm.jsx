@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function ReservationItemForm(props) {
   const classes = useStyles();
-  const {journeyId, onSubmit, onSuccess} = props;
+  const {journey, onSubmit, onSuccess} = props;
 
   return (
     <Formik
@@ -36,7 +36,7 @@ export default function ReservationItemForm(props) {
         actions.setSubmitting(true);
         onSubmit();
 
-        values['journeyId'] = parseInt(journeyId, 10);
+        values['journeyId'] = journey.id;
         values['date'] = moment(values.date).format();
         await createReservationItem(values)
           .then(response => {
@@ -96,6 +96,8 @@ export default function ReservationItemForm(props) {
                   label="Reservation time"
                   variant="outlined"
                   inputVariant="outlined"
+                  minDate={journey.startDate}
+                  maxDate={journey.endDate}
                   fullWidth
                   value={values['date']}
                   format="YYYY-MM-DD HH:mm"

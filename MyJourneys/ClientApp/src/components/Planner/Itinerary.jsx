@@ -12,7 +12,6 @@ import HotelIcon from "@material-ui/icons/Hotel";
 import RestaurantIcon from "@material-ui/icons/Restaurant";
 import EventIcon from "@material-ui/icons/Event";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {useParams} from "react-router";
 import JourneyItemsSpeedDial from "./JourneyItemsSpeedDial";
 
 const useStyles = makeStyles(() => ({
@@ -52,8 +51,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function Itinerary(props) {
-  let {location, id} = useParams();
-  const {items, onItemAdd} = props;
+  const {items, onItemAdd, journey} = props;
 
   const classes = useStyles();
 
@@ -105,7 +103,7 @@ export default function Itinerary(props) {
     if (!items.length) {
       return (
         <Typography variant="body1">
-          {location} journey has no items added! Click button in bottom right to get started!
+          {journey.location} journey has no items added! Click button in bottom right to get started!
         </Typography>
       )
     }
@@ -133,7 +131,7 @@ export default function Itinerary(props) {
   return (
     <React.Fragment>
       {renderItems()}
-      <JourneyItemsSpeedDial journeyId={id} onItemAdd={onItemAdd}/>
+      <JourneyItemsSpeedDial journey={journey} onItemAdd={onItemAdd}/>
     </React.Fragment>
   )
 

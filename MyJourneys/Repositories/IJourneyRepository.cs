@@ -8,6 +8,7 @@ namespace MyJourneys.Repositories
     {
         Journey AddJourney(string userId, JourneyCreationViewModel model);
         List<JourneyViewModel> GetJourneys(string userId);
+        JourneyViewModel GetJourney(string userId, int journeyId);
         bool IsUsersJourney(string userId, int journeyId);
         List<JourneyItemViewModel> GetJourneyItems(string userId, int journeyId);
         List<PlaceViewModel> GetPlaces(string userId, int journeyId);

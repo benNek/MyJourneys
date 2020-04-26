@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function FlightItemForm(props) {
   const classes = useStyles();
-  const {journeyId, onSubmit, onSuccess} = props;
+  const {journey, onSubmit, onSuccess} = props;
 
   return (
     <Formik
@@ -38,7 +38,7 @@ export default function FlightItemForm(props) {
         actions.setSubmitting(true);
         onSubmit();
 
-        values['journeyId'] = parseInt(journeyId, 10);
+        values['journeyId'] = journey.id;
         values['date'] = moment(values.date).format();
         await createFlightItem(values)
           .then(response => {
@@ -124,6 +124,8 @@ export default function FlightItemForm(props) {
                   label="Depart date"
                   variant="outlined"
                   inputVariant="outlined"
+                  minDate={journey.startDate}
+                  maxDate={journey.endDate}
                   fullWidth
                   value={values['date']}
                   format="YYYY-MM-DD HH:mm"

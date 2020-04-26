@@ -42,7 +42,8 @@ export const hasLikedArticle = id => axios.get(`/api/article/${id}/like`);
 // Journeys
 export const createJourney = data => axios.post('/api/journey', data);
 export const getJourneys = () => axios.get('/api/journey');
-export const getJourneyItems = id => axios.get(`/api/journey/${id}`);
+export const getJourney = id => axios.get(`/api/journey/${id}`);
+export const getJourneyItems = id => axios.get(`/api/journey/${id}/itinerary`);
 export const getPlaces = id => axios.get(`/api/journey/${id}/places`);
 export const getNotes = id => axios.get(`/api/journey/${id}/notes`);
 export const createFlightItem = data => axios.post('/api/journey/flight', data);

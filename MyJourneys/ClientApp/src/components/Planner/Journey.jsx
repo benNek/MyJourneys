@@ -7,7 +7,7 @@ import Paper from "@material-ui/core/Paper";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import Itinerary from "./Itinerary";
-import {getJourneyItems, getNotes, getPlaces} from "../../utils/networkFunctions";
+import {getJourney, getJourneyItems, getNotes, getPlaces} from "../../utils/networkFunctions";
 import {toast} from "react-toastify";
 import Notes from "./Notes";
 import Places from "./Places";
@@ -24,16 +24,18 @@ export default function Journey() {
   const classes = useStyles();
   let {location, id} = useParams();
   const [tab, setTab] = React.useState(0);
+  const [journey, setJourney] = useState({});
   const [items, setItems] = useState([]);
   const [places, setPlaces] = useState([]);
   const [notes, setNotes] = useState([]);
 
   useEffect(() => {
+    getJourney(id).then(res => setJourney(res.data)).catch(err => toast.error(err));
     getJourneyItems(id).then(res => setItems(res.data)).catch(err => toast.error(err));
     getPlaces(id).then(res => setPlaces(res.data)).catch(err => toast.error(err));
     getNotes(id).then(res => setNotes(res.data)).catch(err => toast.error(err));
   }, []);
-
+  
   const handleTabChange = (event, newValue) => {
     setTab(newValue);
   };
@@ -93,7 +95,7 @@ export default function Journey() {
         </Tabs>
       </Paper>
       <TabPanel value={tab} index={0}>
-        <Itinerary items={items} onItemAdd={handleAddItem}/>
+        <Itinerary items={items} onItemAdd={handleAddItem} journey={journey}/>
       </TabPanel>
       <TabPanel value={tab} index={1}>
         <Places places={places} onPlaceAdd={handleAddPlace} onReorder={handlePlacesReorder}/>
