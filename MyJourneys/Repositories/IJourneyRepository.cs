@@ -16,9 +16,13 @@ namespace MyJourneys.Repositories
         void UpdatePlaceRank(int placeId, int rank);
         List<NoteViewModel> GetNotes(string userId, int journeyId);
         JourneyItemViewModel AddFlightItem(string userId, FlightItemCreationViewModel model);
+        int DeleteFlightItem(string userId, int itemId);
         JourneyItemViewModel AddHotelItem(string userId, CommonItemCreationViewModel model);
+        int DeleteHotelItem(string userId, int itemId);
         JourneyItemViewModel AddReservationItem(string userId, CommonItemCreationViewModel model);
+        int DeleteReservationItem(string userId, int itemId);
         JourneyItemViewModel AddEventItem(string userId, CommonItemCreationViewModel model);
+        int DeleteEventItem(string userId, int itemId);
         Place AddPlaceItem(string userId, PlaceFormViewModel model);
         int DeletePlaceItem(string userId, int placeId);
         void SetStartPlace(string userId, int journeyId, int placeId);

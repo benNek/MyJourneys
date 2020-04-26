@@ -53,7 +53,7 @@ namespace MyJourneys.Repositories
                     PhotoPath = journey.PhotoPath,
                     StartDate = journey.StartDate,
                     EndDate = journey.EndDate,
-                    Expired =  IsExpired(journey.EndDate)
+                    Expired = IsExpired(journey.EndDate)
                 })
                 .OrderBy(journey => journey.StartDate)
                 .ToList();
@@ -70,7 +70,7 @@ namespace MyJourneys.Repositories
                     PhotoPath = journey.PhotoPath,
                     StartDate = journey.StartDate,
                     EndDate = journey.EndDate,
-                    Expired =  IsExpired(journey.EndDate)
+                    Expired = IsExpired(journey.EndDate)
                 })
                 .FirstOrDefault();
         }
@@ -207,7 +207,7 @@ namespace MyJourneys.Repositories
             };
             _context.FlightItems.Add(item);
             _context.SaveChanges();
-            
+
             return new JourneyItemViewModel
             {
                 Id = item.Id,
@@ -218,6 +218,19 @@ namespace MyJourneys.Repositories
                 Origin = item.Origin,
                 Destination = item.Destination
             };
+        }
+
+        public int DeleteFlightItem(string userId, int itemId)
+        {
+            var item = _context.FlightItems.FirstOrDefault(i => i.UserId.Equals(userId) && i.Id == itemId);
+            if (item == null)
+            {
+                return -1;
+            }
+
+            _context.FlightItems.Remove(item);
+            _context.SaveChanges();
+            return item.Id;
         }
 
         public JourneyItemViewModel AddHotelItem(string userId, CommonItemCreationViewModel model)
@@ -242,6 +255,19 @@ namespace MyJourneys.Repositories
             };
         }
 
+        public int DeleteHotelItem(string userId, int itemId)
+        {
+            var item = _context.HotelItems.FirstOrDefault(i => i.UserId.Equals(userId) && i.Id == itemId);
+            if (item == null)
+            {
+                return -1;
+            }
+
+            _context.HotelItems.Remove(item);
+            _context.SaveChanges();
+            return item.Id;
+        }
+
         public JourneyItemViewModel AddReservationItem(string userId, CommonItemCreationViewModel model)
         {
             var item = new ReservationItem
@@ -262,6 +288,19 @@ namespace MyJourneys.Repositories
                 Name = item.Name,
                 Address = item.Address
             };
+        }
+
+        public int DeleteReservationItem(string userId, int itemId)
+        {
+            var item = _context.ReservationItems.FirstOrDefault(i => i.UserId.Equals(userId) && i.Id == itemId);
+            if (item == null)
+            {
+                return -1;
+            }
+
+            _context.ReservationItems.Remove(item);
+            _context.SaveChanges();
+            return item.Id;
         }
 
         public JourneyItemViewModel AddEventItem(string userId, CommonItemCreationViewModel model)
@@ -286,13 +325,26 @@ namespace MyJourneys.Repositories
             };
         }
 
+        public int DeleteEventItem(string userId, int itemId)
+        {
+            var item = _context.EventItems.FirstOrDefault(i => i.UserId.Equals(userId) && i.Id == itemId);
+            if (item == null)
+            {
+                return -1;
+            }
+
+            _context.EventItems.Remove(item);
+            _context.SaveChanges();
+            return item.Id;
+        }
+
         public Place AddPlaceItem(string userId, PlaceFormViewModel model)
         {
             var hasStart = _context.Places
                 .Any(p => p.UserId.Equals(userId) && p.JourneyId == model.JourneyId && p.Start);
             var hasFinish = _context.Places
                 .Any(p => p.UserId.Equals(userId) && p.JourneyId == model.JourneyId && p.Finish);
-            
+
             var place = new Place
             {
                 UserId = userId,
@@ -330,7 +382,7 @@ namespace MyJourneys.Repositories
             {
                 return;
             }
-            
+
             places.ForEach(place => place.Start = false);
             startPlace.Start = true;
             _context.SaveChanges();
@@ -344,7 +396,7 @@ namespace MyJourneys.Repositories
             {
                 return;
             }
-            
+
             places.ForEach(place => place.Finish = false);
             finishPlace.Finish = true;
             _context.SaveChanges();

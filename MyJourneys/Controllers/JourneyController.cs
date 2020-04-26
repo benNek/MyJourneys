@@ -84,6 +84,14 @@ namespace MyJourneys.Controllers
             return Ok(_journeyRepository.AddFlightItem(userId, model));
         }
 
+        [HttpDelete("flight/{id}")]
+        [Authorize]
+        public IActionResult DeleteFlight(int id)
+        {
+            var userId = GetUserId(User);
+            return Ok(_journeyRepository.DeleteFlightItem(userId, id));
+        }
+        
         [HttpPost("hotel")]
         [Authorize]
         public IActionResult AddHotel([FromBody] CommonItemCreationViewModel model)
@@ -100,6 +108,14 @@ namespace MyJourneys.Controllers
             }
 
             return Ok(_journeyRepository.AddHotelItem(userId, model));
+        }
+        
+        [HttpDelete("hotel/{id}")]
+        [Authorize]
+        public IActionResult DeleteHotel(int id)
+        {
+            var userId = GetUserId(User);
+            return Ok(_journeyRepository.DeleteHotelItem(userId, id));
         }
 
         [HttpPost("reservation")]
@@ -119,6 +135,14 @@ namespace MyJourneys.Controllers
 
             return Ok(_journeyRepository.AddReservationItem(userId, model));
         }
+        
+        [HttpDelete("reservation/{id}")]
+        [Authorize]
+        public IActionResult DeleteReservation(int id)
+        {
+            var userId = GetUserId(User);
+            return Ok(_journeyRepository.DeleteReservationItem(userId, id));
+        }
 
         [HttpPost("event")]
         [Authorize]
@@ -136,6 +160,14 @@ namespace MyJourneys.Controllers
             }
 
             return Ok(_journeyRepository.AddEventItem(userId, model));
+        }
+        
+        [HttpDelete("event/{id}")]
+        [Authorize]
+        public IActionResult DeleteEvent(int id)
+        {
+            var userId = GetUserId(User);
+            return Ok(_journeyRepository.DeleteEventItem(userId, id));
         }
 
         [HttpPost("place")]

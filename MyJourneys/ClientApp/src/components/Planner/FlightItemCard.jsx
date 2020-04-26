@@ -4,6 +4,9 @@ import CardContent from "@material-ui/core/CardContent";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Typography from "@material-ui/core/Typography";
 import moment from "moment";
+import {CardActions} from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -18,13 +21,15 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
     padding: '12px 24px 24px',
     borderRight: '1px solid rgba(0, 0, 0, 0.12)'
+  },
+  action: {
+    marginLeft: 'auto'
   }
 }));
 
 export default function FlightItemCard(props) {
   const classes = useStyles();
-  const {flight} = props;
-
+  const {flight, onDelete} = props;
   return (
     <Card className={classes.root}>
       <div className={classes.date}>
@@ -40,6 +45,11 @@ export default function FlightItemCard(props) {
           {flight.origin} – {flight.destination}
         </Typography>
       </CardContent>
+      <CardActions className={classes.action}>
+        <IconButton onClick={() => onDelete(flight.id)} variant="outlined">
+          <DeleteForeverIcon/>
+        </IconButton>
+      </CardActions>
     </Card>
   )
 }

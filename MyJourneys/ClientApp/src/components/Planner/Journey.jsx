@@ -8,7 +8,8 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import Itinerary from "./Itinerary";
 import {
-  deleteNote, deletePlace,
+  deleteEventItem, deleteFlightItem, deleteHotelItem,
+  deleteNote, deletePlace, deleteReservationItem,
   getJourney,
   getJourneyItems,
   getNotes,
@@ -22,6 +23,7 @@ import Places from "./Places";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import _ from 'lodash';
 import update from 'immutability-helper';
+import {ITEM_TYPE_EVENT, ITEM_TYPE_FLIGHT, ITEM_TYPE_HOTEL, ITEM_TYPE_RESERVATION} from "../../types/journeyItemTypes";
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -96,6 +98,26 @@ export default function Journey() {
     setItems([...items, data]);
   };
 
+  const handleDeleteItem = (id, type) => {
+    setItems(items.filter(item => item.type !== type || item.id !== id));
+  };
+
+  const handleDeleteFlightItem = id => {
+    deleteFlightItem(id).then(res => handleDeleteItem(res.data, ITEM_TYPE_FLIGHT)).catch(err => console.error(err));
+  };
+
+  const handleDeleteHotelItem = id => {
+    deleteHotelItem(id).then(res => handleDeleteItem(res.data, ITEM_TYPE_HOTEL)).catch(err => console.error(err));
+  };
+
+  const handleDeleteReservationItem = id => {
+    deleteReservationItem(id).then(res => handleDeleteItem(res.data, ITEM_TYPE_RESERVATION)).catch(err => console.error(err));
+  };
+
+  const handleDeleteEventItem = id => {
+    deleteEventItem(id).then(res => handleDeleteItem(res.data, ITEM_TYPE_EVENT)).catch(err => console.error(err));
+  };
+
   function TabPanel(props) {
     const {children, value, index, ...other} = props;
 
@@ -135,7 +157,9 @@ export default function Journey() {
         </Tabs>
       </Paper>
       <TabPanel value={tab} index={0}>
-        <Itinerary journey={journey} items={items} onItemAdd={handleAddItem}/>
+        <Itinerary journey={journey} items={items} onItemAdd={handleAddItem} onFlightDelete={handleDeleteFlightItem}
+                   onHotelDelete={handleDeleteHotelItem} onReservationDelete={handleDeleteReservationItem}
+                   onEventDelete={handleDeleteEventItem}/>
       </TabPanel>
       <TabPanel value={tab} index={1}>
         <Places journey={journey} places={places} onPlaceAdd={handleAddPlace} onPlaceDelete={handleDeletePlace}
