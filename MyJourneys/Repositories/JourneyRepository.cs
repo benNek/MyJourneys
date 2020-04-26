@@ -42,6 +42,19 @@ namespace MyJourneys.Repositories
             return journey;
         }
 
+        public int DeleteJourney(string userId, int journeyId)
+        {
+            var journey = _context.Journeys.FirstOrDefault(j => j.UserId.Equals(userId) && j.Id == journeyId);
+            if (journey == null)
+            {
+                return -1;
+            }
+
+            _context.Journeys.Remove(journey);
+            _context.SaveChanges();
+            return journey.Id;
+        }
+
         public List<JourneyViewModel> GetJourneys(string userId)
         {
             return _context.Journeys

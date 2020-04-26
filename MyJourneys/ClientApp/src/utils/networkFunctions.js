@@ -41,6 +41,7 @@ export const hasLikedArticle = id => axios.get(`/api/article/${id}/like`);
 
 // Journeys
 export const createJourney = data => axios.post('/api/journey', data);
+export const deleteJourney = id => axios.delete(`/api/journey/${id}`);
 export const getJourneys = () => axios.get('/api/journey');
 export const getJourney = id => axios.get(`/api/journey/${id}`);
 export const getJourneyItems = id => axios.get(`/api/journey/${id}/itinerary`);

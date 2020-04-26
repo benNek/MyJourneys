@@ -26,7 +26,7 @@ namespace MyJourneys.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult Create([FromBody] JourneyCreationViewModel model)
+        public IActionResult CreateJourney([FromBody] JourneyCreationViewModel model)
         {
             if (model.EndDate < Today)
             {
@@ -40,6 +40,19 @@ namespace MyJourneys.Controllers
 
             var userId = GetUserId(User);
             return Ok(_journeyRepository.AddJourney(userId, model));
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public IActionResult DeleteJourney(int id)
+        {
+            var userId = GetUserId(User);
+            if (!_journeyRepository.IsUsersJourney(userId, id))
+            {
+                return StatusCode(403, $"Journey {id} doesn't belong to user");
+            }
+
+            return Ok(_journeyRepository.DeleteJourney(userId, id));
         }
 
         [HttpGet]
