@@ -1,12 +1,9 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
 import {Route} from 'react-router';
-import {parseUser} from "./utils/auth";
-import Retrospective from "./components/Overview/Retrospective";
 import Articles from "./components/Sharing/Articles";
 import Layout from "./components/Layout";
 import Journeys from "./components/Planner/Journeys";
 import {Context} from "./state/store";
-import {setUser} from "./state/actions";
 import Journey from "./components/Planner/Journey";
 import {MuiPickersUtilsProvider} from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
@@ -16,6 +13,7 @@ import UploadPhotosPage from "./components/Overview/UploadPhotosPage";
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import {CssBaseline} from "@material-ui/core";
 import PrivateRoute from "./components/PrivateRoute";
+import Overview from "./components/Overview/Overview";
 
 const darkTheme = createMuiTheme({
   palette: {
@@ -27,19 +25,15 @@ const darkTheme = createMuiTheme({
 });
 
 export default function App() {
-  const [state, dispatch] = useContext(Context);
+  const [state] = useContext(Context);
   const {darkMode} = state;
-  
-  useEffect(() => {
-    setUser(dispatch, parseUser());
-  }, [dispatch]);
   
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
       <ThemeProvider theme={darkMode ? darkTheme : createMuiTheme()}>
         <CssBaseline/>
         <Layout>
-          <Route exact path='/' component={Retrospective}/>
+          <Route exact path='/' component={Overview}/>
           <PrivateRoute exact path='/journeys' component={Journeys}/>
           <PrivateRoute exact path='/journeys/:location.:id' component={Journey}/>
           <Route exact path='/articles' component={Articles}/>

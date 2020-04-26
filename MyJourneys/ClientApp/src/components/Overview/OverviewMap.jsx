@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function RetrospectiveMap(props) {
+export default function OverviewMap(props) {
   const classes = useStyles();
   const [state] = useContext(Context);
   const {darkMode} = state;

@@ -7,8 +7,6 @@ import {Context} from "../state/store";
 export const PrivateRoute = ({component: Component, ...rest}) => {
   const [state] = useContext(Context);
   const {user} = state;
-
-  console.log(user);
   return (
     <Route
       {...rest}
@@ -17,11 +15,7 @@ export const PrivateRoute = ({component: Component, ...rest}) => {
           ? <Component {...props} />
           : (
             <Redirect to={{
-              pathname: '/',
-              state: {
-                error: 'You must login to proceed!',
-                fallback: this ? props.location.pathname : '/'
-              }
+              pathname: '/'
             }}
             />
           )

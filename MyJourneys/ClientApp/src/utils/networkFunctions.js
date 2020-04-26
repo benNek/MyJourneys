@@ -8,10 +8,12 @@ const createParameters = (parameters) => {
     if (value && key) return [...result, (`${key}=${value}`)];
     return result;
   }, []);
+  if (!strings.length) {
+    return '';
+  }
   return `?${_.join(strings, '&')}`;
 };
 
-// potencialiai del sito reload reikia po login/logout
 axios.defaults.headers.Authorization = `Bearer ${localStorage.getItem('accessToken')}`;
 
 // Auth

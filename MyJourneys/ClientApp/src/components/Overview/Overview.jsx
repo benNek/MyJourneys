@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import './Retrospective.css';
+import React, {useContext, useEffect, useState} from 'react';
+import './Overview.css';
 import Fab from "@material-ui/core/Fab";
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import {useHistory} from "react-router";
-import RetrospectiveMap from "./RetrospectiveMap";
 import {
   getOverviewJourney,
   getOverviewJourneys,
@@ -13,6 +12,8 @@ import {
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import OverviewActions from "./OverviewActions";
 import SingleJourneyActions from "./SingleJourneyActions";
+import OverviewMap from "./OverviewMap";
+import {Context} from "../../state/store";
 
 const useStyles = makeStyles(theme => ({
   fab: {
@@ -22,9 +23,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Retrospective() {
+export default function Overview() {
   const classes = useStyles();
   const history = useHistory();
+
+  const [state] = useContext(Context);
+  const {user} = state;
 
   const [journeys, setJourneys] = useState([]);
 
@@ -38,6 +42,10 @@ export default function Retrospective() {
   const [year, setYear] = useState(0);
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
+    
     getOverviewJourneys({year}).then(res => setJourneys(res.data)).catch(err => console.error(err));
     getTravelingYears().then(res => {
       if (res.data.length > 1) {
@@ -47,6 +55,10 @@ export default function Retrospective() {
   }, []);
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
+
     getOverviewJourneys({year}).then(res => setJourneys(res.data)).catch(err => console.error(err));
     getVisitedCountries({year}).then(res => setCountries(res.data)).catch(err => console.error(err));
   }, [year]);
@@ -77,8 +89,8 @@ export default function Retrospective() {
   return (
     <React.Fragment>
       <div className={`map__container ${viewMode === 'gallery' && 'map__container--gallery'}`}>
-        <RetrospectiveMap countries={countries} journeys={journeys} viewMode={viewMode}
-                          currentJourney={currentJourney} onJourneyClick={handleJourneyClick}/>
+        <OverviewMap countries={countries} journeys={journeys} viewMode={viewMode}
+                     currentJourney={currentJourney} onJourneyClick={handleJourneyClick}/>
         {!!currentJourney.id ?
           <SingleJourneyActions handleGoBackClick={handleGoBackClick} journey={currentJourney}
                                 viewMode={viewMode} handleViewModeChange={handleViewModeChange}/>

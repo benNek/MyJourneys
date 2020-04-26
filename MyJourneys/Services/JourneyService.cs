@@ -14,7 +14,9 @@ namespace MyJourneys.Services
         {
             _journeyRepository = journeyRepository;
         }
-
+        
+        // TSP (Approximate using Prim algorithm for MST)
+        // https://www.geeksforgeeks.org/travelling-salesman-problem-set-2-approximate-using-mst/
         public void ReorderPlaces(string userId, int journeyId)
         {
             List<Place> places = _journeyRepository.GetPlaceObjects(userId, journeyId);

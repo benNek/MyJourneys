@@ -14,6 +14,7 @@ export default function Logout() {
       .then(() => {
         localStorage.removeItem('accessToken');
         setUser(dispatch, null);
+        window.location.reload();
       })
       .catch(err => {
         toast.error(`${err.response.data} Status code: ${err.response.status}`);

@@ -79,10 +79,9 @@ export default function Login() {
                     localStorage.setItem('accessToken', response.data);
                     
                     setUser(dispatch, parseUser());
-                    toast.success("User login successfully.");
+                    window.location.reload();
                   })
                   .catch(err => {
-                    console.log(err);
                     toast.error(`${err.response.data} Status code: ${err.response.status}`);
                     actions.setSubmitting(false);
                   });
