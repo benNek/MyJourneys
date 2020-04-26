@@ -68,20 +68,12 @@ export default function OverviewMap(props) {
     setCountries(props.countries);
     setJourneys(props.journeys);
   }, [props]);
-
+  
   useEffect(() => {
     // changing mode from overall view -> single journey view
-    if (currentJourney.id) {
-      removeMapCountries();
-      removeMapJourneys();
-      addPhotoMarkers();
-    } else {
-      updateMapCountries();
-      updateMapJourneys();
-    }
+    updateMap();
   }, [currentJourney]);
-
-
+  
   useEffect(() => {
     if (currentJourney.id) {
       const coordinates = currentJourney.photos.map(photo => [photo.longitude, photo.latitude]);
@@ -108,6 +100,10 @@ export default function OverviewMap(props) {
   useEffect(() => {
     updateMapJourneys();
   }, [journeys]);
+  
+  useEffect(() => {
+    updateMap(100);
+  }, [darkMode]);
 
   useEffect(() => {
     if (Object.entries(map).length === 0 && map.constructor === Object) {
@@ -126,7 +122,7 @@ export default function OverviewMap(props) {
     map.setPaintProperty('countries', 'fill-opacity', 0);
   };
 
-  const updateMapCountries = () => {
+  const updateMapCountries = (timeout = 0) => {
     if (Object.entries(map).length === 0 && map.constructor === Object) {
       return;
     }
@@ -137,12 +133,26 @@ export default function OverviewMap(props) {
     }
 
     const activeCountriesOpacity = countries.map(country => [country, defaultOpacity]).flat();
-    map.setPaintProperty('countries', 'fill-opacity', [
-      'match',
-      ['get', 'ADM0_A3_IS'],
-      ...activeCountriesOpacity,
-      0
-    ]);
+    
+    setTimeout(() => {
+      map.setPaintProperty('countries', 'fill-opacity', [
+        'match',
+        ['get', 'ADM0_A3_IS'],
+        ...activeCountriesOpacity,
+        0
+      ]);
+    }, timeout);
+  };
+  
+  const updateMap = timeout => {
+    if (currentJourney.id) {
+      removeMapCountries();
+      removeMapJourneys();
+      addPhotoMarkers();
+    } else {
+      updateMapCountries(timeout);
+      updateMapJourneys();
+    }
   };
 
   const removeMapJourneys = () => {
