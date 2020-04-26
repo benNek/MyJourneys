@@ -6,7 +6,7 @@ namespace MyJourneys.Repositories
 {
     public interface IJourneyRepository
     {
-        void AddJourney(string userId, JourneyCreationViewModel model);
+        Journey AddJourney(string userId, JourneyCreationViewModel model);
         List<JourneyViewModel> GetJourneys(string userId);
         bool IsUsersJourney(string userId, int journeyId);
         List<JourneyItemViewModel> GetJourneyItems(string userId, int journeyId);
@@ -14,11 +14,11 @@ namespace MyJourneys.Repositories
         List<Place> GetPlaceObjects(string userId, int journeyId);
         void UpdatePlaceRank(int placeId, int rank);
         List<NoteViewModel> GetNotes(string userId, int journeyId);
-        void AddFlightItem(string userId, FlightItemCreationViewModel model);
-        void AddHotelItem(string userId, CommonItemCreationViewModel model);
-        void AddReservationItem(string userId, CommonItemCreationViewModel model);
-        void AddEventItem(string userId, CommonItemCreationViewModel model);
-        void AddPlaceItem(string userId, PlaceFormViewModel model);
-        void AddNoteItem(string userId, NoteFormViewModel model);
+        JourneyItemViewModel AddFlightItem(string userId, FlightItemCreationViewModel model);
+        JourneyItemViewModel AddHotelItem(string userId, CommonItemCreationViewModel model);
+        JourneyItemViewModel AddReservationItem(string userId, CommonItemCreationViewModel model);
+        JourneyItemViewModel AddEventItem(string userId, CommonItemCreationViewModel model);
+        Place AddPlaceItem(string userId, PlaceFormViewModel model);
+        Note AddNoteItem(string userId, NoteFormViewModel model);
     }
 }

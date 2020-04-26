@@ -40,8 +40,7 @@ namespace MyJourneys.Controllers
             }
 
             var userId = GetUserId(User);
-            _journeyRepository.AddJourney(userId, model);
-            return Ok("Journey has been created successfully");
+            return Ok(_journeyRepository.AddJourney(userId, model));
         }
 
         [HttpGet]
@@ -75,8 +74,7 @@ namespace MyJourneys.Controllers
                 return StatusCode(422, "Date must not be in the past");
             }
 
-            _journeyRepository.AddFlightItem(userId, model);
-            return Ok("Flight has been successfully added to the journey");
+            return Ok(_journeyRepository.AddFlightItem(userId, model));
         }
 
         [HttpPost("hotel")]
@@ -94,8 +92,7 @@ namespace MyJourneys.Controllers
                 return StatusCode(422, "Date must not be in the past");
             }
 
-            _journeyRepository.AddHotelItem(userId, model);
-            return Ok("Hotel has been successfully added to the journey");
+            return Ok(_journeyRepository.AddHotelItem(userId, model));
         }
 
         [HttpPost("reservation")]
@@ -113,8 +110,7 @@ namespace MyJourneys.Controllers
                 return StatusCode(422, "Date must not be in the past");
             }
 
-            _journeyRepository.AddReservationItem(userId, model);
-            return Ok("Reservation has been successfully added to the journey");
+            return Ok(_journeyRepository.AddReservationItem(userId, model));
         }
 
         [HttpPost("event")]
@@ -132,8 +128,7 @@ namespace MyJourneys.Controllers
                 return StatusCode(422, "Date must not be in the past");
             }
 
-            _journeyRepository.AddEventItem(userId, model);
-            return Ok("Event has been successfully added to the journey");
+            return Ok(_journeyRepository.AddEventItem(userId, model));
         }
 
         [HttpPost("place")]
@@ -156,8 +151,7 @@ namespace MyJourneys.Controllers
                 return StatusCode(422, "Longitude must be between -180 and 180");
             }
 
-            _journeyRepository.AddPlaceItem(userId, model);
-            return Ok("Place has been successfully added to the journey");
+            return Ok(_journeyRepository.AddPlaceItem(userId, model));
         }
 
         [HttpGet("{id}/places")]
@@ -178,8 +172,7 @@ namespace MyJourneys.Controllers
                 return StatusCode(403, $"Journey {id} doesn't belong to user");
             }
 
-            _journeyService.ReorderPlaces(userId, id);
-            return Ok();
+            return Ok(_journeyService.ReorderPlaces(userId, id));
         }
 
         [HttpPost("note")]
@@ -187,8 +180,7 @@ namespace MyJourneys.Controllers
         public IActionResult AddNote([FromBody] NoteFormViewModel model)
         {
             var userId = GetUserId(User);
-            _journeyRepository.AddNoteItem(userId, model);
-            return Ok("Note has been successfully added");
+            return Ok(_journeyRepository.AddNoteItem(userId, model));
         }
 
         [HttpGet("{id}/notes")]

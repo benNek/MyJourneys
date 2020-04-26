@@ -1,7 +1,10 @@
+using System.Collections.Generic;
+using MyJourneys.Models.ViewModels;
+
 namespace MyJourneys.Services
 {
     public interface IJourneyService
     {
-        public void ReorderPlaces(string userId, int journeyId);
+        public List<PlaceViewModel> ReorderPlaces(string userId, int journeyId);
     }
 }

@@ -17,6 +17,7 @@ import Grid from "@material-ui/core/Grid";
 import RecommendedAction from "../RecommendedAction";
 import MapIcon from '@material-ui/icons/Map';
 import RotateRightIcon from '@material-ui/icons/RotateRight';
+import {toast} from "react-toastify";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -42,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Places(props) {
   let {id} = useParams();
-  const {places} = props;
+  const {places, onPlaceAdd, onReorder} = props;
 
   const classes = useStyles();
   const [modalOpen, setModalOpen] = useState(false);
@@ -56,7 +57,10 @@ export default function Places(props) {
   };
 
   const handleReorderPlacesClick = () => {
-    reorderPlaces(id).then(result => console.log(result.data));
+    reorderPlaces(id).then(result => {
+      onReorder(result.data);
+      toast.success('Places have been reordered!')
+    });
   };
 
   const renderContent = () => {
@@ -157,7 +161,7 @@ export default function Places(props) {
       >
         <Fade in={modalOpen}>
           <div className={classes.paper}>
-            <PlaceForm onSubmit={handleModalClose} journeyId={id}/>
+            <PlaceForm onSubmit={handleModalClose} onSuccess={onPlaceAdd} journeyId={id}/>
           </div>
         </Fade>
       </Modal>

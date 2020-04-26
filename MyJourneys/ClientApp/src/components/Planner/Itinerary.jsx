@@ -53,7 +53,7 @@ const useStyles = makeStyles(() => ({
 
 export default function Itinerary(props) {
   let {location, id} = useParams();
-  const {items} = props;
+  const {items, onItemAdd} = props;
 
   const classes = useStyles();
 
@@ -110,7 +110,8 @@ export default function Itinerary(props) {
       )
     }
 
-    const groupedByDays = _.groupBy(items, item => moment(item.date).format('MMMM Do'));
+    const sortedItems = _.sortBy(items, 'date');
+    const groupedByDays = _.groupBy(sortedItems, item => moment(item.date).format('MMMM Do'));
     return Object.keys(groupedByDays).map(day => {
       const items = groupedByDays[day].map(item => {
         return (
@@ -132,7 +133,7 @@ export default function Itinerary(props) {
   return (
     <React.Fragment>
       {renderItems()}
-      <JourneyItemsSpeedDial journeyId={id}/>
+      <JourneyItemsSpeedDial journeyId={id} onItemAdd={onItemAdd}/>
     </React.Fragment>
   )
 

@@ -33,7 +33,7 @@ export default function JourneyItemsSpeedDial(props) {
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState(undefined);
-  const {journeyId} = props;
+  const {journeyId, onItemAdd} = props;
 
   const handleOpen = () => {
     setOpen(true);
@@ -41,6 +41,10 @@ export default function JourneyItemsSpeedDial(props) {
 
   const handleClose = () => {
     setOpen(false);
+  };
+  
+  const handleItemAdd = data => {
+    onItemAdd(data);
   };
 
   const handleModalOpen = (form) => {
@@ -57,22 +61,22 @@ export default function JourneyItemsSpeedDial(props) {
     {
       icon: <RestaurantIcon/>,
       name: 'Reservation',
-      form: <ReservationItemForm journeyId={journeyId} onSubmit={handleModalClose}/>
+      form: <ReservationItemForm journeyId={journeyId} onSubmit={handleModalClose} onSuccess={handleItemAdd}/>
     },
     {
       icon: <EventIcon/>,
       name: 'Event',
-      form: <EventItemForm journeyId={journeyId} onSubmit={handleModalClose}/>
+      form: <EventItemForm journeyId={journeyId} onSubmit={handleModalClose} onSuccess={handleItemAdd}/>
     },
     {
       icon: <HotelIcon/>,
       name: 'Hotel',
-      form: <HotelItemForm journeyId={journeyId} onSubmit={handleModalClose}/>
+      form: <HotelItemForm journeyId={journeyId} onSubmit={handleModalClose} onSuccess={handleItemAdd}/>
     },
     {
       icon: <FlightIcon/>,
       name: 'Flight',
-      form: <FlightItemForm journeyId={journeyId} onSubmit={handleModalClose}/>
+      form: <FlightItemForm journeyId={journeyId} onSubmit={handleModalClose} onSuccess={handleItemAdd}/>
     }
   ];
 

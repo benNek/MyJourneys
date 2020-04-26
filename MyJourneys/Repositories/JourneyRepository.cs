@@ -23,18 +23,20 @@ namespace MyJourneys.Repositories
             _config = configuration;
         }
 
-        public void AddJourney(string userId, JourneyCreationViewModel model)
+        public Journey AddJourney(string userId, JourneyCreationViewModel model)
         {
             var photoPath = GetPhotoPath(model.Location).Result;
-            _context.Journeys.Add(new Journey
+            var journey = new Journey
             {
                 UserId = userId,
                 Location = model.Location,
                 PhotoPath = photoPath,
                 StartDate = model.StartDate,
                 EndDate = model.EndDate
-            });
+            };
+            _context.Journeys.Add(journey);
             _context.SaveChanges();
+            return journey;
         }
 
         public List<JourneyViewModel> GetJourneys(string userId)
@@ -166,9 +168,9 @@ namespace MyJourneys.Repositories
                 .ToList();
         }
 
-        public void AddFlightItem(string userId, FlightItemCreationViewModel model)
+        public JourneyItemViewModel AddFlightItem(string userId, FlightItemCreationViewModel model)
         {
-            _context.FlightItems.Add(new FlightItem
+            var item = new FlightItem
             {
                 UserId = userId,
                 JourneyId = model.JourneyId,
@@ -177,52 +179,91 @@ namespace MyJourneys.Repositories
                 FlightNumber = model.FlightNumber,
                 Origin = model.Origin,
                 Destination = model.Destination
-            });
+            };
+            _context.FlightItems.Add(item);
             _context.SaveChanges();
+            
+            return new JourneyItemViewModel
+            {
+                Id = item.Id,
+                Type = JourneyItemType.Flight.ToString(),
+                Date = item.Date,
+                Airline = item.Airline,
+                FlightNumber = item.FlightNumber,
+                Origin = item.Origin,
+                Destination = item.Destination
+            };
         }
 
-        public void AddHotelItem(string userId, CommonItemCreationViewModel model)
+        public JourneyItemViewModel AddHotelItem(string userId, CommonItemCreationViewModel model)
         {
-            _context.HotelItems.Add(new HotelItem
+            var item = new HotelItem
             {
                 UserId = userId,
                 JourneyId = model.JourneyId,
                 Date = model.Date,
                 Name = model.Name,
                 Address = model.Address
-            });
+            };
+            _context.HotelItems.Add(item);
             _context.SaveChanges();
+            return new JourneyItemViewModel
+            {
+                Id = item.Id,
+                Type = JourneyItemType.Hotel.ToString(),
+                Date = item.Date,
+                Name = item.Name,
+                Address = item.Address
+            };
         }
 
-        public void AddReservationItem(string userId, CommonItemCreationViewModel model)
+        public JourneyItemViewModel AddReservationItem(string userId, CommonItemCreationViewModel model)
         {
-            _context.ReservationItems.Add(new ReservationItem
+            var item = new ReservationItem
             {
                 UserId = userId,
                 JourneyId = model.JourneyId,
                 Date = model.Date,
                 Name = model.Name,
                 Address = model.Address
-            });
+            };
+            _context.ReservationItems.Add(item);
             _context.SaveChanges();
+            return new JourneyItemViewModel
+            {
+                Id = item.Id,
+                Type = JourneyItemType.Reservation.ToString(),
+                Date = item.Date,
+                Name = item.Name,
+                Address = item.Address
+            };
         }
 
-        public void AddEventItem(string userId, CommonItemCreationViewModel model)
+        public JourneyItemViewModel AddEventItem(string userId, CommonItemCreationViewModel model)
         {
-            _context.EventItems.Add(new EventItem
+            var item = new EventItem
             {
                 UserId = userId,
                 JourneyId = model.JourneyId,
                 Date = model.Date,
                 Name = model.Name,
                 Address = model.Address
-            });
+            };
+            _context.EventItems.Add(item);
             _context.SaveChanges();
+            return new JourneyItemViewModel
+            {
+                Id = item.Id,
+                Type = JourneyItemType.Event.ToString(),
+                Date = item.Date,
+                Name = item.Name,
+                Address = item.Address
+            };
         }
 
-        public void AddPlaceItem(string userId, PlaceFormViewModel model)
+        public Place AddPlaceItem(string userId, PlaceFormViewModel model)
         {
-            _context.Places.Add(new Place
+            var place = new Place
             {
                 UserId = userId,
                 JourneyId = model.JourneyId,
@@ -230,20 +271,24 @@ namespace MyJourneys.Repositories
                 Address = model.Address,
                 Latitude = model.Latitude,
                 Longitude = model.Longitude
-            });
+            };
+            _context.Places.Add(place);
             _context.SaveChanges();
+            return place;
         }
 
-        public void AddNoteItem(string userId, NoteFormViewModel model)
+        public Note AddNoteItem(string userId, NoteFormViewModel model)
         {
-            _context.Notes.Add(new Note
+            var note = new Note
             {
                 UserId = userId,
                 JourneyId = model.JourneyId,
                 Title = model.Title,
                 Text = model.Text
-            });
+            };
+            _context.Notes.Add(note);
             _context.SaveChanges();
+            return note;
         }
 
         private async Task<string> GetPhotoPath(string location)
@@ -253,6 +298,7 @@ namespace MyJourneys.Repositories
             {
                 return path;
             }
+
             bool success = await _photoRepository.SaveLocationPhoto(location.ToLower());
             return success ? path : null;
         }

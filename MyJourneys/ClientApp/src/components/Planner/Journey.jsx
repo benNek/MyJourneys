@@ -37,6 +37,22 @@ export default function Journey() {
   const handleTabChange = (event, newValue) => {
     setTab(newValue);
   };
+  
+  const handleAddPlace = data => {
+    setPlaces([...places, data]);
+  };
+  
+  const handlePlacesReorder = data => {
+    setPlaces(data);
+  };
+  
+  const handleAddNote = data => {
+    setNotes([...notes, data]);
+  };
+  
+  const handleAddItem = data => {
+    setItems([...items, data]);
+  };
 
   function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -77,13 +93,13 @@ export default function Journey() {
         </Tabs>
       </Paper>
       <TabPanel value={tab} index={0}>
-        <Itinerary items={items}/>
+        <Itinerary items={items} onItemAdd={handleAddItem}/>
       </TabPanel>
       <TabPanel value={tab} index={1}>
-        <Places places={places}/>
+        <Places places={places} onPlaceAdd={handleAddPlace} onReorder={handlePlacesReorder}/>
       </TabPanel>
       <TabPanel value={tab} index={2}>
-        <Notes notes={notes}/>
+        <Notes notes={notes} onNoteAdd={handleAddNote}/>
       </TabPanel>
     </React.Fragment>
   )

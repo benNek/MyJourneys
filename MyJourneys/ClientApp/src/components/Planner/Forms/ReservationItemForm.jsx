@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function ReservationItemForm(props) {
   const classes = useStyles();
-  const {journeyId} = props;
+  const {journeyId, onSubmit, onSuccess} = props;
 
   return (
     <Formik
@@ -34,16 +34,14 @@ export default function ReservationItemForm(props) {
       validationSchema={reservationItemValidation}
       onSubmit={async (values, actions) => {
         actions.setSubmitting(true);
-
-        if (props && props.onSubmit) {
-          props.onSubmit();
-        }
+        onSubmit();
 
         values['journeyId'] = parseInt(journeyId, 10);
         values['date'] = moment(values.date).format();
         await createReservationItem(values)
           .then(response => {
-            toast.success(response.data);
+            onSuccess(response.data);
+            toast.success('Reservation item has been successfully saved!');
           })
           .catch(err => {
             toast.error(`${err.response.data} Status code: ${err.response.status}`);

@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Notes(props) {
   let {id} = useParams();
-  const {notes} = props;
+  const {notes, onNoteAdd} = props;
 
   const classes = useStyles();
   const [modalOpen, setModalOpen] = useState(false);
@@ -69,9 +69,14 @@ export default function Notes(props) {
 
   return (
     <React.Fragment>
-      <Grid container spacing={2}>
-        {renderNotes()}
-      </Grid>
+      {notes.length === 0 ?
+        <Typography variant="body1">
+          No notes have been added yet!
+        </Typography> :
+        <Grid container spacing={2}>
+          {renderNotes()}
+        </Grid>
+      }
       <Fab onClick={handleModalOpen} aria-label="add note" color="primary" className="FloatingActionButton">
         <NoteAddIcon/>
       </Fab>
@@ -89,7 +94,7 @@ export default function Notes(props) {
       >
         <Fade in={modalOpen}>
           <div className={classes.paper}>
-            <NoteForm onSubmit={handleModalClose} journeyId={id}/>
+            <NoteForm onSubmit={handleModalClose} onSuccess={onNoteAdd} journeyId={id}/>
           </div>
         </Fade>
       </Modal>

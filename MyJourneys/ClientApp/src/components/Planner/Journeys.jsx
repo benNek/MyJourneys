@@ -62,6 +62,10 @@ export default function Journeys() {
   const handleClose = () => {
     setOpen(false);
   };
+  
+  const handleAddJourney = (data) => {
+    setJourneys(dispatch, [...journeys, data]);
+  };
 
   const content = () => {
     if (loading) {
@@ -106,7 +110,7 @@ export default function Journeys() {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <JourneyForm onSubmit={handleClose}/>
+            <JourneyForm onSubmit={handleClose} onSuccess={handleAddJourney}/>
           </div>
         </Fade>
       </Modal>

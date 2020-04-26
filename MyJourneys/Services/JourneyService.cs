@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using MyJourneys.Models;
+using MyJourneys.Models.ViewModels;
 using MyJourneys.Repositories;
 using MyJourneys.Utils;
 
@@ -17,7 +18,7 @@ namespace MyJourneys.Services
         
         // TSP (Approximate using Prim algorithm for MST)
         // https://www.geeksforgeeks.org/travelling-salesman-problem-set-2-approximate-using-mst/
-        public void ReorderPlaces(string userId, int journeyId)
+        public List<PlaceViewModel> ReorderPlaces(string userId, int journeyId)
         {
             List<Place> places = _journeyRepository.GetPlaceObjects(userId, journeyId);
             double[,] graph = ResolveGraph(places);
@@ -30,6 +31,7 @@ namespace MyJourneys.Services
                 _journeyRepository.UpdatePlaceRank(places[vertex].Id, rank++);
                 vertex = GetVertexLeadingTo(parent, vertex);
             }
+            return _journeyRepository.GetPlaces(userId, journeyId);
         }
 
         private int GetVertexLeadingTo(int[] parent, int vertex)

@@ -34,7 +34,7 @@ export default function PlaceForm(props) {
 
   const geoCodingClient = mbxGeoCoding(baseClient);
   const classes = useStyles();
-  const {journeyId} = props;
+  const {journeyId, onSubmit, onSuccess} = props;
 
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
@@ -83,11 +83,9 @@ export default function PlaceForm(props) {
     };
   }, [inputValue, fetch]);
 
-  const onSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (props && props.onSubmit) {
-      props.onSubmit();
-    }
+    onSubmit();
 
     const values = {
       journeyId: parseInt(journeyId, 10),
@@ -98,7 +96,8 @@ export default function PlaceForm(props) {
     };
     await createPlace(values)
       .then(response => {
-        toast.success(response.data);
+        onSuccess(response.data);
+        toast.success('Place has been successfully added!');
       })
       .catch(err => {
         toast.error(`${err.response.data} Status code: ${err.response.status}`);
@@ -106,7 +105,7 @@ export default function PlaceForm(props) {
   };
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={handleSubmit}>
       <Typography className={classes.formTitle} variant='h5'>
         Add a place
       </Typography>

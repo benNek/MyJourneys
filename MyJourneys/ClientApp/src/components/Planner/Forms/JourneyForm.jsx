@@ -21,6 +21,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function JourneyForm(props) {
   const classes = useStyles();
+  
+  const { onSubmit, onSuccess} = props;
 
   return (
     <Formik
@@ -32,14 +34,12 @@ export default function JourneyForm(props) {
       validationSchema={journeyValidation}
       onSubmit={async (values, actions) => {
         actions.setSubmitting(true);
-
-        if (props && props.onSubmit) {
-          props.onSubmit();
-        }
+        onSubmit();
         
         await createJourney(values)
           .then(response => {
-            toast.success(response.data);
+            toast.success("Journey has been successfully added");
+            onSuccess(response.data);
           })
           .catch(err => {
             toast.error(`${err.response.data} Status code: ${err.response.status}`);

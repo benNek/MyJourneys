@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
 
 export default function NoteForm(props) {
   const classes = useStyles();
-  const {journeyId} = props;
+  const {journeyId, onSubmit, onSuccess} = props;
 
   return (
     <Formik
@@ -31,15 +31,13 @@ export default function NoteForm(props) {
       validationSchema={noteValidation}
       onSubmit={async (values, actions) => {
         actions.setSubmitting(true);
-
-        if (props && props.onSubmit) {
-          props.onSubmit();
-        }
+        onSubmit();
 
         values['journeyId'] = parseInt(journeyId, 10);
         await createNote(values)
           .then(response => {
-            toast.success(response.data);
+            onSuccess(response.data);
+            toast.success('Note has been successfully saved!');
           })
           .catch(err => {
             toast.error(`${err.response.data} Status code: ${err.response.status}`);
