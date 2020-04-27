@@ -32,7 +32,7 @@ export default function OverviewMap(props) {
   const [state] = useContext(Context);
   const {darkMode} = state;
 
-  const {currentJourney, onJourneyClick, viewMode} = props;
+  const {currentJourney, onJourneyClick, viewMode, onPhotoClick} = props;
 
   const defaultOpacity = darkMode ? .2 : .4;
 
@@ -199,7 +199,7 @@ export default function OverviewMap(props) {
 
     const createdMarkers = [];
     currentJourney.photos.forEach(photo => {
-      const el = renderPhotoCard(undefined, photo.path)
+      const el = renderPhotoCard(undefined, photo.path, () => onPhotoClick(photo));
       const marker = new mapboxgl.Marker(el)
         .setLngLat([photo.longitude, photo.latitude])
         .addTo(map);

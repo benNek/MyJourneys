@@ -25,6 +25,7 @@
         <Content Include="ClientApp\src\components\Overview\OverviewActions.jsx" />
         <Content Include="ClientApp\src\components\Overview\OverviewJourneysList.jsx" />
         <Content Include="ClientApp\src\components\Overview\OverviewMap.jsx" />
+        <Content Include="ClientApp\src\components\Overview\PhotoView.jsx" />
         <Content Include="ClientApp\src\components\Overview\SingleJourneyActions.jsx" />
         <Content Include="ClientApp\src\components\Overview\UploadPhotosPage.css" />
         <Content Include="ClientApp\src\components\Overview\UploadPhotosStep1.jsx" />

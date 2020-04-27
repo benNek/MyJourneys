@@ -51,17 +51,20 @@ const useStyles = makeStyles(theme => ({
 export default function SingleJourneyActions(props) {
   const classes = useStyles();
 
-  const {journey, viewMode, handleViewModeChange, handleGoBackClick} = props;
+  const {journey, viewMode, handleViewModeChange, handleGoBackClick, onPhotoClick} = props;
 
   const renderPhotos = () => {
     if (!isGalleryMode()) {
       return;
     }
 
+    console.log('render photos?')
     return (
       <Grid container spacing={2} className={classes.gallery}>
         {journey.photos.map(photo => 
-          <Grid item xs={6} sm={4} lg={3}><img src={getPhotoUrl(photo.path)} className={classes.photo} alt=""/></Grid>
+          <Grid key={photo.id} item xs={6} sm={4} lg={3}>
+            <img onClick={() => onPhotoClick(photo)} src={getPhotoUrl(photo.path)} className={classes.photo} alt=""/>
+          </Grid>
         )}
       </Grid>
     )

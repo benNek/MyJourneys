@@ -14,6 +14,7 @@ import OverviewActions from "./OverviewActions";
 import SingleJourneyActions from "./SingleJourneyActions";
 import OverviewMap from "./OverviewMap";
 import {Context} from "../../state/store";
+import PhotoView from "./PhotoView";
 
 const useStyles = makeStyles(theme => ({
   fab: {
@@ -41,11 +42,14 @@ export default function Overview() {
   const [listOpen, setListOpen] = useState(false);
   const [year, setYear] = useState(0);
 
+  const [photoModalOpen, setPhotoModalOpen] = useState(false);
+  const [photo, setPhoto] = useState(null);
+
   useEffect(() => {
     if (!user) {
       return;
     }
-    
+
     getOverviewJourneys({year}).then(res => setJourneys(res.data)).catch(err => console.error(err));
     getTravelingYears().then(res => {
       if (res.data.length > 1) {
@@ -62,6 +66,11 @@ export default function Overview() {
     getOverviewJourneys({year}).then(res => setJourneys(res.data)).catch(err => console.error(err));
     getVisitedCountries({year}).then(res => setCountries(res.data)).catch(err => console.error(err));
   }, [year]);
+
+  const handleOpenPhoto = photo => {
+    setPhoto(photo);
+    setPhotoModalOpen(true);
+  };
 
   const handleGoBackClick = () => {
     setCurrentJourney({});
@@ -91,16 +100,18 @@ export default function Overview() {
     <React.Fragment>
       <div className={`map__container ${viewMode === 'gallery' && 'map__container--gallery'}`}>
         <OverviewMap countries={countries} journeys={journeys} viewMode={viewMode}
-                     currentJourney={currentJourney} onJourneyClick={handleJourneyClick}/>
+                     currentJourney={currentJourney} onJourneyClick={handleJourneyClick}
+                     onPhotoClick={handleOpenPhoto}/>
         {!!currentJourney.id ?
-          <SingleJourneyActions handleGoBackClick={handleGoBackClick} journey={currentJourney}
-                                viewMode={viewMode} handleViewModeChange={handleViewModeChange}/>
+          <SingleJourneyActions handleGoBackClick={handleGoBackClick} journey={currentJourney} viewMode={viewMode}
+                                handleViewModeChange={handleViewModeChange} onPhotoClick={handleOpenPhoto}/>
           :
           <OverviewActions journeys={journeys} year={year} allYears={allYears} isListOpen={listOpen}
                            handleTriggerListClick={handleTriggerListClick} handleJourneyClick={handleJourneyClick}
                            handleYearChange={handleYearChange}/>
         }
       </div>
+      <PhotoView open={photoModalOpen} handleClose={() => setPhotoModalOpen(false)} photo={photo}/>
       <Fab onClick={() => history.push('/upload')} aria-label="add photos"
            className={`${classes.fab} FloatingActionButton`}>
         <AddPhotoAlternateIcon/>
