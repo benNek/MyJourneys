@@ -14,6 +14,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import {CssBaseline} from "@material-ui/core";
 import PrivateRoute from "./components/PrivateRoute";
 import Overview from "./components/Overview/Overview";
+import SettingsPage from "./components/SettingsPage";
 
 const darkTheme = createMuiTheme({
   palette: {
@@ -40,6 +41,7 @@ export default function App() {
           <PrivateRoute Route exact path='/article' component={ArticleForm}/>
           <Route exact path='/articles/:id' component={Article}/>
           <PrivateRoute Route exact path='/upload' component={UploadPhotosPage}/>
+          <PrivateRoute Route exact path='/settings' component={SettingsPage}/>
         </Layout>
       </ThemeProvider>
     </MuiPickersUtilsProvider>

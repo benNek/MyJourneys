@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useHistory, useParams} from "react-router";
+import {useParams} from "react-router";
 import Typography from "@material-ui/core/Typography";
 import OfflinePinIcon from '@material-ui/icons/OfflinePin';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';

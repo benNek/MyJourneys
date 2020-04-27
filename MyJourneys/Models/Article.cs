@@ -13,6 +13,7 @@ namespace MyJourneys.Models
         public string Text { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime ModifyDate { get; set; }
+        public bool Confirmed { get; set; }
 
         [JsonIgnore]
         [ForeignKey("AuthorId")] public virtual User Author { get; set; }

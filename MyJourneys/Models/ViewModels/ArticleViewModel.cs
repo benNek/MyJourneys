@@ -12,5 +12,6 @@ namespace MyJourneys.Models.ViewModels
         public List<string> Tags { get; set; }
         public int LikesCount { get; set; }
         public DateTime CreateDate { get; set; }
+        public bool Confirmed { get; set; }
     }
 }

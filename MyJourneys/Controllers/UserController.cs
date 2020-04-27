@@ -32,6 +32,11 @@ namespace MyJourneys.Controllers
                 return StatusCode(422, $"User with email {model.Email} already exists");
             }
 
+            if (model.Password.Length < 8)
+            {
+                return StatusCode(422, "Password is too short");
+            }
+
             if (await _userService.Register(model))
             {
                 return Ok("Registration was successful");

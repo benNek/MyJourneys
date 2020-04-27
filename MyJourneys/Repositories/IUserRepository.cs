@@ -9,5 +9,6 @@ namespace MyJourneys.Repositories
         User GetUser(string username);
         User GetUserById(string id);
         bool UserWithEmailExists(string email);
+        bool HasWriterRole(string userId);
     }
 }

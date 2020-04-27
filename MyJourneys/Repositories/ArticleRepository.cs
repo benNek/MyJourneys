@@ -33,7 +33,8 @@ namespace MyJourneys.Repositories
                     Text = article.Text,
                     Tags = article.ArticleTags.Select(tag => tag.Tag.Name).ToList(),
                     LikesCount = article.ArticleLikes.Count,
-                    CreateDate = article.CreateDate
+                    CreateDate = article.CreateDate,
+                    Confirmed = article.Confirmed
                 }).FirstOrDefault();
         }
 
@@ -42,7 +43,7 @@ namespace MyJourneys.Repositories
         {
             DateTime filterDate = GetMaxDate(sortType);
             var query = _context.Articles
-                .Where(article => article.CreateDate >= filterDate);
+                .Where(article => article.CreateDate >= filterDate && article.Confirmed);
 
             if (tagName != null)
             {
@@ -63,7 +64,8 @@ namespace MyJourneys.Repositories
                 Text = article.Text,
                 Tags = article.ArticleTags.Select(tag => tag.Tag.Name).ToList(),
                 LikesCount = article.ArticleLikes.Count,
-                CreateDate = article.CreateDate
+                CreateDate = article.CreateDate,
+                Confirmed = article.Confirmed
             }).OrderByDescending(article => article.CreateDate);
             if (!sortType.Equals(ArticleSortType.Feed))
             {
@@ -95,7 +97,8 @@ namespace MyJourneys.Repositories
                 Text = model.Text,
                 AuthorId = userId,
                 CreateDate = DateTime.UtcNow,
-                ModifyDate = DateTime.UtcNow
+                ModifyDate = DateTime.UtcNow,
+                Confirmed = _userRepository.HasWriterRole(userId)
             };
             _context.Articles.Add(article);
             _context.SaveChanges();

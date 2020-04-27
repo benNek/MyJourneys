@@ -25,6 +25,9 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 
 const useStyles = makeStyles(theme => ({
+  card: {
+    overflow: 'initial'
+  },
   successContainer: {
     textAlign: 'center'
   },
@@ -95,7 +98,7 @@ export default function ArticleForm() {
   }
 
   return (
-    <Card variant="outlined">
+    <Card className={classes.card} variant="outlined">
       <CardContent>
         <Typography component='h1' variant='h3'>
           Publish your article

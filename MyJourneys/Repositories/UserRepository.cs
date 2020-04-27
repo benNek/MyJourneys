@@ -1,6 +1,5 @@
+using System;
 using System.Linq;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
 using MyJourneys.Data;
 using MyJourneys.Models;
 
@@ -8,7 +7,8 @@ namespace MyJourneys.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private TravelContext _context;
+        private readonly String writer = "Writer";
+        private readonly TravelContext _context;
 
         public UserRepository()
         {
@@ -33,6 +33,22 @@ namespace MyJourneys.Repositories
         public bool UserWithEmailExists(string email)
         {
             return _context.Users.Any(user => user.Email.Equals(email));
+        }
+
+        public bool HasWriterRole(string userId)
+        {
+            string roleId = _context.Roles
+                .Where(role => role.NormalizedName.Equals(writer))
+                .Select(role => role.Id)
+                .FirstOrDefault();
+
+            if (roleId == null)
+            {
+                return false;
+            }
+            return _context.UserRoles
+                .Where(userRole => userRole.UserId.Equals(userId))
+                .Any(role => role.RoleId.Equals(roleId));
         }
     }
 }

@@ -163,6 +163,11 @@ namespace MyJourneys
                     await roleManager.CreateAsync(new IdentityRole(roleName));
                 }
             }
+            
+            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+            var admin = await userManager.FindByNameAsync("admin");
+            if (admin != null && !await userManager.IsInRoleAsync(admin, "Admin"))
+                await userManager.AddToRoleAsync(admin, "Admin");
         }
 
         private void CreateFolders()

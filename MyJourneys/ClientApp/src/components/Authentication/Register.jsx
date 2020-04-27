@@ -72,6 +72,7 @@ export default function Register() {
                 await register(values)
                   .then(() => {
                     toast.success("User registered successfully.");
+                    handleClose();
                   })
                   .catch(err => {
                     toast.error(`${err.response.data} Status code: ${err.response.status}`);

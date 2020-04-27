@@ -57,6 +57,7 @@ namespace MyJourneys.Services
                 new Claim("id", user.Id),
                 new Claim("username", user.UserName),
                 new Claim("email", user.Email),
+                new Claim("roles", roles.Count > 0 ? roles[0] : "User")
             };
             
             foreach (var role in roles)

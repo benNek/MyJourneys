@@ -57,6 +57,10 @@ div.cpfcfM {
     padding: 8px 0;
 }
 
+div.cpfcfM .block-menu-trigger {
+    color: white;
+}
+
 div.dkKtpg {
     background: #424242;
 }

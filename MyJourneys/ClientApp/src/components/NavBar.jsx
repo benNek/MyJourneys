@@ -20,9 +20,7 @@ import WorkIcon from '@material-ui/icons/Work';
 import {Link} from "react-router-dom";
 import useTheme from "@material-ui/core/styles/useTheme";
 import {Context} from "../state/store";
-import Button from "@material-ui/core/Button";
-import {setDarkMode} from "../state/actions";
-import InvertColorsIcon from '@material-ui/icons/InvertColors';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 const drawerWidth = 240;
 
@@ -54,7 +52,14 @@ const useStyles = makeStyles(theme => ({
     width: drawerWidth,
   },
   rightAlign: {
-    marginLeft: 'auto'
+    marginLeft: 'auto',
+    display: 'flex'
+  },
+  settings: {
+    display: 'flex',
+    alignItems: 'center',
+    color: theme.palette.text.primary,
+    marginRight: '8px'
   },
   logo: {
     display: 'none',
@@ -69,7 +74,7 @@ export default function NavBar() {
   const classes = useStyles();
   const theme = useTheme();
 
-  const [state, dispatch] = useContext(Context);
+  const [state] = useContext(Context);
   const {user, darkMode} = state;
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -82,10 +87,6 @@ export default function NavBar() {
     if (theme.breakpoints.values['md'] >= window.innerWidth) {
       setMobileOpen(false);
     }
-  };
-  
-  const handleThemeChange = () => {
-    setDarkMode(dispatch, !darkMode);
   };
 
   let authControls;
@@ -135,7 +136,9 @@ export default function NavBar() {
             <img className={classes.logo} src={logo} alt="MyJourneys"/>
           </Link>
           <div className={classes.rightAlign}>
-            <Button onClick={handleThemeChange}><InvertColorsIcon/></Button>
+            <Link className={classes.settings} to="/settings">
+              <SettingsIcon/>
+            </Link>
             {authControls}
           </div>
         </Toolbar>

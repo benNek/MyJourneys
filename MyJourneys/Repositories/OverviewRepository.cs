@@ -130,7 +130,7 @@ namespace MyJourneys.Repositories
 
         public List<int> GetTravelingYears(string userId)
         {
-            return _context.LocationPhotos.Select(photo => photo.Date.Year).Distinct().ToList();
+            return _context.LocationPhotos.Select(p => p.Date.Year).Distinct().OrderByDescending(y => y).ToList();
         }
     }
 }

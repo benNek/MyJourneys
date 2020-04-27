@@ -21,9 +21,13 @@ import FavoriteTwoToneIcon from '@material-ui/icons/FavoriteTwoTone';
 import './Article.css';
 import {Context} from "../../state/store";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   divider: {
     margin: '12px 0'
+  },
+  notApproved: {
+    marginTop: '12px',
+    color: theme.palette.error.main
   },
   bottom: {
     display: 'flex',
@@ -50,7 +54,7 @@ const useStyles = makeStyles({
   socialItem: {
     marginLeft: '8px'
   }
-});
+}));
 
 export default function Article() {
   const classes = useStyles();
@@ -80,18 +84,22 @@ export default function Article() {
       return `${likesCount} likes`;
     }
   };
-  
+
   if (!article) {
     return (
       <React.Fragment/>
     )
   }
-  
+
   return (
     <Card variant="outlined">
       <CardContent>
         <Typography className={classes.heading} variant="h3" component="h1">
           {article.title}
+          {!article.confirmed &&
+          <Typography variant="body1" className={classes.notApproved}>
+            This article is not yet approved!
+          </Typography>}
         </Typography>
         <Divider className={classes.divider}/>
         <Editor
