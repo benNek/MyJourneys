@@ -42,7 +42,9 @@ const useStyles = makeStyles(theme => ({
   },
   photo: {
     height: '200px',
-    objectFit: 'cover'
+    width: '100%',
+    objectFit: 'cover',
+    cursor: 'pointer'
   }
 }));
 
@@ -57,7 +59,7 @@ export default function SingleJourneyActions(props) {
     }
 
     return (
-      <Grid container spacing={1} className={classes.gallery}>
+      <Grid container spacing={2} className={classes.gallery}>
         {journey.photos.map(photo => 
           <Grid item xs={6} sm={4} lg={3}><img src={getPhotoUrl(photo.path)} className={classes.photo} alt=""/></Grid>
         )}

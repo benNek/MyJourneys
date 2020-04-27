@@ -65,6 +65,7 @@ export default function Overview() {
 
   const handleGoBackClick = () => {
     setCurrentJourney({});
+    setViewMode('map');
   };
 
   const handleViewModeChange = (event, mode) => {
