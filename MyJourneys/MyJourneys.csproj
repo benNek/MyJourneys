@@ -17,6 +17,7 @@
         <Content Include="ClientApp\public\images\logo.png" />
         <Content Include="ClientApp\public\styles.css" />
         <Content Include="ClientApp\public\sw.js" />
+        <Content Include="ClientApp\src\components\AdminSettings.jsx" />
         <Content Include="ClientApp\src\components\Authentication\Login.jsx" />
         <Content Include="ClientApp\src\components\Authentication\Logout.jsx" />
         <Content Include="ClientApp\src\components\Authentication\Register.jsx" />

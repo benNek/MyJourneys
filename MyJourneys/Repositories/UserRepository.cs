@@ -1,5 +1,7 @@
-using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using MyJourneys.Data;
 using MyJourneys.Models;
 
@@ -7,12 +9,17 @@ namespace MyJourneys.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly String writer = "Writer";
-        private readonly TravelContext _context;
+        private readonly string writer = "Writer";
+        private readonly string deniedWriter = "DeniedWriter";
+        private readonly string admin = "Admin";
 
-        public UserRepository()
+        private readonly TravelContext _context;
+        private UserManager<User> _userManager;
+
+        public UserRepository(UserManager<User> userManager)
         {
             _context = new TravelContext();
+            _userManager = userManager;
         }
 
         public bool UserWithNameExists(string username)
@@ -35,10 +42,62 @@ namespace MyJourneys.Repositories
             return _context.Users.Any(user => user.Email.Equals(email));
         }
 
+        public bool HasDeniedWriterRole(string userId)
+        {
+            return HasRole(userId, deniedWriter);
+        }
+
         public bool HasWriterRole(string userId)
         {
+            return HasRole(userId, writer);
+        }
+
+        public bool HasAdminRole(string userId)
+        {
+            return HasRole(userId, admin);
+        }
+
+        public List<string> GetUnapprovedAuthors()
+        {
+            var users = _context.Articles.Where(article => !article.Confirmed)
+                .Select(article => article.Author)
+                .Distinct().ToList();
+
+            return users.Where(user => !HasDeniedWriterRole(user.Id)).Select(user => user.UserName).ToList();
+        }
+
+        public async Task<string> ApproveAuthor(string name)
+        {
+            var user = await _userManager.FindByNameAsync(name);
+            if (user == null)
+            {
+                return null;
+            }
+
+            if (!await _userManager.IsInRoleAsync(user, writer))
+                await _userManager.AddToRoleAsync(user, writer);
+
+            return user.UserName;
+        }
+
+        public async Task<string> BlockAuthor(string name)
+        {
+            var user = await _userManager.FindByNameAsync(name);
+            if (user == null)
+            {
+                return null;
+            }
+
+            if (!await _userManager.IsInRoleAsync(user, deniedWriter))
+                await _userManager.AddToRoleAsync(user, deniedWriter);
+
+            return user.UserName;
+        }
+
+        private bool HasRole(string userId, string roleName)
+        {
             string roleId = _context.Roles
-                .Where(role => role.NormalizedName.Equals(writer))
+                .Where(role => role.NormalizedName.Equals(roleName))
                 .Select(role => role.Id)
                 .FirstOrDefault();
 
@@ -46,6 +105,7 @@ namespace MyJourneys.Repositories
             {
                 return false;
             }
+
             return _context.UserRoles
                 .Where(userRole => userRole.UserId.Equals(userId))
                 .Any(role => role.RoleId.Equals(roleId));

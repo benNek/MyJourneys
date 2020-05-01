@@ -34,6 +34,12 @@ namespace MyJourneys.Controllers
             return _articleRepository.GetArticles(tag, sort, search, skip, take);
         }
 
+        [HttpGet("author/{name}")]
+        public IEnumerable<ArticleViewModel> GetAuthorArticles(string name)
+        {
+            return _articleRepository.GetAuthorArticles(name);
+        }
+        
         [HttpGet("{id}")]
         public ArticleViewModel GetArticle(int id)
         {

@@ -1,7 +1,7 @@
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
-import React, {useContext, useState} from "react";
+import React, {Fragment, useContext, useState} from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import MenuIcon from '@material-ui/icons/Menu';
 import Register from "./Authentication/Register";
@@ -91,7 +91,14 @@ export default function NavBar() {
 
   let authControls;
   if (user) {
-    authControls = <Logout/>;
+    authControls = (
+      <Fragment>
+        <Link className={classes.settings} to="/settings">
+          <SettingsIcon/>
+        </Link>
+        <Logout/>
+      </Fragment>
+    );
   } else {
     authControls = <React.Fragment><Login/><Register/></React.Fragment>
   }
@@ -118,7 +125,7 @@ export default function NavBar() {
   );
 
   const logo = darkMode ? "/images/logo_dark.png" : "/images/logo.png";
-  
+
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appBar}>
@@ -136,9 +143,6 @@ export default function NavBar() {
             <img className={classes.logo} src={logo} alt="MyJourneys"/>
           </Link>
           <div className={classes.rightAlign}>
-            <Link className={classes.settings} to="/settings">
-              <SettingsIcon/>
-            </Link>
             {authControls}
           </div>
         </Toolbar>

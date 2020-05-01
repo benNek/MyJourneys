@@ -13,14 +13,11 @@ namespace MyJourneys.Controllers
     public class JourneyController : Controller
     {
         private readonly IJourneyRepository _journeyRepository;
-        private readonly IUserRepository _userRepository;
         private readonly IJourneyService _journeyService;
 
-        public JourneyController(IJourneyRepository journeyRepository, IUserRepository userRepository,
-            IJourneyService journeyService)
+        public JourneyController(IJourneyRepository journeyRepository, IJourneyService journeyService)
         {
             _journeyRepository = journeyRepository;
-            _userRepository = userRepository;
             _journeyService = journeyService;
         }
 

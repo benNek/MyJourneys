@@ -20,6 +20,9 @@ axios.defaults.headers.Authorization = `Bearer ${localStorage.getItem('accessTok
 export const register = data => axios.post('/api/user/register', data);
 export const login = data => axios.post('/api/user/login', data);
 export const logout = () => axios.get('/api/user/logout');
+export const getUnapprovedAuthors = () => axios.get('/api/user/unapproved');
+export const approveAuthor = author => axios.get(`/api/user/approve/${author}`);
+export const blockAuthor = author => axios.get(`/api/user/block/${author}`);
 
 // Overview
 export const uploadPhoto = data => axios.post('/api/overview', data, {
@@ -35,6 +38,7 @@ export const getTags = () => axios.get('/api/article/tags');
 export const getPopularTags = () => axios.get('/api/article/tags/popular');
 export const createArticle = data => axios.post('/api/article', data);
 export const getArticles = params => axios.get(`/api/article${createParameters(params)}`);
+export const getAuthorArticles = name => axios.get(`/api/article/author/${name}`);
 export const getArticle = id => axios.get(`/api/article/${id}`);
 export const likeArticle = id => axios.post(`/api/article/${id}/like`);
 export const hasLikedArticle = id => axios.get(`/api/article/${id}/like`);

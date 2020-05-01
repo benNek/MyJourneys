@@ -153,7 +153,7 @@ namespace MyJourneys
         private async Task CreateRoles(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            string[] roleNames = {"Admin", "Writer"};
+            string[] roleNames = {"Admin", "Writer", "DeniedWriter"};
 
             foreach (var roleName in roleNames)
             {

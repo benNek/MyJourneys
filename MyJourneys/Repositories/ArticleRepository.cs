@@ -11,6 +11,7 @@ namespace MyJourneys.Repositories
     public class ArticleRepository : IArticleRepository
     {
         private const int PopularLimit = 20;
+        private const int AuthorArticlesLimit = 3;
 
         private readonly TravelContext _context;
         private readonly IUserRepository _userRepository;
@@ -74,6 +75,28 @@ namespace MyJourneys.Repositories
             }
 
             return viewModelQuery.Skip(skip).Take(take).ToList();
+        }
+
+        public List<ArticleViewModel> GetAuthorArticles(string name)
+        {
+            var user = _userRepository.GetUser(name);
+            if (user == null)
+            {
+                return new List<ArticleViewModel>();
+            }
+            
+            return _context.Articles.Where(article => article.AuthorId.Equals(user.Id))
+                .Select(article => new ArticleViewModel
+                {
+                    Id = article.Id,
+                    AuthorName = article.Author.UserName,
+                    Title = article.Title,
+                    Text = article.Text,
+                    Tags = article.ArticleTags.Select(tag => tag.Tag.Name).ToList(),
+                    LikesCount = article.ArticleLikes.Count,
+                    CreateDate = article.CreateDate,
+                    Confirmed = article.Confirmed
+                }).Take(AuthorArticlesLimit).ToList();
         }
 
         private DateTime GetMaxDate(ArticleSortType sortType)
@@ -179,6 +202,13 @@ namespace MyJourneys.Repositories
         public bool HasLiked(string userId, int articleId)
         {
             return _context.ArticleLikes.Any(likes => likes.UserId.Equals(userId) && likes.ArticleId == articleId);
+        }
+
+        public void ApproveArticles(string userId)
+        {
+            _context.Articles.Where(article => article.AuthorId.Equals(userId)).ToList()
+                .ForEach(article => article.Confirmed = true);
+            _context.SaveChanges();
         }
     }
 }

@@ -6,6 +6,7 @@ import Switch from "@material-ui/core/Switch";
 import {Context} from "../state/store";
 import {setDarkMode} from "../state/actions";
 import Button from "@material-ui/core/Button";
+import AdminSettings from "./AdminSettings";
 
 const useStyles = makeStyles(theme => ({
   setting: {
@@ -29,6 +30,7 @@ export default function SettingsPage() {
   const handleThemeChange = () => {
     setDarkMode(dispatch, !darkMode);
   };
+  const isAdmin = user.roles.includes('Admin');
   
   return (
     <Fragment>
@@ -51,6 +53,7 @@ export default function SettingsPage() {
           </Button>
         </div>
       </div>
+      {isAdmin && <AdminSettings/>}
     </Fragment>
   )
 }

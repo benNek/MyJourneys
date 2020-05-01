@@ -9,6 +9,7 @@ namespace MyJourneys.Repositories
     {
         ArticleViewModel GetArticle(int id);
         List<ArticleViewModel> GetArticles(string tagName, ArticleSortType sortType, string search, int skip, int take);
+        List<ArticleViewModel> GetAuthorArticles(string name);
         Article AddArticle(string userId, ArticleFormViewModel model);
         void AddTagsToArticle(int articleId, List<string> tags);
         Tag GetTag(string tagName);
@@ -16,5 +17,6 @@ namespace MyJourneys.Repositories
         List<PopularTagViewModel> GetPopularTags();
         void LikeArticle(string userId, int articleId);
         bool HasLiked(string userId, int articleId);
+        void ApproveArticles(string userId);
     }
 }

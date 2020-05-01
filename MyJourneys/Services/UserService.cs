@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,14 +57,9 @@ namespace MyJourneys.Services
             {
                 new Claim("id", user.Id),
                 new Claim("username", user.UserName),
-                new Claim("email", user.Email),
-                new Claim("roles", roles.Count > 0 ? roles[0] : "User")
+                new Claim("email", user.Email)
             };
-            
-            foreach (var role in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
+            claims.AddRange(GetUserRolesList(roles));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Auth:IssuerSigningKey"]));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -80,6 +76,11 @@ namespace MyJourneys.Services
         public async void Logout()
         {
             await _signInManager.SignOutAsync();
+        }
+
+        private List<Claim> GetUserRolesList(IList<string> roles)
+        {
+            return roles.Select(role => new Claim("roles", role)).ToList();
         }
     }
 }

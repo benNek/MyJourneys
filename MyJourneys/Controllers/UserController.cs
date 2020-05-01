@@ -11,11 +11,14 @@ namespace MyJourneys.Controllers
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepository;
+        private readonly IArticleRepository _articleRepository;
         private readonly IUserService _userService;
 
-        public UserController(IUserRepository userRepository, IUserService userService)
+        public UserController(IUserRepository userRepository, IArticleRepository articleRepository,
+            IUserService userService)
         {
             _userRepository = userRepository;
+            _articleRepository = articleRepository;
             _userService = userService;
         }
 
@@ -41,7 +44,7 @@ namespace MyJourneys.Controllers
             {
                 return Ok("Registration was successful");
             }
-            
+
             return StatusCode(500, "Registration has failed. Please try again later");
         }
 
@@ -55,13 +58,42 @@ namespace MyJourneys.Controllers
 
             return StatusCode(401, "Invalid username or password");
         }
-        
+
         [Authorize]
         [HttpGet("logout")]
         public IActionResult Logout()
         {
             _userService.Logout();
             return Ok("You have signed out successfully!");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("unapproved")]
+        public IActionResult GetUnapprovedWriters()
+        {
+            return Ok(_userRepository.GetUnapprovedAuthors());
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("approve/{name}")]
+        public async Task<IActionResult> ApproveAuthor(string name)
+        {
+            var approvedUser = await _userRepository.ApproveAuthor(name);
+            if (approvedUser == null)
+            {
+                return StatusCode(500, "System failed to approved author, try again later.");
+            }
+
+            var authorId = _userRepository.GetUser(approvedUser).Id;
+            _articleRepository.ApproveArticles(authorId);
+            return Ok(approvedUser);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("block/{name}")]
+        public async Task<IActionResult> BlockAuthor(string name)
+        {
+            return Ok(await _userRepository.BlockAuthor(name));
         }
     }
 }
