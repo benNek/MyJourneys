@@ -2,7 +2,7 @@ using System;
 
 namespace MyJourneys.Models.ViewModels
 {
-    public class JourneyCreationViewModel
+    public class JourneyFormViewModel
     {
         public string Location { get; set; }
         public DateTime StartDate { get; set; }

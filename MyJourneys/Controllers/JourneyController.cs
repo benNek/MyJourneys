@@ -23,7 +23,7 @@ namespace MyJourneys.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult CreateJourney([FromBody] JourneyCreationViewModel model)
+        public IActionResult CreateJourney([FromBody] JourneyFormViewModel model)
         {
             if (model.EndDate < Today)
             {
@@ -78,7 +78,7 @@ namespace MyJourneys.Controllers
 
         [HttpPost("flight")]
         [Authorize]
-        public IActionResult AddFlight([FromBody] FlightItemCreationViewModel model)
+        public IActionResult AddFlight([FromBody] FlightItemFormViewModel model)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
@@ -104,7 +104,7 @@ namespace MyJourneys.Controllers
         
         [HttpPost("hotel")]
         [Authorize]
-        public IActionResult AddHotel([FromBody] CommonItemCreationViewModel model)
+        public IActionResult AddHotel([FromBody] CommonItemFormViewModel model)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
@@ -130,7 +130,7 @@ namespace MyJourneys.Controllers
 
         [HttpPost("reservation")]
         [Authorize]
-        public IActionResult AddReservation([FromBody] CommonItemCreationViewModel model)
+        public IActionResult AddReservation([FromBody] CommonItemFormViewModel model)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
@@ -156,7 +156,7 @@ namespace MyJourneys.Controllers
 
         [HttpPost("event")]
         [Authorize]
-        public IActionResult AddEvent([FromBody] CommonItemCreationViewModel model)
+        public IActionResult AddEvent([FromBody] CommonItemFormViewModel model)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))

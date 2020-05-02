@@ -26,7 +26,7 @@ namespace MyJourneys.Repositories
             _config = configuration;
         }
 
-        public Journey AddJourney(string userId, JourneyCreationViewModel model)
+        public Journey AddJourney(string userId, JourneyFormViewModel model)
         {
             var photoPath = GetPhotoPath(model.Location).Result;
             var journey = new Journey
@@ -205,7 +205,7 @@ namespace MyJourneys.Repositories
                 .ToList();
         }
 
-        public JourneyItemViewModel AddFlightItem(string userId, FlightItemCreationViewModel model)
+        public JourneyItemViewModel AddFlightItem(string userId, FlightItemFormViewModel model)
         {
             var item = new FlightItem
             {
@@ -245,7 +245,7 @@ namespace MyJourneys.Repositories
             return item.Id;
         }
 
-        public JourneyItemViewModel AddHotelItem(string userId, CommonItemCreationViewModel model)
+        public JourneyItemViewModel AddHotelItem(string userId, CommonItemFormViewModel model)
         {
             var item = new HotelItem
             {
@@ -280,7 +280,7 @@ namespace MyJourneys.Repositories
             return item.Id;
         }
 
-        public JourneyItemViewModel AddReservationItem(string userId, CommonItemCreationViewModel model)
+        public JourneyItemViewModel AddReservationItem(string userId, CommonItemFormViewModel model)
         {
             var item = new ReservationItem
             {
@@ -315,7 +315,7 @@ namespace MyJourneys.Repositories
             return item.Id;
         }
 
-        public JourneyItemViewModel AddEventItem(string userId, CommonItemCreationViewModel model)
+        public JourneyItemViewModel AddEventItem(string userId, CommonItemFormViewModel model)
         {
             var item = new EventItem
             {

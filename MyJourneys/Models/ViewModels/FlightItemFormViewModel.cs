@@ -2,7 +2,7 @@ using System;
 
 namespace MyJourneys.Models.ViewModels
 {
-    public class FlightItemCreationViewModel
+    public class FlightItemFormViewModel
     {
         public int JourneyId { get; set; }
         public string Airline { get; set; }

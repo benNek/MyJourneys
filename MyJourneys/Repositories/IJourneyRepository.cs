@@ -6,7 +6,7 @@ namespace MyJourneys.Repositories
 {
     public interface IJourneyRepository
     {
-        Journey AddJourney(string userId, JourneyCreationViewModel model);
+        Journey AddJourney(string userId, JourneyFormViewModel model);
         int DeleteJourney(string userId, int journeyId);
         List<JourneyViewModel> GetJourneys(string userId);
         JourneyViewModel GetJourney(string userId, int journeyId);
@@ -16,13 +16,13 @@ namespace MyJourneys.Repositories
         List<Place> GetPlaceObjects(string userId, int journeyId);
         void UpdatePlaceRank(int placeId, int rank);
         List<NoteViewModel> GetNotes(string userId, int journeyId);
-        JourneyItemViewModel AddFlightItem(string userId, FlightItemCreationViewModel model);
+        JourneyItemViewModel AddFlightItem(string userId, FlightItemFormViewModel model);
         int DeleteFlightItem(string userId, int itemId);
-        JourneyItemViewModel AddHotelItem(string userId, CommonItemCreationViewModel model);
+        JourneyItemViewModel AddHotelItem(string userId, CommonItemFormViewModel model);
         int DeleteHotelItem(string userId, int itemId);
-        JourneyItemViewModel AddReservationItem(string userId, CommonItemCreationViewModel model);
+        JourneyItemViewModel AddReservationItem(string userId, CommonItemFormViewModel model);
         int DeleteReservationItem(string userId, int itemId);
-        JourneyItemViewModel AddEventItem(string userId, CommonItemCreationViewModel model);
+        JourneyItemViewModel AddEventItem(string userId, CommonItemFormViewModel model);
         int DeleteEventItem(string userId, int itemId);
         Place AddPlaceItem(string userId, PlaceFormViewModel model);
         int DeletePlaceItem(string userId, int placeId);
