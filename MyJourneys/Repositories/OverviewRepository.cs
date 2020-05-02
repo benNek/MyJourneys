@@ -14,11 +14,13 @@ namespace MyJourneys.Repositories
     {
         private readonly TravelContext _context;
         private readonly IConfiguration _config;
+        private readonly IPhotoRepository _photoRepository;
 
-        public OverviewRepository(IConfiguration configuration)
+        public OverviewRepository(IConfiguration configuration, IPhotoRepository photoRepository)
         {
             _context = new TravelContext();
             _config = configuration;
+            _photoRepository = photoRepository;
         }
 
         public List<OverviewJourneyPreviewViewModel> GetJourneyOverviews(string userId, int year)
@@ -72,7 +74,7 @@ namespace MyJourneys.Repositories
                 var filePath = Path.Combine(_config["FileStorage:OverviewPath"],
                     Guid.NewGuid() + Path.GetExtension(file.FileName));
 
-                SaveFile(file, filePath);
+                _photoRepository.SaveOverviewPhoto(file, filePath);
                 _context.LocationPhotos.Add(new LocationPhoto
                 {
                     Path = filePath,
@@ -97,14 +99,6 @@ namespace MyJourneys.Repositories
             }
 
             _context.SaveChanges();
-        }
-
-        private void SaveFile(IFormFile file, string path)
-        {
-            using (var stream = File.Create(path))
-            {
-                file.CopyTo(stream);
-            }
         }
 
         public Country GetCountry(string alpha2)
@@ -139,7 +133,7 @@ namespace MyJourneys.Repositories
             var photos = _context.LocationPhotos.Where(photo => journeys.Contains(photo.OverviewJourney)).ToList();
             photos.ForEach(photo =>
             {
-                File.Delete(photo.Path);
+                _photoRepository.DeletePhoto(photo.Path);
             });
             _context.OverviewJourneys.RemoveRange(journeys);
             _context.SaveChanges();

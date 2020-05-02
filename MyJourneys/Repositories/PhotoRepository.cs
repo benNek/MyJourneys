@@ -1,6 +1,7 @@
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Unsplash.Photos;
 using Unsplash.Requests;
@@ -41,6 +42,19 @@ namespace MyJourneys.Repositories
             }
 
             return true;
+        }
+
+        public void SaveOverviewPhoto(IFormFile file, string path)
+        {
+            using (var stream = File.Create(path))
+            {
+                file.CopyTo(stream);
+            }
+        }
+
+        public void DeletePhoto(string path)
+        {
+            File.Delete(path);
         }
     }
 }
