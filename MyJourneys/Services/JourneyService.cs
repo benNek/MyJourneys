@@ -29,7 +29,7 @@ namespace MyJourneys.Services
             }
 
             double[,] graph = ResolveGraph(places);
-            int[] parent = ResolvePrimMstPath(start, places.Count, graph);
+            int[] parent = ResolvePrimMst(start, places.Count, graph);
             UpdateRanks(start, parent, places);
             
             return _journeyRepository.GetPlaces(userId, journeyId);
@@ -74,7 +74,7 @@ namespace MyJourneys.Services
             return graph;
         }
 
-        private int[] ResolvePrimMstPath(int start, int vertices, double[,] graph)
+        private int[] ResolvePrimMst(int start, int vertices, double[,] graph)
         {
             int[] parent = new int[vertices];
             double[] key = new double[vertices];
