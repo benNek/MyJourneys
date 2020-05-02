@@ -30,7 +30,7 @@ namespace MyJourneys.Services
             _signInManager = signInManager;
         }
 
-        public async Task<bool> Register(UserRegisterViewModel model)
+        public async Task<bool> Register(RegisterViewModel model)
         {
             var user = new User
             {
@@ -42,7 +42,7 @@ namespace MyJourneys.Services
             return result.Succeeded;
         }
 
-        public async Task<bool> Login(UserLoginViewModel model)
+        public async Task<bool> Login(LoginViewModel model)
         {
             var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, true, false);
             return result.Succeeded;

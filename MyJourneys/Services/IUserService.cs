@@ -5,8 +5,8 @@ namespace MyJourneys.Services
 {
     public interface IUserService
     {
-        public Task<bool> Register(UserRegisterViewModel model);
-        public Task<bool> Login(UserLoginViewModel model);
+        public Task<bool> Register(RegisterViewModel model);
+        public Task<bool> Login(LoginViewModel model);
         public Task<string> RequestToken(string email);
         public void Logout();
     }

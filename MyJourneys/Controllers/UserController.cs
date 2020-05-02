@@ -26,7 +26,7 @@ namespace MyJourneys.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] UserRegisterViewModel model)
+        public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
         {
             if (_userRepository.UserWithNameExists(model.Username))
             {
@@ -52,7 +52,7 @@ namespace MyJourneys.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] UserLoginViewModel model)
+        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
         {
             if (await _userService.Login(model))
             {
