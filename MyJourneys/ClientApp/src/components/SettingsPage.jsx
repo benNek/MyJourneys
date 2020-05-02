@@ -7,6 +7,8 @@ import {Context} from "../state/store";
 import {setDarkMode} from "../state/actions";
 import Button from "@material-ui/core/Button";
 import AdminSettings from "./AdminSettings";
+import {deletePhotos} from "../utils/networkFunctions";
+import {toast} from "react-toastify";
 
 const useStyles = makeStyles(theme => ({
   setting: {
@@ -30,6 +32,11 @@ export default function SettingsPage() {
   const handleThemeChange = () => {
     setDarkMode(dispatch, !darkMode);
   };
+  
+  const handleDeletePhotos = () => {
+    deletePhotos().then(res => toast.success(res.data)).catch(err => console.error(err));
+  };
+  
   const isAdmin = user.roles.includes('Admin');
   
   return (
@@ -48,7 +55,7 @@ export default function SettingsPage() {
         </div>
         <div className={classes.setting}>
           <Typography variant="body1">Delete all uploaded photos</Typography>
-          <Button className={classes.button} variant="outlined">
+          <Button className={classes.button} variant="outlined" onClick={handleDeletePhotos}>
             Delete
           </Button>
         </div>

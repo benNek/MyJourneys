@@ -132,5 +132,18 @@ namespace MyJourneys.Repositories
         {
             return _context.LocationPhotos.Select(p => p.Date.Year).Distinct().OrderByDescending(y => y).ToList();
         }
+
+        public void DeletePhotos(string userId)
+        {
+            var journeys = _context.OverviewJourneys.Where(journey => journey.UserId.Equals(userId)).ToList();
+            var photos = _context.LocationPhotos.Where(photo => journeys.Contains(photo.OverviewJourney)).ToList();
+            photos.ForEach(photo =>
+            {
+                File.Delete(photo.Path);
+            });
+            _context.OverviewJourneys.RemoveRange(journeys);
+            _context.SaveChanges();
+        }
+
     }
 }

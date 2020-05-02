@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyJourneys.Models.ViewModels;
 using MyJourneys.Repositories;
 using MyJourneys.Services;
+using static MyJourneys.Utils.AuthorizationUtils;
 
 namespace MyJourneys.Controllers
 {
@@ -12,13 +13,15 @@ namespace MyJourneys.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IArticleRepository _articleRepository;
+        private readonly IOverviewRepository _overviewRepository;
         private readonly IUserService _userService;
 
         public UserController(IUserRepository userRepository, IArticleRepository articleRepository,
-            IUserService userService)
+            IOverviewRepository overviewRepository, IUserService userService)
         {
             _userRepository = userRepository;
             _articleRepository = articleRepository;
+            _overviewRepository = overviewRepository;
             _userService = userService;
         }
 
@@ -94,6 +97,15 @@ namespace MyJourneys.Controllers
         public async Task<IActionResult> BlockAuthor(string name)
         {
             return Ok(await _userRepository.BlockAuthor(name));
+        }
+
+        [HttpDelete("delete-photos")]
+        [Authorize]
+        public IActionResult DeletePhotos()
+        {
+            var userId = GetUserId(User);
+            _overviewRepository.DeletePhotos(userId);
+            return Ok("Photos have been deleted successfully");
         }
     }
 }

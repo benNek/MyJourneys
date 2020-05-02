@@ -23,6 +23,7 @@ export const logout = () => axios.get('/api/user/logout');
 export const getUnapprovedAuthors = () => axios.get('/api/user/unapproved');
 export const approveAuthor = author => axios.get(`/api/user/approve/${author}`);
 export const blockAuthor = author => axios.get(`/api/user/block/${author}`);
+export const deletePhotos = () => axios.delete(`/api/user/delete-photos`);
 
 // Overview
 export const uploadPhoto = data => axios.post('/api/overview', data, {
@@ -30,8 +31,8 @@ export const uploadPhoto = data => axios.post('/api/overview', data, {
 });
 export const getTravelingYears = () => axios.get('/api/overview/years');
 export const getVisitedCountries = params => axios.get(`/api/overview/countries${createParameters(params)}`);
-export const getOverviewJourneys = params => axios.get(`api/overview${createParameters(params)}`);
-export const getOverviewJourney = id => axios.get(`api/overview/${id}`);
+export const getOverviewJourneys = params => axios.get(`/api/overview${createParameters(params)}`);
+export const getOverviewJourney = id => axios.get(`/api/overview/${id}`);
 
 // Sharing
 export const getTags = () => axios.get('/api/article/tags');
