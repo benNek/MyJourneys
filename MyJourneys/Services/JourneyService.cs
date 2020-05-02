@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 using MyJourneys.Models;
 using MyJourneys.Models.ViewModels;
 using MyJourneys.Repositories;
@@ -15,36 +16,45 @@ namespace MyJourneys.Services
         {
             _journeyRepository = journeyRepository;
         }
-        
+
         // TSP (Approximate using Prim algorithm for MST)
         // https://www.geeksforgeeks.org/travelling-salesman-problem-set-2-approximate-using-mst/
         public List<PlaceViewModel> ReorderPlaces(string userId, int journeyId)
         {
             List<Place> places = _journeyRepository.GetPlaceObjects(userId, journeyId);
-            double[,] graph = ResolveGraph(places);
-            int[] parent = ResolvePrimMstPath(places.Count, graph);
-
-            int vertex = GetVertexLeadingTo(parent, 0);
-            int rank = 1;
-            while (vertex > 0)
+            int start = places.FindIndex(place => place.Start);
+            if (start == -1)
             {
-                _journeyRepository.UpdatePlaceRank(places[vertex].Id, rank++);
-                vertex = GetVertexLeadingTo(parent, vertex);
+                return _journeyRepository.GetPlaces(userId, journeyId);
             }
+
+            double[,] graph = ResolveGraph(places);
+            int[] parent = ResolvePrimMstPath(start, places.Count, graph);
+            UpdateRanks(start, parent, places);
+            
             return _journeyRepository.GetPlaces(userId, journeyId);
         }
 
-        private int GetVertexLeadingTo(int[] parent, int vertex)
+        private void UpdateRanks(int start, int[] parent, List<Place> places)
         {
-            for (int i = 0; i < parent.Length; i++)
+            int vertex = start;
+            int rank = 9999;
+            Stack<int> dfs = new Stack<int>();
+            bool[] visited = new bool[parent.Length];
+            dfs.Push(vertex);
+            while (dfs.Count > 0)
             {
-                if (parent[i] == vertex)
+                vertex = dfs.Pop();
+                visited[vertex] = true;
+                _journeyRepository.UpdatePlaceRank(places[vertex].Id, rank--);
+                for (int i = 0; i < parent.Length; i++)
                 {
-                    return i;
+                    if (parent[i] == vertex && !visited[i])
+                    {
+                        dfs.Push(i);
+                    }
                 }
             }
-
-            return -1;
         }
 
         private double[,] ResolveGraph(List<Place> places)
@@ -64,7 +74,7 @@ namespace MyJourneys.Services
             return graph;
         }
 
-        private int[] ResolvePrimMstPath(int vertices, double[,] graph)
+        private int[] ResolvePrimMstPath(int start, int vertices, double[,] graph)
         {
             int[] parent = new int[vertices];
             double[] key = new double[vertices];
@@ -76,8 +86,8 @@ namespace MyJourneys.Services
                 key[i] = double.MaxValue;
             }
 
-            key[0] = 0;
-            parent[0] = -1;
+            key[start] = 0;
+            parent[start] = -1;
 
             for (int count = 0; count < vertices - 1; count++)
             {

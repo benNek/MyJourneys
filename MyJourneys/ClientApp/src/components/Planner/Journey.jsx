@@ -15,7 +15,6 @@ import {
   getJourneyItems,
   getNotes,
   getPlaces,
-  setFinishPlace,
   setStartPlace
 } from "../../utils/networkFunctions";
 import {toast} from "react-toastify";
@@ -58,7 +57,7 @@ export default function Journey() {
   const handleDeleteClick = () => {
     deleteJourney(id).then(() => window.location = '/journeys').catch(err => console.error(err));
   };
-  
+
   const handleTabChange = (event, newValue) => {
     setTab(newValue);
   };
@@ -77,10 +76,6 @@ export default function Journey() {
 
   const handleSetStartPlace = id => {
     setStartPlace(journey.id, id).then(res => setPlaces(res.data)).catch(err => console.error(err));
-  };
-
-  const handleSetFinishPlace = id => {
-    setFinishPlace(journey.id, id).then(res => setPlaces(res.data)).catch(err => console.error(err));
   };
 
   const handlePlacesReorder = data => {
@@ -187,7 +182,7 @@ export default function Journey() {
       </TabPanel>
       <TabPanel value={tab} index={1}>
         <Places journey={journey} places={places} onPlaceAdd={handleAddPlace} onPlaceDelete={handleDeletePlace}
-                onReorder={handlePlacesReorder} onSetStart={handleSetStartPlace} onSetFinish={handleSetFinishPlace}/>
+                onReorder={handlePlacesReorder} onSetStart={handleSetStartPlace}/>
       </TabPanel>
       <TabPanel value={tab} index={2}>
         <Notes journey={journey} notes={notes} onNoteAdd={handleAddNote} onNoteUpdate={handleUpdateNote}

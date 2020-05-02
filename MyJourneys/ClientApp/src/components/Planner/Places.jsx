@@ -62,7 +62,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Places(props) {
   let {id} = useParams();
-  const {journey, places, onPlaceAdd, onPlaceDelete, onReorder, onSetStart, onSetFinish} = props;
+  const {journey, places, onPlaceAdd, onPlaceDelete, onReorder, onSetStart} = props;
 
   const classes = useStyles();
   const [modalOpen, setModalOpen] = useState(false);
@@ -144,7 +144,7 @@ export default function Places(props) {
             <Typography gutterBottom variant="h5" component="h2">
               {place.location}
             </Typography>
-            <IconButton disabled={place.start || place.finish} onClick={() => onPlaceDelete(place.id)} variant="outlined">
+            <IconButton disabled={place.start} onClick={() => onPlaceDelete(place.id)} variant="outlined">
               <DeleteForeverIcon/>
             </IconButton>
           </div>
@@ -162,15 +162,10 @@ export default function Places(props) {
             Find on maps
           </Link>
           <div className={classes.buttons}>
-            <Button onClick={() => onSetStart(place.id)} disabled={place.start || (!place.start && place.finish)}
+            <Button onClick={() => onSetStart(place.id)} disabled={place.start}
                     variant={place.start ? "contained" : "outlined"}
                     startIcon={<FirstPageIcon/>} className={classes.button} size="small">
               Start point
-            </Button>
-            <Button onClick={() => onSetFinish(place.id)} disabled={place.finish || (place.start && !place.finish)}
-                    variant={place.finish ? "contained" : "outlined"}
-                    startIcon={<LastPageIcon/>} className={classes.button} size="small">
-              Finish point
             </Button>
           </div>
         </CardActions>

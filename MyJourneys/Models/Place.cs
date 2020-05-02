@@ -11,7 +11,6 @@ namespace MyJourneys.Models
         public double Longitude { get; set; }
         public int Rank { get; set; }
         public bool Start { get; set; }
-        public bool Finish { get; set; }
         public string UserId { get; set; }
         public int JourneyId { get; set; }
         

@@ -219,15 +219,6 @@ namespace MyJourneys.Controllers
             _journeyRepository.SetStartPlace(userId, id, placeId);
             return Ok(_journeyRepository.GetPlaces(userId, id));
         }
-        
-        [HttpGet("{id}/places/{placeId}/finish")]
-        [Authorize]
-        public IActionResult SetFinishPlace(int id, int placeId)
-        {
-            var userId = GetUserId(User);
-            _journeyRepository.SetFinishPlace(userId, id, placeId);
-            return Ok(_journeyRepository.GetPlaces(userId, id));
-        }
 
         [HttpGet("{id}/places")]
         [Authorize]

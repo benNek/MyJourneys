@@ -62,7 +62,6 @@ export const deleteEventItem = id => axios.delete(`/api/journey/event/${id}`);
 export const createPlace = data => axios.post('/api/journey/place', data);
 export const deletePlace = id => axios.delete(`/api/journey/place/${id}`);
 export const setStartPlace = (journeyId, placeId) => axios.get(`/api/journey/${journeyId}/places/${placeId}/start`);
-export const setFinishPlace = (journeyId, placeId) => axios.get(`/api/journey/${journeyId}/places/${placeId}/finish`);
 export const reorderPlaces = id => axios.get(`/api/journey/${id}/places/reorder`);
 export const createNote = data => axios.post('/api/journey/note', data);
 export const updateNote = (id, data) => axios.put(`/api/journey/note/${id}`, data);

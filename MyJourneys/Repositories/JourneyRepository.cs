@@ -162,10 +162,8 @@ namespace MyJourneys.Repositories
                     Longitude = place.Longitude,
                     Rank = place.Rank,
                     Start = place.Start,
-                    Finish = place.Finish
                 })
                 .OrderByDescending(place => place.Start)
-                .ThenBy(place => place.Finish)
                 .ThenByDescending(place => place.Rank)
                 .ThenBy(place => place.Id)
                 .ToList();
@@ -175,7 +173,8 @@ namespace MyJourneys.Repositories
         {
             return _context.Places
                 .Where(place => place.UserId.Equals(userId) && place.JourneyId == journeyId)
-                .OrderByDescending(place => place.Rank)
+                .OrderByDescending(place => place.Start)
+                .ThenByDescending(place => place.Rank)
                 .ThenBy(place => place.Id)
                 .ToList();
         }
@@ -355,8 +354,6 @@ namespace MyJourneys.Repositories
         {
             var hasStart = _context.Places
                 .Any(p => p.UserId.Equals(userId) && p.JourneyId == model.JourneyId && p.Start);
-            var hasFinish = _context.Places
-                .Any(p => p.UserId.Equals(userId) && p.JourneyId == model.JourneyId && p.Finish);
 
             var place = new Place
             {
@@ -366,8 +363,7 @@ namespace MyJourneys.Repositories
                 Address = model.Address,
                 Latitude = model.Latitude,
                 Longitude = model.Longitude,
-                Start = !hasStart,
-                Finish = hasStart && !hasFinish
+                Start = !hasStart
             };
             _context.Places.Add(place);
             _context.SaveChanges();
@@ -398,20 +394,6 @@ namespace MyJourneys.Repositories
 
             places.ForEach(place => place.Start = false);
             startPlace.Start = true;
-            _context.SaveChanges();
-        }
-
-        public void SetFinishPlace(string userId, int journeyId, int placeId)
-        {
-            var places = GetPlaceObjects(userId, journeyId);
-            var finishPlace = places.FirstOrDefault(place => place.Id == placeId);
-            if (finishPlace == null)
-            {
-                return;
-            }
-
-            places.ForEach(place => place.Finish = false);
-            finishPlace.Finish = true;
             _context.SaveChanges();
         }
 
