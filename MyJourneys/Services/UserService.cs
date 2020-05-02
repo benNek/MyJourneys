@@ -17,15 +17,13 @@ namespace MyJourneys.Services
     public class UserService : IUserService
     {
         private IConfiguration _configuration;
-        private IUserRepository _userRepository;
         private UserManager<User> _userManager;
         private SignInManager<User> _signInManager;
 
-        public UserService(IConfiguration configuration, IUserRepository userRepository, UserManager<User> userManager,
+        public UserService(IConfiguration configuration, UserManager<User> userManager,
             SignInManager<User> signInManager)
         {
             _configuration = configuration;
-            _userRepository = userRepository;
             _userManager = userManager;
             _signInManager = signInManager;
         }
