@@ -3,7 +3,7 @@ using System.Security.Claims;
 
 namespace MyJourneys.Utils
 {
-    public class AuthorizationUtils
+    public class AuthUtils
     {
         public static string GetUserId(ClaimsPrincipal user)
         {

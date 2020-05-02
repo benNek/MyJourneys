@@ -5,7 +5,7 @@ using MyJourneys.Models.ViewModels;
 using MyJourneys.Repositories;
 using MyJourneys.Services;
 using static System.DateTime;
-using static MyJourneys.Utils.AuthorizationUtils;
+using static MyJourneys.Utils.AuthUtils;
 
 namespace MyJourneys.Controllers
 {
