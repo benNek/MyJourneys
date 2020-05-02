@@ -25,6 +25,19 @@ namespace MyJourneys.Controllers
             var userId = GetUserId(User);
             return Ok(_articleRepository.AddArticle(userId, model));
         }
+        
+        [HttpDelete("{id}")]
+        [Authorize]
+        public IActionResult DeleteArticle(int id)
+        {
+            var userId = GetUserId(User);
+            if (!_articleRepository.IsUserAuthor(id, userId))
+            {
+                return StatusCode(403, $"User is not the author");
+            }
+            
+            return Ok(_articleRepository.DeleteArticle(id));
+        }
 
         [HttpGet]
         public IEnumerable<ArticleViewModel> Get([FromQuery] string tag, [FromQuery] string sortType,

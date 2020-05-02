@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {useParams} from "react-router";
-import {getArticle, hasLikedArticle, likeArticle} from "../../utils/networkFunctions";
+import {useHistory, useParams} from "react-router";
+import {deleteArticle, getArticle, hasLikedArticle, likeArticle} from "../../utils/networkFunctions";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
@@ -17,11 +17,16 @@ import {
   TwitterShareButton
 } from "react-share";
 import FavoriteTwoToneIcon from '@material-ui/icons/FavoriteTwoTone';
-
 import './Article.css';
 import {Context} from "../../state/store";
+import Button from "@material-ui/core/Button";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import {setArticles} from "../../state/actions";
 
 const useStyles = makeStyles(theme => ({
+  heading: {
+    marginBottom: '8px'
+  },
   divider: {
     margin: '12px 0'
   },
@@ -60,10 +65,10 @@ export default function Article() {
   const classes = useStyles();
   const [article, setArticle] = useState(undefined);
   const [hasLiked, setHasLiked] = useState(false);
+  const history = useHistory();
 
-  const [state] = useContext(Context);
-  const {darkMode} = state;
-
+  const [state, dispatch] = useContext(Context);
+  const {darkMode, user, articles} = state;
   let {id} = useParams();
 
   useEffect(() => {
@@ -72,7 +77,21 @@ export default function Article() {
   }, []);
 
   const handleLikeClick = () => {
+    if (hasLiked) {
+      article.likesCount--;
+    } else {
+      article.likesCount++;
+    }
+    setHasLiked(!hasLiked);
     likeArticle(id).then(res => res);
+  };
+
+  const handleDeleteArticle = () => {
+    deleteArticle(article.id).then(res => {
+      setArticles(dispatch, articles.filter(a => a.id !== res.data));
+      history.push(`/articles`);
+    }).catch(err => console.error(err));
+    console.log(article.id);
   };
 
   const getLikesCountMessage = (likesCount) => {
@@ -91,6 +110,20 @@ export default function Article() {
     )
   }
 
+  const isAuthor = article && article.authorName === user.username;
+
+  const renderAuthorOptions = () => {
+    return (
+      <Button
+        variant="outlined"
+        startIcon={<DeleteForeverIcon/>}
+        onClick={handleDeleteArticle}
+      >
+        Delete
+      </Button>
+    )
+  };
+
   return (
     <Card variant="outlined">
       <CardContent>
@@ -101,6 +134,7 @@ export default function Article() {
             This article is not yet approved!
           </Typography>}
         </Typography>
+        {isAuthor && renderAuthorOptions()}
         <Divider className={classes.divider}/>
         <Editor
           readOnly={true}

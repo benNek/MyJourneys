@@ -210,5 +210,23 @@ namespace MyJourneys.Repositories
                 .ForEach(article => article.Confirmed = true);
             _context.SaveChanges();
         }
+
+        public bool IsUserAuthor(int articleId, string userId)
+        {
+            return _context.Articles.Any(article => article.Id == articleId && article.AuthorId.Equals(userId));
+        }
+
+        public int DeleteArticle(int id)
+        {
+            var article = _context.Articles.FirstOrDefault(a => a.Id == id);
+            if (article == null)
+            {
+                return -1;
+            }
+
+            _context.Articles.Remove(article);
+            _context.SaveChanges();
+            return article.Id;
+        }
     }
 }

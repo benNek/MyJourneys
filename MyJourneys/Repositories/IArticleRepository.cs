@@ -18,5 +18,7 @@ namespace MyJourneys.Repositories
         void LikeArticle(string userId, int articleId);
         bool HasLiked(string userId, int articleId);
         void ApproveArticles(string userId);
+        bool IsUserAuthor(int articleId, string userId);
+        int DeleteArticle(int id);
     }
 }

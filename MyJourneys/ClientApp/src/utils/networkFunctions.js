@@ -37,6 +37,7 @@ export const getOverviewJourney = id => axios.get(`api/overview/${id}`);
 export const getTags = () => axios.get('/api/article/tags');
 export const getPopularTags = () => axios.get('/api/article/tags/popular');
 export const createArticle = data => axios.post('/api/article', data);
+export const deleteArticle = id => axios.delete(`/api/article/${id}`);
 export const getArticles = params => axios.get(`/api/article${createParameters(params)}`);
 export const getAuthorArticles = name => axios.get(`/api/article/author/${name}`);
 export const getArticle = id => axios.get(`/api/article/${id}`);
