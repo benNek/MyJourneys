@@ -1,5 +1,4 @@
 using System;
-using MyJourneys.Enums;
 
 namespace MyJourneys.Models.ViewModels
 {

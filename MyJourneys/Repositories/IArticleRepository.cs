@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using MyJourneys.Enums;
 using MyJourneys.Models;
+using MyJourneys.Models.Enums;
 using MyJourneys.Models.ViewModels;
 
 namespace MyJourneys.Repositories

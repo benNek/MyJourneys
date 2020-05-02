@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MyJourneys.Data;
-using MyJourneys.Enums;
 using MyJourneys.Models;
+using MyJourneys.Models.Enums;
 using MyJourneys.Models.ViewModels;
 using Newtonsoft.Json.Bson;
 

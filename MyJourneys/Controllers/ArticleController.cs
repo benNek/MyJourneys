@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyJourneys.Enums;
+using MyJourneys.Models.Enums;
 using MyJourneys.Models.ViewModels;
 using MyJourneys.Repositories;
 using static MyJourneys.Utils.AuthorizationUtils;

@@ -1,4 +1,4 @@
-namespace MyJourneys.Enums
+namespace MyJourneys.Models.Enums
 {
     public enum JourneyItemType
     {
