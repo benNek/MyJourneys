@@ -33,12 +33,17 @@ namespace MyJourneys.Utils
 
         public static bool IsValidImageSignature(IFormFile file)
         {
+            if (file == null)
+            {
+                return false;
+            }
+
             var extension = Path.GetExtension(file.FileName);
             if (!FileSignatures.ContainsKey(extension))
             {
                 return false;
             }
-            
+
             using (var reader = new BinaryReader(file.OpenReadStream()))
             {
                 var signatures = FileSignatures[extension];
