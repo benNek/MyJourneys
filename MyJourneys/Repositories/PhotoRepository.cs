@@ -1,4 +1,5 @@
 using System.IO;
+using System.IO.Abstractions;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -11,10 +12,12 @@ namespace MyJourneys.Repositories
     public class PhotoRepository : IPhotoRepository
     {
         private readonly IConfiguration _config;
+        private readonly IFileSystem _fileSystem;
 
-        public PhotoRepository(IConfiguration configuration)
+        public PhotoRepository(IConfiguration configuration, IFileSystem fileSystem = null)
         {
             _config = configuration;
+            _fileSystem = fileSystem ?? new FileSystem();
         }
 
         public async Task<bool> SaveLocationPhoto(string location)
@@ -46,7 +49,7 @@ namespace MyJourneys.Repositories
 
         public void SaveOverviewPhoto(IFormFile file, string path)
         {
-            using (var stream = File.Create(path))
+            using (var stream = _fileSystem.File.Create(path))
             {
                 file.CopyTo(stream);
             }
@@ -54,7 +57,7 @@ namespace MyJourneys.Repositories
 
         public void DeletePhoto(string path)
         {
-            File.Delete(path);
+            _fileSystem.File.Delete(path);
         }
     }
 }

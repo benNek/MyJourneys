@@ -19,9 +19,9 @@ namespace MyJourneys.Repositories
         private readonly IPhotoRepository _photoRepository;
         private readonly IConfiguration _config;
 
-        public JourneyRepository(IPhotoRepository photoRepository, IConfiguration configuration)
+        public JourneyRepository(IPhotoRepository photoRepository, IConfiguration configuration, TravelContext context = null)
         {
-            _context = new TravelContext();
+            _context = context ?? new TravelContext();
             _photoRepository = photoRepository;
             _config = configuration;
         }
