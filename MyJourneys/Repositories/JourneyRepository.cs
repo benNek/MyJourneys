@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +19,15 @@ namespace MyJourneys.Repositories
         private readonly TravelContext _context;
         private readonly IPhotoRepository _photoRepository;
         private readonly IConfiguration _config;
+        private readonly IFileSystem _fileSystem;
 
-        public JourneyRepository(IPhotoRepository photoRepository, IConfiguration configuration, TravelContext context = null)
+        public JourneyRepository(IPhotoRepository photoRepository, IConfiguration configuration,
+            TravelContext context = null, IFileSystem fileSystem = null)
         {
             _context = context ?? new TravelContext();
             _photoRepository = photoRepository;
             _config = configuration;
+            _fileSystem = fileSystem ?? new FileSystem();
         }
 
         public Journey AddJourney(string userId, JourneyFormViewModel model)
@@ -448,7 +452,7 @@ namespace MyJourneys.Repositories
         private async Task<string> GetPhotoPath(string location)
         {
             var path = Path.Combine(_config["FileStorage:LocationPath"], location.ToLower() + ".jpg");
-            if (File.Exists(path))
+            if (_fileSystem.File.Exists(path))
             {
                 return path;
             }
