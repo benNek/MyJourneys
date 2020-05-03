@@ -36,11 +36,9 @@ namespace MyJourneys.Tests.Repositories
             Assert.IsNotEmpty(articles);
             Assert.AreEqual(1, articles.Count);
             articles = _repository.GetArticles("Travel", ArticleSortType.Weekly, "Article", 0, 10);
-            Assert.IsNotEmpty(articles);
-            Assert.AreEqual(1, articles.Count);
+            Assert.IsEmpty(articles);
             articles = _repository.GetArticles("Travel", ArticleSortType.Monthly, "Article", 0, 10);
-            Assert.IsNotEmpty(articles);
-            Assert.AreEqual(1, articles.Count);
+            Assert.IsEmpty(articles);
         }
 
         [Test]
