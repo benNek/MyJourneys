@@ -16,9 +16,9 @@ namespace MyJourneys.Repositories
         private readonly TravelContext _context;
         private readonly IUserRepository _userRepository;
 
-        public ArticleRepository(IUserRepository userRepository)
+        public ArticleRepository(IUserRepository userRepository, TravelContext context = null)
         {
-            _context = new TravelContext();
+            _context = context ?? new TravelContext();
             _userRepository = userRepository;
         }
 
@@ -84,7 +84,7 @@ namespace MyJourneys.Repositories
             {
                 return new List<ArticleViewModel>();
             }
-            
+
             return _context.Articles.Where(article => article.AuthorId.Equals(user.Id))
                 .Select(article => new ArticleViewModel
                 {
