@@ -14,11 +14,11 @@ namespace MyJourneys.Repositories
         private readonly string admin = "Admin";
 
         private readonly TravelContext _context;
-        private UserManager<User> _userManager;
+        private readonly UserManager<User> _userManager;
 
-        public UserRepository(UserManager<User> userManager)
+        public UserRepository(UserManager<User> userManager, TravelContext travelContext = null)
         {
-            _context = new TravelContext();
+            _context = travelContext ?? new TravelContext();
             _userManager = userManager;
         }
 
@@ -29,12 +29,12 @@ namespace MyJourneys.Repositories
 
         public User GetUser(string username)
         {
-            return _context.Users.First(user => user.UserName.Equals(username));
+            return _context.Users.FirstOrDefault(user => user.UserName.Equals(username));
         }
 
         public User GetUserById(string id)
         {
-            return _context.Users.First(user => user.Id.Equals(id));
+            return _context.Users.FirstOrDefault(user => user.Id.Equals(id));
         }
 
         public bool UserWithEmailExists(string email)
@@ -100,11 +100,6 @@ namespace MyJourneys.Repositories
                 .Where(role => role.NormalizedName.Equals(roleName))
                 .Select(role => role.Id)
                 .FirstOrDefault();
-
-            if (roleId == null)
-            {
-                return false;
-            }
 
             return _context.UserRoles
                 .Where(userRole => userRole.UserId.Equals(userId))

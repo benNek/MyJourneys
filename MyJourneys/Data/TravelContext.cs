@@ -8,21 +8,21 @@ namespace MyJourneys.Data
 {
     public class TravelContext : IdentityDbContext<User>
     {
-        public DbSet<Tag> Tags { get; set; }
-        public DbSet<Article> Articles { get; set; }
-        public DbSet<ArticleTags> ArticleTags { get; set; }
-        public DbSet<ArticleLikes> ArticleLikes { get; set; }
-        public DbSet<Journey> Journeys { get; set; }
-        public DbSet<FlightItem> FlightItems { get; set; }
-        public DbSet<HotelItem> HotelItems { get; set; }
-        public DbSet<ReservationItem> ReservationItems { get; set; }
-        public DbSet<EventItem> EventItems { get; set; }
-        public DbSet<Note> Notes { get; set; }
-        public DbSet<Place> Places { get; set; }
-        public DbSet<OverviewJourney> OverviewJourneys { get; set; }
-        public DbSet<LocationPhoto> LocationPhotos { get; set; }
-        public DbSet<Country> Countries { get; set; }
-        public DbSet<OverviewJourneysCountries> OverviewJourneysCountries { get; set; }
+        public virtual DbSet<Tag> Tags { get; set; }
+        public virtual DbSet<Article> Articles { get; set; }
+        public virtual DbSet<ArticleTags> ArticleTags { get; set; }
+        public virtual DbSet<ArticleLikes> ArticleLikes { get; set; }
+        public virtual DbSet<Journey> Journeys { get; set; }
+        public virtual DbSet<FlightItem> FlightItems { get; set; }
+        public virtual DbSet<HotelItem> HotelItems { get; set; }
+        public virtual DbSet<ReservationItem> ReservationItems { get; set; }
+        public virtual DbSet<EventItem> EventItems { get; set; }
+        public virtual DbSet<Note> Notes { get; set; }
+        public virtual DbSet<Place> Places { get; set; }
+        public virtual DbSet<OverviewJourney> OverviewJourneys { get; set; }
+        public virtual DbSet<LocationPhoto> LocationPhotos { get; set; }
+        public virtual DbSet<Country> Countries { get; set; }
+        public virtual DbSet<OverviewJourneysCountries> OverviewJourneysCountries { get; set; }
 
         public TravelContext()
         {
