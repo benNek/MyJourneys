@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using MyJourneys.Data;
 using MyJourneys.Models;
@@ -16,9 +15,10 @@ namespace MyJourneys.Repositories
         private readonly IConfiguration _config;
         private readonly IPhotoRepository _photoRepository;
 
-        public OverviewRepository(IConfiguration configuration, IPhotoRepository photoRepository)
+        public OverviewRepository(IConfiguration configuration, IPhotoRepository photoRepository,
+            TravelContext travelContext = null)
         {
-            _context = new TravelContext();
+            _context = travelContext ?? new TravelContext();
             _config = configuration;
             _photoRepository = photoRepository;
         }
@@ -124,20 +124,17 @@ namespace MyJourneys.Repositories
 
         public List<int> GetTravelingYears(string userId)
         {
-            return _context.LocationPhotos.Select(p => p.Date.Year).Distinct().OrderByDescending(y => y).ToList();
+            return _context.LocationPhotos.Where(p => p.OverviewJourney.UserId.Equals(userId))
+                .Select(p => p.Date.Year).Distinct().OrderByDescending(y => y).ToList();
         }
 
         public void DeletePhotos(string userId)
         {
             var journeys = _context.OverviewJourneys.Where(journey => journey.UserId.Equals(userId)).ToList();
             var photos = _context.LocationPhotos.Where(photo => journeys.Contains(photo.OverviewJourney)).ToList();
-            photos.ForEach(photo =>
-            {
-                _photoRepository.DeletePhoto(photo.Path);
-            });
+            photos.ForEach(photo => { _photoRepository.DeletePhoto(photo.Path); });
             _context.OverviewJourneys.RemoveRange(journeys);
             _context.SaveChanges();
         }
-
     }
 }

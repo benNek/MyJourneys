@@ -9,6 +9,10 @@ namespace MyJourneys.Models
         public string Alpha2 { get; set; }
         public string Alpha3 { get; set; }
 
+        public Country()
+        {
+        }
+
         public Country(string name, string alpha2, string alpha3)
         {
             Name = name;
