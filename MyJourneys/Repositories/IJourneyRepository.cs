@@ -15,7 +15,6 @@ namespace MyJourneys.Repositories
         bool IsUsersHotel(string userId, int hotelId);
         bool IsUsersEvent(string userId, int eventId);
         bool IsUsersReservation(string userId, int reservationId);
-
         bool IsUsersNote(string userId, int noteId);
         bool IsUsersPlace(string userId, int placeId);
         List<JourneyItemViewModel> GetJourneyItems(int journeyId);

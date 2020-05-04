@@ -93,6 +93,78 @@ namespace MyJourneys.Tests.Repositories
         }
 
         [Test]
+        public void TestIsUsersFlightFalse()
+        {
+            Assert.IsFalse(_repository.IsUsersFlight("1", 3));
+        }
+
+        [Test]
+        public void TestIsUsersFlightTrue()
+        {
+            Assert.IsTrue(_repository.IsUsersFlight("1", 1));
+        }
+
+        [Test]
+        public void TestIsUsersHotelFalse()
+        {
+            Assert.IsFalse(_repository.IsUsersHotel("1", 3));
+        }
+
+        [Test]
+        public void TestIsUsersHotelTrue()
+        {
+            Assert.IsTrue(_repository.IsUsersHotel("1", 1));
+        }
+
+        [Test]
+        public void TestIsUsersEventFalse()
+        {
+            Assert.IsFalse(_repository.IsUsersEvent("1", 3));
+        }
+
+        [Test]
+        public void TestIsUsersEventTrue()
+        {
+            Assert.IsTrue(_repository.IsUsersEvent("1", 1));
+        }
+
+        [Test]
+        public void TestIsUsersReservationFalse()
+        {
+            Assert.IsFalse(_repository.IsUsersReservation("1", 3));
+        }
+
+        [Test]
+        public void TestIsUsersReservationTrue()
+        {
+            Assert.IsTrue(_repository.IsUsersReservation("1", 1));
+        }
+
+        [Test]
+        public void TestIsUsersPlaceFalse()
+        {
+            Assert.IsFalse(_repository.IsUsersPlace("1", 3));
+        }
+
+        [Test]
+        public void TestIsUsersPlaceTrue()
+        {
+            Assert.IsTrue(_repository.IsUsersPlace("1", 1));
+        }
+
+        [Test]
+        public void TestIsUsersNoteFalse()
+        {
+            Assert.IsFalse(_repository.IsUsersNote("1", 3));
+        }
+
+        [Test]
+        public void TestIsUsersNoteTrue()
+        {
+            Assert.IsTrue(_repository.IsUsersNote("1", 1));
+        }
+
+        [Test]
         public void TestGetJourneyItems()
         {
             var items = _repository.GetJourneyItems(1);
@@ -296,10 +368,11 @@ namespace MyJourneys.Tests.Repositories
         {
             var mockContext = new Mock<TravelContext>();
 
+            var journey1 = new Journey {Id = 1, UserId = "1", Location = "Barcelona"};
+            var journey2 = new Journey {Id = 2, UserId = "1", Location = "Paris"};
             var journeys = FakeDbSet<Journey>.Create(new List<Journey>
             {
-                new Journey {Id = 1, UserId = "1", Location = "Barcelona"},
-                new Journey {Id = 2, UserId = "1", Location = "Paris"}
+                journey1, journey2
             });
             mockContext.Setup(x => x.Journeys).Returns(journeys.Object);
 
@@ -307,8 +380,8 @@ namespace MyJourneys.Tests.Repositories
             {
                 new FlightItem
                 {
-                    JourneyId = 1, Id = 1, Date = DateTime.Now, Airline = "Ryanair", FlightNumber = "F01",
-                    Origin = "KUN", Destination = "BCN"
+                    Journey = journey1, JourneyId = 1, Id = 1, Date = DateTime.Now, Airline = "Ryanair",
+                    FlightNumber = "F01", Origin = "KUN", Destination = "BCN"
                 }
             });
             mockContext.Setup(x => x.FlightItems).Returns(flights.Object);
@@ -317,7 +390,7 @@ namespace MyJourneys.Tests.Repositories
             {
                 new HotelItem
                 {
-                    JourneyId = 1, Id = 1, Date = DateTime.Now, Address = "Rue 1, Barcelona"
+                    Journey = journey1, JourneyId = 1, Id = 1, Date = DateTime.Now, Address = "Rue 1, Barcelona"
                 }
             });
             mockContext.Setup(x => x.HotelItems).Returns(hotels.Object);
@@ -326,7 +399,7 @@ namespace MyJourneys.Tests.Repositories
             {
                 new ReservationItem
                 {
-                    JourneyId = 1, Id = 1, Date = DateTime.Now, Address = "Rue 1, Barcelona"
+                    Journey = journey1, JourneyId = 1, Id = 1, Date = DateTime.Now, Address = "Rue 1, Barcelona"
                 }
             });
             mockContext.Setup(x => x.ReservationItems).Returns(reservations.Object);
@@ -335,7 +408,7 @@ namespace MyJourneys.Tests.Repositories
             {
                 new EventItem
                 {
-                    JourneyId = 1, Id = 1, Date = DateTime.Now, Address = "Rue 1, Barcelona"
+                    Journey = journey1, JourneyId = 1, Id = 1, Date = DateTime.Now, Address = "Rue 1, Barcelona"
                 }
             });
             mockContext.Setup(x => x.EventItems).Returns(events.Object);
@@ -344,7 +417,7 @@ namespace MyJourneys.Tests.Repositories
             {
                 new Place
                 {
-                    Id = 1, JourneyId = 1, Location = "La Sagrada Familia", Address = "La Sagr Fam",
+                    Journey = journey1, Id = 1, JourneyId = 1, Location = "La Sagrada Familia", Address = "La Sagr Fam",
                     Latitude = 0, Longitude = 0, Rank = 0, Start = true
                 }
             });
@@ -352,7 +425,7 @@ namespace MyJourneys.Tests.Repositories
 
             var notes = FakeDbSet<Note>.Create(new List<Note>
             {
-                new Note {Id = 1, JourneyId = 1, Title = "TITLE", Text = "TEXT"}
+                new Note {Journey = journey1, Id = 1, JourneyId = 1, Title = "TITLE", Text = "TEXT"}
             });
             mockContext.Setup(x => x.Notes).Returns(notes.Object);
 
