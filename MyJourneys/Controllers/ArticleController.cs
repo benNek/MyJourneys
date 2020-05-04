@@ -21,7 +21,7 @@ namespace MyJourneys.Controllers
 
         [HttpPost]
         [Authorize]
-        public ActionResult<Article> Create([FromBody] ArticleFormViewModel model)
+        public ActionResult<ArticleViewModel> Create([FromBody] ArticleFormViewModel model)
         {
             var userId = GetUserId(User);
             return Ok(_articleRepository.AddArticle(userId, model));

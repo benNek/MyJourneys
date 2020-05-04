@@ -112,7 +112,7 @@ namespace MyJourneys.Repositories
             }
         }
 
-        public Article AddArticle(string userId, ArticleFormViewModel model)
+        public ArticleViewModel AddArticle(string userId, ArticleFormViewModel model)
         {
             var article = new Article
             {
@@ -126,7 +126,17 @@ namespace MyJourneys.Repositories
             _context.Articles.Add(article);
             _context.SaveChanges();
             AddTagsToArticle(article.Id, model.Tags);
-            return article;
+            return new ArticleViewModel
+            {
+                Id = article.Id,
+                AuthorName = article.Author.UserName,
+                Title = article.Title,
+                Text = article.Text,
+                Tags = article.ArticleTags.Select(tag => tag.Tag.Name).ToList(),
+                LikesCount = article.ArticleLikes.Count,
+                CreateDate = article.CreateDate,
+                Confirmed = article.Confirmed
+            };
         }
 
         public void AddTagsToArticle(int articleId, List<string> tags)
