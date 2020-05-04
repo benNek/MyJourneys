@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyJourneys.Models;
 using MyJourneys.Models.ViewModels;
 using MyJourneys.Repositories;
 using MyJourneys.Services;
@@ -25,7 +23,7 @@ namespace MyJourneys.Controllers
 
         [HttpPost]
         [Authorize]
-        public ActionResult<Journey> CreateJourney([FromBody] JourneyFormViewModel model)
+        public ActionResult<JourneyViewModel> CreateJourney([FromBody] JourneyFormViewModel model)
         {
             if (model.EndDate < Today)
             {
@@ -214,7 +212,7 @@ namespace MyJourneys.Controllers
 
         [HttpPost("place")]
         [Authorize]
-        public ActionResult<Place> AddPlace([FromBody] PlaceFormViewModel model)
+        public ActionResult<PlaceViewModel> AddPlace([FromBody] PlaceFormViewModel model)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
@@ -290,7 +288,7 @@ namespace MyJourneys.Controllers
 
         [HttpPost("note")]
         [Authorize]
-        public ActionResult<Note> AddNote([FromBody] NoteFormViewModel model)
+        public ActionResult<NoteViewModel> AddNote([FromBody] NoteFormViewModel model)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
@@ -303,7 +301,7 @@ namespace MyJourneys.Controllers
 
         [HttpPut("note/{id}")]
         [Authorize]
-        public ActionResult<Note> EditNote(int id, [FromBody] NoteFormViewModel model)
+        public ActionResult<NoteViewModel> EditNote(int id, [FromBody] NoteFormViewModel model)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersNote(userId, id))

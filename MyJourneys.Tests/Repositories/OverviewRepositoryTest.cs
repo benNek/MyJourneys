@@ -40,16 +40,28 @@ namespace MyJourneys.Tests.Repositories
         }
 
         [Test]
+        public void TestIsUsersJourneyFalse()
+        {
+            Assert.IsFalse(_repository.IsUsersJourney("2", 1));
+        }
+        
+        [Test]
+        public void TestIsUsersJourneyTrue()
+        {
+            Assert.IsTrue(_repository.IsUsersJourney("1", 1));
+        }
+
+        [Test]
         public void TestGetJourneyOverviewNull()
         {
-            var journey = _repository.GetJourneyOverview("1", 3);
+            var journey = _repository.GetJourneyOverview(3);
             Assert.IsNull(journey);
         }
 
         [Test]
         public void TestGetJourneyOverviewValid()
         {
-            var journey = _repository.GetJourneyOverview("1", 1);
+            var journey = _repository.GetJourneyOverview(1);
             Assert.NotNull(journey);
             Assert.AreEqual("Barcelona", journey.Title);
         }
