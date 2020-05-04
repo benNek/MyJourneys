@@ -29,7 +29,7 @@ export default function ReservationItemForm(props) {
       initialValues={{
         name: '',
         address: '',
-        date: moment().add(1, 'days').format('YYYY-MM-DD HH:mm')
+        date: journey.startDate
       }}
       validationSchema={reservationItemValidation}
       onSubmit={async (values, actions) => {

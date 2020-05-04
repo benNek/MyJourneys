@@ -7,12 +7,6 @@ namespace MyJourneys.Models
     {
         public ICollection<Article> Articles { get; set; }
         public ICollection<Journey> Journeys { get; set; }
-        public ICollection<EventItem> EventItems { get; set; }
-        public ICollection<FlightItem> FlightItems { get; set; }
-        public ICollection<HotelItem> HotelItems { get; set; }
-        public ICollection<ReservationItem> ReservationItems { get; set; }
-        public ICollection<Note> Notes { get; set; }
-        public ICollection<Place> Places { get; set; }
         public ICollection<ArticleLikes> ArticleLikes { get; set; }
         public ICollection<OverviewJourney> OverviewJourneys { get; set; }
     }

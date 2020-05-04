@@ -11,10 +11,8 @@ namespace MyJourneys.Models
         public double Longitude { get; set; }
         public int Rank { get; set; }
         public bool Start { get; set; }
-        public string UserId { get; set; }
         public int JourneyId { get; set; }
         
-        [ForeignKey("UserId")] public virtual User User { get; set; }
         [ForeignKey("JourneyId")] public virtual Journey Journey { get; set; }
     }
 }

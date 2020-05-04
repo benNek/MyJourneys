@@ -5,6 +5,7 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using MyJourneys.Data;
 using MyJourneys.Models;
@@ -46,9 +47,9 @@ namespace MyJourneys.Repositories
             return journey;
         }
 
-        public int DeleteJourney(string userId, int journeyId)
+        public int DeleteJourney(int journeyId)
         {
-            var journey = _context.Journeys.FirstOrDefault(j => j.UserId.Equals(userId) && j.Id == journeyId);
+            var journey = _context.Journeys.FirstOrDefault(j => j.Id == journeyId);
             if (journey == null)
             {
                 return -1;
@@ -76,10 +77,10 @@ namespace MyJourneys.Repositories
                 .ToList();
         }
 
-        public JourneyViewModel GetJourney(string userId, int journeyId)
+        public JourneyViewModel GetJourney(int journeyId)
         {
             return _context.Journeys
-                .Where(journey => journey.UserId.Equals(userId) && journey.Id == journeyId)
+                .Where(journey => journey.Id == journeyId)
                 .Select(journey => new JourneyViewModel
                 {
                     Id = journey.Id,
@@ -97,11 +98,41 @@ namespace MyJourneys.Repositories
             return _context.Journeys.Any(journey => journey.Id == journeyId && journey.UserId.Equals(userId));
         }
 
-        public List<JourneyItemViewModel> GetJourneyItems(string userId, int journeyId)
+        public bool IsUsersFlight(string userId, int flightId)
+        {
+            return _context.FlightItems.Any(x => x.Journey.UserId.Equals(userId) && x.Id == flightId);
+        }
+
+        public bool IsUsersHotel(string userId, int hotelId)
+        {
+            return _context.HotelItems.Any(x => x.Journey.UserId.Equals(userId) && x.Id == hotelId);
+        }
+
+        public bool IsUsersEvent(string userId, int eventId)
+        {
+            return _context.EventItems.Any(x => x.Journey.UserId.Equals(userId) && x.Id == eventId);
+        }
+
+        public bool IsUsersReservation(string userId, int reservationId)
+        {
+            return _context.ReservationItems.Any(x => x.Journey.UserId.Equals(userId) && x.Id == reservationId);
+        }
+
+        public bool IsUsersNote(string userId, int noteId)
+        {
+            return _context.Notes.Any(n => n.Journey.UserId.Equals(userId) && n.Id == noteId);
+        }
+
+        public bool IsUsersPlace(string userId, int placeId)
+        {
+            return _context.Places.Any(p => p.Journey.UserId.Equals(userId) && p.Id == placeId);
+        }
+
+        public List<JourneyItemViewModel> GetJourneyItems(int journeyId)
         {
             var items = _context.FlightItems
                 .OfType<FlightItem>()
-                .Where(item => item.UserId.Equals(userId) && item.JourneyId == journeyId)
+                .Where(item => item.JourneyId == journeyId)
                 .Select(item => new JourneyItemViewModel
                 {
                     Id = item.Id,
@@ -115,7 +146,7 @@ namespace MyJourneys.Repositories
                 .AsEnumerable()
                 .Union(_context.HotelItems
                     .OfType<HotelItem>()
-                    .Where(item => item.UserId.Equals(userId) && item.JourneyId == journeyId)
+                    .Where(item => item.JourneyId == journeyId)
                     .Select(item => new JourneyItemViewModel
                     {
                         Id = item.Id,
@@ -127,7 +158,7 @@ namespace MyJourneys.Repositories
                 .AsEnumerable()
                 .Union(_context.ReservationItems
                     .OfType<ReservationItem>()
-                    .Where(item => item.UserId.Equals(userId) && item.JourneyId == journeyId)
+                    .Where(item => item.JourneyId == journeyId)
                     .Select(item => new JourneyItemViewModel
                     {
                         Id = item.Id,
@@ -139,7 +170,7 @@ namespace MyJourneys.Repositories
                 .AsEnumerable()
                 .Union(_context.EventItems
                     .OfType<EventItem>()
-                    .Where(item => item.UserId.Equals(userId) && item.JourneyId == journeyId)
+                    .Where(item => item.JourneyId == journeyId)
                     .Select(item => new JourneyItemViewModel
                     {
                         Id = item.Id,
@@ -153,10 +184,10 @@ namespace MyJourneys.Repositories
             return items;
         }
 
-        public List<PlaceViewModel> GetPlaces(string userId, int journeyId)
+        public List<PlaceViewModel> GetPlaces(int journeyId)
         {
             return _context.Places
-                .Where(item => item.UserId.Equals(userId) && item.JourneyId == journeyId)
+                .Where(item => item.JourneyId == journeyId)
                 .Select(place => new PlaceViewModel
                 {
                     Id = place.Id,
@@ -173,10 +204,10 @@ namespace MyJourneys.Repositories
                 .ToList();
         }
 
-        public List<Place> GetPlaceObjects(string userId, int journeyId)
+        public List<Place> GetPlaceObjects(int journeyId)
         {
             return _context.Places
-                .Where(place => place.UserId.Equals(userId) && place.JourneyId == journeyId)
+                .Where(place => place.JourneyId == journeyId)
                 .OrderByDescending(place => place.Start)
                 .ThenByDescending(place => place.Rank)
                 .ThenBy(place => place.Id)
@@ -196,10 +227,10 @@ namespace MyJourneys.Repositories
             _context.SaveChanges();
         }
 
-        public List<NoteViewModel> GetNotes(string userId, int journeyId)
+        public List<NoteViewModel> GetNotes(int journeyId)
         {
             return _context.Notes
-                .Where(item => item.UserId.Equals(userId) && item.JourneyId == journeyId)
+                .Where(item => item.JourneyId == journeyId)
                 .Select(note => new NoteViewModel
                 {
                     Id = note.Id,
@@ -209,11 +240,10 @@ namespace MyJourneys.Repositories
                 .ToList();
         }
 
-        public JourneyItemViewModel AddFlightItem(string userId, FlightItemFormViewModel model)
+        public JourneyItemViewModel AddFlightItem(FlightItemFormViewModel model)
         {
             var item = new FlightItem
             {
-                UserId = userId,
                 JourneyId = model.JourneyId,
                 Date = model.Date,
                 Airline = model.Airline,
@@ -236,9 +266,9 @@ namespace MyJourneys.Repositories
             };
         }
 
-        public int DeleteFlightItem(string userId, int itemId)
+        public int DeleteFlightItem(int itemId)
         {
-            var item = _context.FlightItems.FirstOrDefault(i => i.UserId.Equals(userId) && i.Id == itemId);
+            var item = _context.FlightItems.FirstOrDefault(i => i.Id == itemId);
             if (item == null)
             {
                 return -1;
@@ -249,11 +279,10 @@ namespace MyJourneys.Repositories
             return item.Id;
         }
 
-        public JourneyItemViewModel AddHotelItem(string userId, CommonItemFormViewModel model)
+        public JourneyItemViewModel AddHotelItem(CommonItemFormViewModel model)
         {
             var item = new HotelItem
             {
-                UserId = userId,
                 JourneyId = model.JourneyId,
                 Date = model.Date,
                 Name = model.Name,
@@ -271,9 +300,9 @@ namespace MyJourneys.Repositories
             };
         }
 
-        public int DeleteHotelItem(string userId, int itemId)
+        public int DeleteHotelItem(int itemId)
         {
-            var item = _context.HotelItems.FirstOrDefault(i => i.UserId.Equals(userId) && i.Id == itemId);
+            var item = _context.HotelItems.FirstOrDefault(i => i.Id == itemId);
             if (item == null)
             {
                 return -1;
@@ -284,11 +313,10 @@ namespace MyJourneys.Repositories
             return item.Id;
         }
 
-        public JourneyItemViewModel AddReservationItem(string userId, CommonItemFormViewModel model)
+        public JourneyItemViewModel AddReservationItem(CommonItemFormViewModel model)
         {
             var item = new ReservationItem
             {
-                UserId = userId,
                 JourneyId = model.JourneyId,
                 Date = model.Date,
                 Name = model.Name,
@@ -306,9 +334,9 @@ namespace MyJourneys.Repositories
             };
         }
 
-        public int DeleteReservationItem(string userId, int itemId)
+        public int DeleteReservationItem(int itemId)
         {
-            var item = _context.ReservationItems.FirstOrDefault(i => i.UserId.Equals(userId) && i.Id == itemId);
+            var item = _context.ReservationItems.FirstOrDefault(i => i.Id == itemId);
             if (item == null)
             {
                 return -1;
@@ -319,11 +347,10 @@ namespace MyJourneys.Repositories
             return item.Id;
         }
 
-        public JourneyItemViewModel AddEventItem(string userId, CommonItemFormViewModel model)
+        public JourneyItemViewModel AddEventItem(CommonItemFormViewModel model)
         {
             var item = new EventItem
             {
-                UserId = userId,
                 JourneyId = model.JourneyId,
                 Date = model.Date,
                 Name = model.Name,
@@ -341,9 +368,9 @@ namespace MyJourneys.Repositories
             };
         }
 
-        public int DeleteEventItem(string userId, int itemId)
+        public int DeleteEventItem(int itemId)
         {
-            var item = _context.EventItems.FirstOrDefault(i => i.UserId.Equals(userId) && i.Id == itemId);
+            var item = _context.EventItems.FirstOrDefault(i => i.Id == itemId);
             if (item == null)
             {
                 return -1;
@@ -354,14 +381,13 @@ namespace MyJourneys.Repositories
             return item.Id;
         }
 
-        public Place AddPlaceItem(string userId, PlaceFormViewModel model)
+        public Place AddPlaceItem(PlaceFormViewModel model)
         {
             var hasStart = _context.Places
-                .Any(p => p.UserId.Equals(userId) && p.JourneyId == model.JourneyId && p.Start);
+                .Any(p => p.JourneyId == model.JourneyId && p.Start);
 
             var place = new Place
             {
-                UserId = userId,
                 JourneyId = model.JourneyId,
                 Location = model.Location,
                 Address = model.Address,
@@ -374,9 +400,9 @@ namespace MyJourneys.Repositories
             return place;
         }
 
-        public int DeletePlaceItem(string userId, int placeId)
+        public int DeletePlaceItem(int placeId)
         {
-            var place = _context.Places.FirstOrDefault(p => p.UserId.Equals(userId) && p.Id == placeId);
+            var place = _context.Places.FirstOrDefault(p => p.Id == placeId);
             if (place == null)
             {
                 return -1;
@@ -387,9 +413,9 @@ namespace MyJourneys.Repositories
             return place.Id;
         }
 
-        public void SetStartPlace(string userId, int journeyId, int placeId)
+        public void SetStartPlace(int journeyId, int placeId)
         {
-            var places = GetPlaceObjects(userId, journeyId);
+            var places = GetPlaceObjects(journeyId);
             var startPlace = places.FirstOrDefault(place => place.Id == placeId);
             if (startPlace == null)
             {
@@ -401,11 +427,10 @@ namespace MyJourneys.Repositories
             _context.SaveChanges();
         }
 
-        public Note AddNoteItem(string userId, NoteFormViewModel model)
+        public Note AddNoteItem(NoteFormViewModel model)
         {
             var note = new Note
             {
-                UserId = userId,
                 JourneyId = model.JourneyId,
                 Title = model.Title,
                 Text = model.Text
@@ -415,9 +440,9 @@ namespace MyJourneys.Repositories
             return note;
         }
 
-        public Note UpdateNoteItem(string userId, int noteId, NoteFormViewModel model)
+        public Note UpdateNoteItem(int noteId, NoteFormViewModel model)
         {
-            var note = _context.Notes.FirstOrDefault(n => n.UserId.Equals(userId) && n.Id == noteId);
+            var note = _context.Notes.FirstOrDefault(n => n.Id == noteId);
             if (note == null)
             {
                 return null;
@@ -430,9 +455,9 @@ namespace MyJourneys.Repositories
             return note;
         }
 
-        public int DeleteNoteItem(string userId, int noteId)
+        public int DeleteNoteItem(int noteId)
         {
-            var note = _context.Notes.FirstOrDefault(n => n.UserId.Equals(userId) && n.Id == noteId);
+            var note = _context.Notes.FirstOrDefault(n => n.Id == noteId);
             if (note == null)
             {
                 return -1;

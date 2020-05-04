@@ -148,12 +148,6 @@ export default function Journey() {
         <div>
           <Button
             variant="outlined"
-            startIcon={<OfflinePinIcon/>}
-          >
-            Save for offline
-          </Button>
-          <Button
-            variant="outlined"
             startIcon={<DeleteForeverIcon/>}
             className={classes.deleteBtn}
             onClick={handleDeleteClick}

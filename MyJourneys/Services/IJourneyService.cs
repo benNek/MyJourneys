@@ -5,6 +5,6 @@ namespace MyJourneys.Services
 {
     public interface IJourneyService
     {
-        public List<PlaceViewModel> ReorderPlaces(string userId, int journeyId);
+        public List<PlaceViewModel> ReorderPlaces(int journeyId);
     }
 }

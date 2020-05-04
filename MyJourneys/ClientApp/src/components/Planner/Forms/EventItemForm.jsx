@@ -29,7 +29,7 @@ export default function EventItemForm(props) {
       initialValues={{
         name: '',
         address: '',
-        date: moment().add(1, 'days').format('YYYY-MM-DD HH:mm')
+        date: journey.startDate
       }}
       validationSchema={eventItemValidation}
       onSubmit={async (values, actions) => {

@@ -46,34 +46,44 @@ namespace MyJourneys.Controllers
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, id))
             {
-                return StatusCode(403, $"Journey {id} doesn't belong to user");
+                return StatusCode(403, "Journey doesn't belong to the user");
             }
 
-            return Ok(_journeyRepository.DeleteJourney(userId, id));
+            return Ok(_journeyRepository.DeleteJourney(id));
         }
 
         [HttpGet]
         [Authorize]
-        public IEnumerable<JourneyViewModel> GetJourneys()
+        public IActionResult GetJourneys()
         {
             var userId = GetUserId(User);
-            return _journeyRepository.GetJourneys(userId);
+            return Ok(_journeyRepository.GetJourneys(userId));
         }
 
         [HttpGet("{id}")]
         [Authorize]
-        public JourneyViewModel GetJourney(int id)
+        public IActionResult GetJourney(int id)
         {
             var userId = GetUserId(User);
-            return _journeyRepository.GetJourney(userId, id);
+            if (!_journeyRepository.IsUsersJourney(userId, id))
+            {
+                return StatusCode(403, "Journey doesn't belong to the user");
+            }
+
+            return Ok(_journeyRepository.GetJourney(id));
         }
-        
+
         [HttpGet("{id}/itinerary")]
         [Authorize]
-        public IEnumerable<JourneyItemViewModel> GetJourneyItems(int id)
+        public IActionResult GetJourneyItems(int id)
         {
             var userId = GetUserId(User);
-            return _journeyRepository.GetJourneyItems(userId, id);
+            if (!_journeyRepository.IsUsersJourney(userId, id))
+            {
+                return StatusCode(403, "Journey doesn't belong to the user");
+            }
+
+            return Ok(_journeyRepository.GetJourneyItems(id));
         }
 
         [HttpPost("flight")]
@@ -83,7 +93,7 @@ namespace MyJourneys.Controllers
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
             {
-                return StatusCode(403, $"Journey {model.JourneyId} doesn't belong to user");
+                return StatusCode(403, "Journey doesn't belong to the user");
             }
 
             if (model.Date < Now)
@@ -91,7 +101,7 @@ namespace MyJourneys.Controllers
                 return StatusCode(422, "Date must not be in the past");
             }
 
-            return Ok(_journeyRepository.AddFlightItem(userId, model));
+            return Ok(_journeyRepository.AddFlightItem(model));
         }
 
         [HttpDelete("flight/{id}")]
@@ -99,9 +109,14 @@ namespace MyJourneys.Controllers
         public IActionResult DeleteFlight(int id)
         {
             var userId = GetUserId(User);
-            return Ok(_journeyRepository.DeleteFlightItem(userId, id));
+            if (!_journeyRepository.IsUsersFlight(userId, id))
+            {
+                return StatusCode(403, "Flight doesn't belong to the user");
+            }
+
+            return Ok(_journeyRepository.DeleteFlightItem(id));
         }
-        
+
         [HttpPost("hotel")]
         [Authorize]
         public IActionResult AddHotel([FromBody] CommonItemFormViewModel model)
@@ -109,7 +124,7 @@ namespace MyJourneys.Controllers
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
             {
-                return StatusCode(403, $"Journey {model.JourneyId} doesn't belong to user");
+                return StatusCode(403, "Journey doesn't belong to the user");
             }
 
             if (model.Date < Now)
@@ -117,15 +132,20 @@ namespace MyJourneys.Controllers
                 return StatusCode(422, "Date must not be in the past");
             }
 
-            return Ok(_journeyRepository.AddHotelItem(userId, model));
+            return Ok(_journeyRepository.AddHotelItem(model));
         }
-        
+
         [HttpDelete("hotel/{id}")]
         [Authorize]
         public IActionResult DeleteHotel(int id)
         {
             var userId = GetUserId(User);
-            return Ok(_journeyRepository.DeleteHotelItem(userId, id));
+            if (!_journeyRepository.IsUsersHotel(userId, id))
+            {
+                return StatusCode(403, "Hotel doesn't belong to the user");
+            }
+
+            return Ok(_journeyRepository.DeleteHotelItem(id));
         }
 
         [HttpPost("reservation")]
@@ -135,7 +155,7 @@ namespace MyJourneys.Controllers
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
             {
-                return StatusCode(403, $"Journey {model.JourneyId} doesn't belong to user");
+                return StatusCode(403, "Journey doesn't belong to the user");
             }
 
             if (model.Date < Now)
@@ -143,15 +163,20 @@ namespace MyJourneys.Controllers
                 return StatusCode(422, "Date must not be in the past");
             }
 
-            return Ok(_journeyRepository.AddReservationItem(userId, model));
+            return Ok(_journeyRepository.AddReservationItem(model));
         }
-        
+
         [HttpDelete("reservation/{id}")]
         [Authorize]
         public IActionResult DeleteReservation(int id)
         {
             var userId = GetUserId(User);
-            return Ok(_journeyRepository.DeleteReservationItem(userId, id));
+            if (!_journeyRepository.IsUsersReservation(userId, id))
+            {
+                return StatusCode(403, "Reservation doesn't belong to the user");
+            }
+
+            return Ok(_journeyRepository.DeleteReservationItem(id));
         }
 
         [HttpPost("event")]
@@ -161,7 +186,7 @@ namespace MyJourneys.Controllers
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
             {
-                return StatusCode(403, $"Journey {model.JourneyId} doesn't belong to user");
+                return StatusCode(403, "Journey doesn't belong to the user");
             }
 
             if (model.Date < Now)
@@ -169,15 +194,20 @@ namespace MyJourneys.Controllers
                 return StatusCode(422, "Date must not be in the past");
             }
 
-            return Ok(_journeyRepository.AddEventItem(userId, model));
+            return Ok(_journeyRepository.AddEventItem(model));
         }
-        
+
         [HttpDelete("event/{id}")]
         [Authorize]
         public IActionResult DeleteEvent(int id)
         {
             var userId = GetUserId(User);
-            return Ok(_journeyRepository.DeleteEventItem(userId, id));
+            if (!_journeyRepository.IsUsersEvent(userId, id))
+            {
+                return StatusCode(403, "Event doesn't belong to the user");
+            }
+
+            return Ok(_journeyRepository.DeleteEventItem(id));
         }
 
         [HttpPost("place")]
@@ -187,7 +217,7 @@ namespace MyJourneys.Controllers
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
             {
-                return StatusCode(403, $"Journey {model.JourneyId} doesn't belong to user");
+                return StatusCode(403, "Journey doesn't belong to the user");
             }
 
             if (model.Latitude < -90 || model.Latitude > 90)
@@ -200,7 +230,7 @@ namespace MyJourneys.Controllers
                 return StatusCode(422, "Longitude must be between -180 and 180");
             }
 
-            return Ok(_journeyRepository.AddPlaceItem(userId, model));
+            return Ok(_journeyRepository.AddPlaceItem(model));
         }
 
         [HttpDelete("place/{id}")]
@@ -208,7 +238,12 @@ namespace MyJourneys.Controllers
         public IActionResult DeletePlace(int id)
         {
             var userId = GetUserId(User);
-            return Ok(_journeyRepository.DeletePlaceItem(userId, id));
+            if (!_journeyRepository.IsUsersPlace(userId, id))
+            {
+                return StatusCode(403, "Place doesn't belong to the user");
+            }
+
+            return Ok(_journeyRepository.DeletePlaceItem(id));
         }
 
         [HttpGet("{id}/places/{placeId}/start")]
@@ -216,16 +251,26 @@ namespace MyJourneys.Controllers
         public IActionResult SetStartPlace(int id, int placeId)
         {
             var userId = GetUserId(User);
-            _journeyRepository.SetStartPlace(userId, id, placeId);
-            return Ok(_journeyRepository.GetPlaces(userId, id));
+            if (!_journeyRepository.IsUsersJourney(userId, id))
+            {
+                return StatusCode(403, "Journey doesn't belong to the user");
+            }
+
+            _journeyRepository.SetStartPlace(id, placeId);
+            return Ok(_journeyRepository.GetPlaces(id));
         }
 
         [HttpGet("{id}/places")]
         [Authorize]
-        public IEnumerable<PlaceViewModel> GetPlaces(int id)
+        public IActionResult GetPlaces(int id)
         {
             var userId = GetUserId(User);
-            return _journeyRepository.GetPlaces(userId, id);
+            if (!_journeyRepository.IsUsersJourney(userId, id))
+            {
+                return StatusCode(403, "Journey doesn't belong to the user");
+            }
+
+            return Ok(_journeyRepository.GetPlaces(id));
         }
 
         [HttpGet("{id}/places/reorder")]
@@ -235,10 +280,10 @@ namespace MyJourneys.Controllers
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, id))
             {
-                return StatusCode(403, $"Journey {id} doesn't belong to user");
+                return StatusCode(403, "Journey doesn't belong to the user");
             }
 
-            return Ok(_journeyService.ReorderPlaces(userId, id));
+            return Ok(_journeyService.ReorderPlaces(id));
         }
 
         [HttpPost("note")]
@@ -246,31 +291,51 @@ namespace MyJourneys.Controllers
         public IActionResult AddNote([FromBody] NoteFormViewModel model)
         {
             var userId = GetUserId(User);
-            return Ok(_journeyRepository.AddNoteItem(userId, model));
+            if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
+            {
+                return StatusCode(403, "Journey doesn't belong to the user");
+            }
+
+            return Ok(_journeyRepository.AddNoteItem(model));
         }
-        
+
         [HttpPut("note/{id}")]
         [Authorize]
-        public IActionResult AddNote(int id, [FromBody] NoteFormViewModel model)
+        public IActionResult EditNote(int id, [FromBody] NoteFormViewModel model)
         {
             var userId = GetUserId(User);
-            return Ok(_journeyRepository.UpdateNoteItem(userId, id, model));
+            if (!_journeyRepository.IsUsersNote(userId, id))
+            {
+                return StatusCode(403, "Note doesn't belong to the user");
+            }
+
+            return Ok(_journeyRepository.UpdateNoteItem(id, model));
         }
-        
+
         [HttpDelete("note/{id}")]
         [Authorize]
         public IActionResult DeleteNote(int id)
         {
             var userId = GetUserId(User);
-            return Ok(_journeyRepository.DeleteNoteItem(userId, id));
+            if (!_journeyRepository.IsUsersNote(userId, id))
+            {
+                return StatusCode(403, "Note doesn't belong to the user");
+            }
+
+            return Ok(_journeyRepository.DeleteNoteItem(id));
         }
 
         [HttpGet("{id}/notes")]
         [Authorize]
-        public IEnumerable<NoteViewModel> GetNotes(int id)
+        public IActionResult GetNotes(int id)
         {
             var userId = GetUserId(User);
-            return _journeyRepository.GetNotes(userId, id);
+            if (!_journeyRepository.IsUsersJourney(userId, id))
+            {
+                return StatusCode(403, "Journey doesn't belong to the user");
+            }
+
+            return Ok(_journeyRepository.GetNotes(id));
         }
     }
 }

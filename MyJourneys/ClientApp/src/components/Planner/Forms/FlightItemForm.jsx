@@ -31,7 +31,7 @@ export default function FlightItemForm(props) {
         flightNumber: '',
         origin: '',
         destination: '',
-        date: moment().add(1, 'days').format('YYYY-MM-DD HH:mm')
+        date: journey.startDate
       }}
       validationSchema={flightItemValidation}
       onSubmit={async (values, actions) => {

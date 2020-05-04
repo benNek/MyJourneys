@@ -29,7 +29,7 @@ export default function HotelItemForm(props) {
       initialValues={{
         name: '',
         address: '',
-        date: moment().add(1, 'days').format('YYYY-MM-DD HH:mm')
+        date: journey.startDate
       }}
       validationSchema={hotelItemValidation}
       onSubmit={async (values, actions) => {

@@ -7,10 +7,8 @@ namespace MyJourneys.Models
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public string UserId { get; set; }
         public int JourneyId { get; set; }
 
-        [ForeignKey("UserId")] public virtual User User { get; set; }
         [ForeignKey("JourneyId")] public virtual Journey Journey { get; set; }
     }
 }

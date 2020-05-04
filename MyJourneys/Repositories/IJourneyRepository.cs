@@ -7,28 +7,35 @@ namespace MyJourneys.Repositories
     public interface IJourneyRepository
     {
         Journey AddJourney(string userId, JourneyFormViewModel model);
-        int DeleteJourney(string userId, int journeyId);
+        int DeleteJourney(int journeyId);
         List<JourneyViewModel> GetJourneys(string userId);
-        JourneyViewModel GetJourney(string userId, int journeyId);
+        JourneyViewModel GetJourney(int journeyId);
         bool IsUsersJourney(string userId, int journeyId);
-        List<JourneyItemViewModel> GetJourneyItems(string userId, int journeyId);
-        List<PlaceViewModel> GetPlaces(string userId, int journeyId);
-        List<Place> GetPlaceObjects(string userId, int journeyId);
+        bool IsUsersFlight(string userId, int flightId);
+        bool IsUsersHotel(string userId, int hotelId);
+        bool IsUsersEvent(string userId, int eventId);
+        bool IsUsersReservation(string userId, int reservationId);
+
+        bool IsUsersNote(string userId, int noteId);
+        bool IsUsersPlace(string userId, int placeId);
+        List<JourneyItemViewModel> GetJourneyItems(int journeyId);
+        List<PlaceViewModel> GetPlaces(int journeyId);
+        List<Place> GetPlaceObjects(int journeyId);
         void UpdatePlaceRank(int placeId, int rank);
-        List<NoteViewModel> GetNotes(string userId, int journeyId);
-        JourneyItemViewModel AddFlightItem(string userId, FlightItemFormViewModel model);
-        int DeleteFlightItem(string userId, int itemId);
-        JourneyItemViewModel AddHotelItem(string userId, CommonItemFormViewModel model);
-        int DeleteHotelItem(string userId, int itemId);
-        JourneyItemViewModel AddReservationItem(string userId, CommonItemFormViewModel model);
-        int DeleteReservationItem(string userId, int itemId);
-        JourneyItemViewModel AddEventItem(string userId, CommonItemFormViewModel model);
-        int DeleteEventItem(string userId, int itemId);
-        Place AddPlaceItem(string userId, PlaceFormViewModel model);
-        int DeletePlaceItem(string userId, int placeId);
-        void SetStartPlace(string userId, int journeyId, int placeId);
-        Note AddNoteItem(string userId, NoteFormViewModel model);
-        Note UpdateNoteItem(string userId, int noteId, NoteFormViewModel model);
-        int DeleteNoteItem(string userId, int noteId);
+        List<NoteViewModel> GetNotes(int journeyId);
+        JourneyItemViewModel AddFlightItem(FlightItemFormViewModel model);
+        int DeleteFlightItem(int itemId);
+        JourneyItemViewModel AddHotelItem(CommonItemFormViewModel model);
+        int DeleteHotelItem(int itemId);
+        JourneyItemViewModel AddReservationItem(CommonItemFormViewModel model);
+        int DeleteReservationItem(int itemId);
+        JourneyItemViewModel AddEventItem(CommonItemFormViewModel model);
+        int DeleteEventItem(int itemId);
+        Place AddPlaceItem(PlaceFormViewModel model);
+        int DeletePlaceItem(int placeId);
+        void SetStartPlace(int journeyId, int placeId);
+        Note AddNoteItem(NoteFormViewModel model);
+        Note UpdateNoteItem(int noteId, NoteFormViewModel model);
+        int DeleteNoteItem(int noteId);
     }
 }

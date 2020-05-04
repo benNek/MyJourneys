@@ -19,20 +19,20 @@ namespace MyJourneys.Services
 
         // TSP (Approximate using Prim algorithm for MST)
         // https://www.geeksforgeeks.org/travelling-salesman-problem-set-2-approximate-using-mst/
-        public List<PlaceViewModel> ReorderPlaces(string userId, int journeyId)
+        public List<PlaceViewModel> ReorderPlaces(int journeyId)
         {
-            List<Place> places = _journeyRepository.GetPlaceObjects(userId, journeyId);
+            List<Place> places = _journeyRepository.GetPlaceObjects(journeyId);
             int start = places.FindIndex(place => place.Start);
             if (start == -1)
             {
-                return _journeyRepository.GetPlaces(userId, journeyId);
+                return _journeyRepository.GetPlaces(journeyId);
             }
 
             double[,] graph = ResolveGraph(places);
             int[] parent = ResolvePrimMst(start, places.Count, graph);
             UpdateRanks(start, parent, places);
             
-            return _journeyRepository.GetPlaces(userId, journeyId);
+            return _journeyRepository.GetPlaces(journeyId);
         }
 
         private void UpdateRanks(int start, int[] parent, List<Place> places)
