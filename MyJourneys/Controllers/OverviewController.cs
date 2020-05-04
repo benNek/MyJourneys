@@ -36,10 +36,15 @@ namespace MyJourneys.Controllers
 
         [HttpGet("{id}")]
         [Authorize]
-        public OverviewJourneyViewModel GetOverviewJourney(int id)
+        public IActionResult GetOverviewJourney(int id)
         {
             var userId = GetUserId(User);
-            return _overviewRepository.GetJourneyOverview(userId, id);
+            if (!_overviewRepository.IsUsersJourney(userId, id))
+            {
+                return StatusCode(403, "Journey doesn't belong to the user");
+            }
+
+            return Ok(_overviewRepository.GetJourneyOverview(id));
         }
 
         [HttpPost]

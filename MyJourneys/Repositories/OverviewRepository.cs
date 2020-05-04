@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using MyJourneys.Data;
 using MyJourneys.Models;
@@ -41,9 +42,14 @@ namespace MyJourneys.Repositories
                 .ToList();
         }
 
-        public OverviewJourneyViewModel GetJourneyOverview(string userId, int journeyId)
+        public bool IsUsersJourney(string userId, int journeyId)
         {
-            return _context.OverviewJourneys.Where(journey => journey.Id == journeyId && journey.UserId.Equals(userId))
+            return _context.OverviewJourneys.Any(x => x.UserId.Equals(userId) && x.Id == journeyId);
+        }
+
+        public OverviewJourneyViewModel GetJourneyOverview(int journeyId)
+        {
+            return _context.OverviewJourneys.Where(journey => journey.Id == journeyId)
                 .Select(journey => new OverviewJourneyViewModel
                 {
                     Id = journey.Id,
