@@ -36,7 +36,7 @@ namespace MyJourneys.Controllers
 
         [HttpGet("{id}")]
         [Authorize]
-        public IActionResult GetOverviewJourney(int id)
+        public ActionResult<OverviewJourneyViewModel> GetOverviewJourney(int id)
         {
             var userId = GetUserId(User);
             if (!_overviewRepository.IsUsersJourney(userId, id))

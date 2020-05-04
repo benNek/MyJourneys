@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -52,7 +54,7 @@ namespace MyJourneys.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
+        public async Task<ActionResult<string>> Login([FromBody] LoginViewModel model)
         {
             if (await _userService.Login(model))
             {
@@ -72,14 +74,14 @@ namespace MyJourneys.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet("unapproved")]
-        public IActionResult GetUnapprovedWriters()
+        public ActionResult<IEnumerable<string>> GetUnapprovedWriters()
         {
             return Ok(_userRepository.GetUnapprovedAuthors());
         }
 
         [Authorize(Roles = "Admin")]
         [HttpGet("approve/{name}")]
-        public async Task<IActionResult> ApproveAuthor(string name)
+        public async Task<ActionResult<string>> ApproveAuthor(string name)
         {
             var approvedUser = await _userRepository.ApproveAuthor(name);
             if (approvedUser == null)
@@ -94,7 +96,7 @@ namespace MyJourneys.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet("block/{name}")]
-        public async Task<IActionResult> BlockAuthor(string name)
+        public async Task<ActionResult<string>> BlockAuthor(string name)
         {
             return Ok(await _userRepository.BlockAuthor(name));
         }
