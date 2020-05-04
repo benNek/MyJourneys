@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyJourneys.Models;
 using MyJourneys.Models.Enums;
 using MyJourneys.Models.ViewModels;
 using MyJourneys.Repositories;
@@ -20,7 +21,7 @@ namespace MyJourneys.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult Create([FromBody] ArticleFormViewModel model)
+        public ActionResult<Article> Create([FromBody] ArticleFormViewModel model)
         {
             var userId = GetUserId(User);
             return Ok(_articleRepository.AddArticle(userId, model));
@@ -28,7 +29,7 @@ namespace MyJourneys.Controllers
         
         [HttpDelete("{id}")]
         [Authorize]
-        public IActionResult DeleteArticle(int id)
+        public ActionResult<int> DeleteArticle(int id)
         {
             var userId = GetUserId(User);
             if (!_articleRepository.IsUserAuthor(id, userId))

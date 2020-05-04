@@ -1,6 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyJourneys.Models;
 using MyJourneys.Models.ViewModels;
 using MyJourneys.Repositories;
 using MyJourneys.Services;
@@ -23,7 +25,7 @@ namespace MyJourneys.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult CreateJourney([FromBody] JourneyFormViewModel model)
+        public ActionResult<Journey> CreateJourney([FromBody] JourneyFormViewModel model)
         {
             if (model.EndDate < Today)
             {
@@ -41,7 +43,7 @@ namespace MyJourneys.Controllers
 
         [HttpDelete("{id}")]
         [Authorize]
-        public IActionResult DeleteJourney(int id)
+        public ActionResult<int> DeleteJourney(int id)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, id))
@@ -54,7 +56,7 @@ namespace MyJourneys.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult GetJourneys()
+        public ActionResult<IEnumerable<JourneyViewModel>> GetJourneys()
         {
             var userId = GetUserId(User);
             return Ok(_journeyRepository.GetJourneys(userId));
@@ -62,7 +64,7 @@ namespace MyJourneys.Controllers
 
         [HttpGet("{id}")]
         [Authorize]
-        public IActionResult GetJourney(int id)
+        public ActionResult<JourneyViewModel> GetJourney(int id)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, id))
@@ -75,7 +77,7 @@ namespace MyJourneys.Controllers
 
         [HttpGet("{id}/itinerary")]
         [Authorize]
-        public IActionResult GetJourneyItems(int id)
+        public ActionResult<IEnumerable<JourneyItemViewModel>> GetJourneyItems(int id)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, id))
@@ -88,7 +90,7 @@ namespace MyJourneys.Controllers
 
         [HttpPost("flight")]
         [Authorize]
-        public IActionResult AddFlight([FromBody] FlightItemFormViewModel model)
+        public ActionResult<JourneyItemViewModel> AddFlight([FromBody] FlightItemFormViewModel model)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
@@ -106,7 +108,7 @@ namespace MyJourneys.Controllers
 
         [HttpDelete("flight/{id}")]
         [Authorize]
-        public IActionResult DeleteFlight(int id)
+        public ActionResult<int> DeleteFlight(int id)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersFlight(userId, id))
@@ -119,7 +121,7 @@ namespace MyJourneys.Controllers
 
         [HttpPost("hotel")]
         [Authorize]
-        public IActionResult AddHotel([FromBody] CommonItemFormViewModel model)
+        public ActionResult<JourneyItemViewModel> AddHotel([FromBody] CommonItemFormViewModel model)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
@@ -137,7 +139,7 @@ namespace MyJourneys.Controllers
 
         [HttpDelete("hotel/{id}")]
         [Authorize]
-        public IActionResult DeleteHotel(int id)
+        public ActionResult<int> DeleteHotel(int id)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersHotel(userId, id))
@@ -150,7 +152,7 @@ namespace MyJourneys.Controllers
 
         [HttpPost("reservation")]
         [Authorize]
-        public IActionResult AddReservation([FromBody] CommonItemFormViewModel model)
+        public ActionResult<JourneyItemViewModel> AddReservation([FromBody] CommonItemFormViewModel model)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
@@ -168,7 +170,7 @@ namespace MyJourneys.Controllers
 
         [HttpDelete("reservation/{id}")]
         [Authorize]
-        public IActionResult DeleteReservation(int id)
+        public ActionResult<int> DeleteReservation(int id)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersReservation(userId, id))
@@ -181,7 +183,7 @@ namespace MyJourneys.Controllers
 
         [HttpPost("event")]
         [Authorize]
-        public IActionResult AddEvent([FromBody] CommonItemFormViewModel model)
+        public ActionResult<JourneyItemViewModel> AddEvent([FromBody] CommonItemFormViewModel model)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
@@ -199,7 +201,7 @@ namespace MyJourneys.Controllers
 
         [HttpDelete("event/{id}")]
         [Authorize]
-        public IActionResult DeleteEvent(int id)
+        public ActionResult<int> DeleteEvent(int id)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersEvent(userId, id))
@@ -212,7 +214,7 @@ namespace MyJourneys.Controllers
 
         [HttpPost("place")]
         [Authorize]
-        public IActionResult AddPlace([FromBody] PlaceFormViewModel model)
+        public ActionResult<Place> AddPlace([FromBody] PlaceFormViewModel model)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
@@ -235,7 +237,7 @@ namespace MyJourneys.Controllers
 
         [HttpDelete("place/{id}")]
         [Authorize]
-        public IActionResult DeletePlace(int id)
+        public ActionResult<int> DeletePlace(int id)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersPlace(userId, id))
@@ -248,7 +250,7 @@ namespace MyJourneys.Controllers
 
         [HttpGet("{id}/places/{placeId}/start")]
         [Authorize]
-        public IActionResult SetStartPlace(int id, int placeId)
+        public ActionResult<IEnumerable<PlaceViewModel>> SetStartPlace(int id, int placeId)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, id))
@@ -262,7 +264,7 @@ namespace MyJourneys.Controllers
 
         [HttpGet("{id}/places")]
         [Authorize]
-        public IActionResult GetPlaces(int id)
+        public ActionResult<IEnumerable<PlaceViewModel>> GetPlaces(int id)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, id))
@@ -275,7 +277,7 @@ namespace MyJourneys.Controllers
 
         [HttpGet("{id}/places/reorder")]
         [Authorize]
-        public IActionResult ReorderPlaces(int id)
+        public ActionResult<IEnumerable<PlaceViewModel>> ReorderPlaces(int id)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, id))
@@ -288,7 +290,7 @@ namespace MyJourneys.Controllers
 
         [HttpPost("note")]
         [Authorize]
-        public IActionResult AddNote([FromBody] NoteFormViewModel model)
+        public ActionResult<Note> AddNote([FromBody] NoteFormViewModel model)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
@@ -301,7 +303,7 @@ namespace MyJourneys.Controllers
 
         [HttpPut("note/{id}")]
         [Authorize]
-        public IActionResult EditNote(int id, [FromBody] NoteFormViewModel model)
+        public ActionResult<Note> EditNote(int id, [FromBody] NoteFormViewModel model)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersNote(userId, id))
@@ -314,7 +316,7 @@ namespace MyJourneys.Controllers
 
         [HttpDelete("note/{id}")]
         [Authorize]
-        public IActionResult DeleteNote(int id)
+        public ActionResult<int> DeleteNote(int id)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersNote(userId, id))
@@ -327,7 +329,7 @@ namespace MyJourneys.Controllers
 
         [HttpGet("{id}/notes")]
         [Authorize]
-        public IActionResult GetNotes(int id)
+        public ActionResult<IEnumerable<NoteViewModel>> GetNotes(int id)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, id))

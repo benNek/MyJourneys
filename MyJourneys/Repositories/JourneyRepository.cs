@@ -31,7 +31,7 @@ namespace MyJourneys.Repositories
             _fileSystem = fileSystem ?? new FileSystem();
         }
 
-        public Journey AddJourney(string userId, JourneyFormViewModel model)
+        public JourneyViewModel AddJourney(string userId, JourneyFormViewModel model)
         {
             var photoPath = GetPhotoPath(model.Location).Result;
             var journey = new Journey
@@ -44,7 +44,7 @@ namespace MyJourneys.Repositories
             };
             _context.Journeys.Add(journey);
             _context.SaveChanges();
-            return journey;
+            return GetJourney(journey.Id);
         }
 
         public int DeleteJourney(int journeyId)
@@ -381,7 +381,7 @@ namespace MyJourneys.Repositories
             return item.Id;
         }
 
-        public Place AddPlaceItem(PlaceFormViewModel model)
+        public PlaceViewModel AddPlaceItem(PlaceFormViewModel model)
         {
             var hasStart = _context.Places
                 .Any(p => p.JourneyId == model.JourneyId && p.Start);
@@ -397,7 +397,16 @@ namespace MyJourneys.Repositories
             };
             _context.Places.Add(place);
             _context.SaveChanges();
-            return place;
+            return new PlaceViewModel
+            {
+                Id = place.Id,
+                Location = place.Location,
+                Address = place.Address,
+                Latitude = place.Latitude,
+                Longitude = place.Longitude,
+                Rank = place.Rank,
+                Start = place.Start,
+            };
         }
 
         public int DeletePlaceItem(int placeId)
@@ -427,7 +436,7 @@ namespace MyJourneys.Repositories
             _context.SaveChanges();
         }
 
-        public Note AddNoteItem(NoteFormViewModel model)
+        public NoteViewModel AddNoteItem(NoteFormViewModel model)
         {
             var note = new Note
             {
@@ -437,10 +446,15 @@ namespace MyJourneys.Repositories
             };
             _context.Notes.Add(note);
             _context.SaveChanges();
-            return note;
+            return new NoteViewModel
+            {
+                Id = note.Id,
+                Title = note.Title,
+                Text = note.Text
+            };
         }
 
-        public Note UpdateNoteItem(int noteId, NoteFormViewModel model)
+        public NoteViewModel UpdateNoteItem(int noteId, NoteFormViewModel model)
         {
             var note = _context.Notes.FirstOrDefault(n => n.Id == noteId);
             if (note == null)
@@ -452,7 +466,12 @@ namespace MyJourneys.Repositories
             note.Text = model.Text;
             _context.Entry(note).State = EntityState.Modified;
             _context.SaveChanges();
-            return note;
+            return new NoteViewModel
+            {
+                Id = note.Id,
+                Title = note.Title,
+                Text = note.Text
+            };
         }
 
         public int DeleteNoteItem(int noteId)

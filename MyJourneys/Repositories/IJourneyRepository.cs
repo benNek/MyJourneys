@@ -6,7 +6,7 @@ namespace MyJourneys.Repositories
 {
     public interface IJourneyRepository
     {
-        Journey AddJourney(string userId, JourneyFormViewModel model);
+        JourneyViewModel AddJourney(string userId, JourneyFormViewModel model);
         int DeleteJourney(int journeyId);
         List<JourneyViewModel> GetJourneys(string userId);
         JourneyViewModel GetJourney(int journeyId);
@@ -30,11 +30,11 @@ namespace MyJourneys.Repositories
         int DeleteReservationItem(int itemId);
         JourneyItemViewModel AddEventItem(CommonItemFormViewModel model);
         int DeleteEventItem(int itemId);
-        Place AddPlaceItem(PlaceFormViewModel model);
+        PlaceViewModel AddPlaceItem(PlaceFormViewModel model);
         int DeletePlaceItem(int placeId);
         void SetStartPlace(int journeyId, int placeId);
-        Note AddNoteItem(NoteFormViewModel model);
-        Note UpdateNoteItem(int noteId, NoteFormViewModel model);
+        NoteViewModel AddNoteItem(NoteFormViewModel model);
+        NoteViewModel UpdateNoteItem(int noteId, NoteFormViewModel model);
         int DeleteNoteItem(int noteId);
     }
 }
