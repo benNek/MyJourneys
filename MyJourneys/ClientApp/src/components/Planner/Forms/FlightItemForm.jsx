@@ -9,7 +9,8 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {DateTimePicker} from "@material-ui/pickers";
-import {createFlightItem} from "../../../utils/networkFunctions";
+import {createItem} from "../../../utils/networkFunctions";
+import {ITEM_TYPE_FLIGHT} from "../../../types/journeyItemTypes";
 
 const useStyles = makeStyles(theme => ({
   formTitle: {
@@ -39,11 +40,12 @@ export default function FlightItemForm(props) {
         onSubmit();
 
         values['journeyId'] = journey.id;
+        values['type'] = ITEM_TYPE_FLIGHT;
         values['date'] = moment(values.date).format();
-        await createFlightItem(values)
+        await createItem(values)
           .then(response => {
             onSuccess(response.data);
-            toast.success('Event item has been successfully saved!');
+            toast.success('Flight item has been successfully saved!');
           })
           .catch(err => {
             toast.error(`${err.response.data} Status code: ${err.response.status}`);

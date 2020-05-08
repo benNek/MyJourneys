@@ -34,7 +34,7 @@ namespace MyJourneys.Controllers
             var userId = GetUserId(User);
             if (!_articleRepository.IsUserAuthor(id, userId))
             {
-                return StatusCode(403, $"User is not the author");
+                return StatusCode(403, "User is not the author");
             }
             
             return Ok(_articleRepository.DeleteArticle(id));

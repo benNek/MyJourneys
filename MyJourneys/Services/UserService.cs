@@ -10,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MyJourneys.Models;
 using MyJourneys.Models.ViewModels;
-using MyJourneys.Repositories;
 
 namespace MyJourneys.Services
 {

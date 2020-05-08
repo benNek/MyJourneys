@@ -86,9 +86,9 @@ namespace MyJourneys.Controllers
             return Ok(_journeyRepository.GetJourneyItems(id));
         }
 
-        [HttpPost("flight")]
+        [HttpPost("item")]
         [Authorize]
-        public ActionResult<JourneyItemViewModel> AddFlight([FromBody] FlightItemFormViewModel model)
+        public ActionResult<JourneyItemViewModel> AddItem([FromBody] JourneyItemFormViewModel model)
         {
             var userId = GetUserId(User);
             if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
@@ -101,113 +101,20 @@ namespace MyJourneys.Controllers
                 return StatusCode(422, "Date must not be in the past");
             }
 
-            return Ok(_journeyRepository.AddFlightItem(model));
+            return _journeyRepository.AddItem(model);
         }
 
-        [HttpDelete("flight/{id}")]
+        [HttpDelete("item/{id}")]
         [Authorize]
-        public ActionResult<int> DeleteFlight(int id)
+        public ActionResult<int> DeleteItem(int id)
         {
             var userId = GetUserId(User);
-            if (!_journeyRepository.IsUsersFlight(userId, id))
+            if (!_journeyRepository.IsUsersItem(userId, id))
             {
-                return StatusCode(403, "Flight doesn't belong to the user");
+                return StatusCode(403, "Item doesn't belong to the user");
             }
-
-            return Ok(_journeyRepository.DeleteFlightItem(id));
-        }
-
-        [HttpPost("hotel")]
-        [Authorize]
-        public ActionResult<JourneyItemViewModel> AddHotel([FromBody] CommonItemFormViewModel model)
-        {
-            var userId = GetUserId(User);
-            if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
-            {
-                return StatusCode(403, "Journey doesn't belong to the user");
-            }
-
-            if (model.Date < Now)
-            {
-                return StatusCode(422, "Date must not be in the past");
-            }
-
-            return Ok(_journeyRepository.AddHotelItem(model));
-        }
-
-        [HttpDelete("hotel/{id}")]
-        [Authorize]
-        public ActionResult<int> DeleteHotel(int id)
-        {
-            var userId = GetUserId(User);
-            if (!_journeyRepository.IsUsersHotel(userId, id))
-            {
-                return StatusCode(403, "Hotel doesn't belong to the user");
-            }
-
-            return Ok(_journeyRepository.DeleteHotelItem(id));
-        }
-
-        [HttpPost("reservation")]
-        [Authorize]
-        public ActionResult<JourneyItemViewModel> AddReservation([FromBody] CommonItemFormViewModel model)
-        {
-            var userId = GetUserId(User);
-            if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
-            {
-                return StatusCode(403, "Journey doesn't belong to the user");
-            }
-
-            if (model.Date < Now)
-            {
-                return StatusCode(422, "Date must not be in the past");
-            }
-
-            return Ok(_journeyRepository.AddReservationItem(model));
-        }
-
-        [HttpDelete("reservation/{id}")]
-        [Authorize]
-        public ActionResult<int> DeleteReservation(int id)
-        {
-            var userId = GetUserId(User);
-            if (!_journeyRepository.IsUsersReservation(userId, id))
-            {
-                return StatusCode(403, "Reservation doesn't belong to the user");
-            }
-
-            return Ok(_journeyRepository.DeleteReservationItem(id));
-        }
-
-        [HttpPost("event")]
-        [Authorize]
-        public ActionResult<JourneyItemViewModel> AddEvent([FromBody] CommonItemFormViewModel model)
-        {
-            var userId = GetUserId(User);
-            if (!_journeyRepository.IsUsersJourney(userId, model.JourneyId))
-            {
-                return StatusCode(403, "Journey doesn't belong to the user");
-            }
-
-            if (model.Date < Now)
-            {
-                return StatusCode(422, "Date must not be in the past");
-            }
-
-            return Ok(_journeyRepository.AddEventItem(model));
-        }
-
-        [HttpDelete("event/{id}")]
-        [Authorize]
-        public ActionResult<int> DeleteEvent(int id)
-        {
-            var userId = GetUserId(User);
-            if (!_journeyRepository.IsUsersEvent(userId, id))
-            {
-                return StatusCode(403, "Event doesn't belong to the user");
-            }
-
-            return Ok(_journeyRepository.DeleteEventItem(id));
+            
+            return Ok(_journeyRepository.DeleteItem(id));
         }
 
         [HttpPost("place")]

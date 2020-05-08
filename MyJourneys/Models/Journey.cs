@@ -15,10 +15,7 @@ namespace MyJourneys.Models
 
         [ForeignKey("UserId")] public virtual User User { get; set; }
 
-        public ICollection<EventItem> EventItems { get; set; }
-        public ICollection<FlightItem> FlightItems { get; set; }
-        public ICollection<HotelItem> HotelItems { get; set; }
-        public ICollection<ReservationItem> ReservationItems { get; set; }
+        public ICollection<JourneyItem> Items { get; set; }
         public ICollection<Note> Notes { get; set; }
         public ICollection<Place> Places { get; set; }
     }

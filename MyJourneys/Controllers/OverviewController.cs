@@ -49,7 +49,7 @@ namespace MyJourneys.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult UploadPhoto([FromForm] string title, [FromForm] IFormFile[] files,
+        public IActionResult UploadPhotos([FromForm] string title, [FromForm] IFormFile[] files,
             [FromForm] string[] dates, [FromForm] string[] latitudes, [FromForm] string[] longitudes,
             [FromForm] string[] countries)
         {

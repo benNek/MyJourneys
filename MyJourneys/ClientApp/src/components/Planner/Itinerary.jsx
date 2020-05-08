@@ -51,20 +51,20 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function Itinerary(props) {
-  const {items, onItemAdd, journey, onFlightDelete, onHotelDelete, onReservationDelete, onEventDelete} = props;
+  const {journey, items, onItemAdd, onItemDelete} = props;
 
   const classes = useStyles();
 
   const getItem = item => {
     switch (item.type) {
       case ITEM_TYPE_FLIGHT:
-        return <FlightItemCard flight={item} onDelete={onFlightDelete}/>;
+        return <FlightItemCard flight={item} onDelete={onItemDelete}/>;
       case ITEM_TYPE_HOTEL:
-        return <HotelItemCard hotel={item} onDelete={onHotelDelete}/>;
+        return <HotelItemCard hotel={item} onDelete={onItemDelete}/>;
       case ITEM_TYPE_RESERVATION:
-        return <ReservationItemCard reservation={item} onDelete={onReservationDelete}/>;
+        return <ReservationItemCard reservation={item} onDelete={onItemDelete}/>;
       case ITEM_TYPE_EVENT:
-        return <EventItemCard event={item} onDelete={onEventDelete}/>;
+        return <EventItemCard event={item} onDelete={onItemDelete}/>;
       default:
         return <p>Invalid item type</p>;
     }

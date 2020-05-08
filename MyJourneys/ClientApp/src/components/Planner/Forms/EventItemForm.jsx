@@ -9,7 +9,8 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {DateTimePicker} from "@material-ui/pickers";
-import {createEventItem} from "../../../utils/networkFunctions";
+import {createItem} from "../../../utils/networkFunctions";
+import {ITEM_TYPE_EVENT} from "../../../types/journeyItemTypes";
 
 const useStyles = makeStyles(theme => ({
   formTitle: {
@@ -37,8 +38,9 @@ export default function EventItemForm(props) {
         onSubmit();
 
         values['journeyId'] = journey.id;
+        values['type'] = ITEM_TYPE_EVENT;
         values['date'] = moment(values.date).format();
-        await createEventItem(values)
+        await createItem(values)
           .then(response => {
             onSuccess(response.data);
             toast.success('Event item has been successfully saved!');

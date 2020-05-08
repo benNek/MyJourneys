@@ -9,7 +9,8 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import {DateTimePicker} from "@material-ui/pickers";
-import {createReservationItem} from "../../../utils/networkFunctions";
+import {createItem} from "../../../utils/networkFunctions";
+import {ITEM_TYPE_RESERVATION} from "../../../types/journeyItemTypes";
 
 const useStyles = makeStyles(theme => ({
   formTitle: {
@@ -37,8 +38,9 @@ export default function ReservationItemForm(props) {
         onSubmit();
 
         values['journeyId'] = journey.id;
+        values['type'] = ITEM_TYPE_RESERVATION;
         values['date'] = moment(values.date).format();
-        await createReservationItem(values)
+        await createItem(values)
           .then(response => {
             onSuccess(response.data);
             toast.success('Reservation item has been successfully saved!');

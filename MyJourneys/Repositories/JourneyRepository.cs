@@ -98,24 +98,9 @@ namespace MyJourneys.Repositories
             return _context.Journeys.Any(journey => journey.Id == journeyId && journey.UserId.Equals(userId));
         }
 
-        public bool IsUsersFlight(string userId, int flightId)
+        public bool IsUsersItem(string userId, int itemId)
         {
-            return _context.FlightItems.Any(x => x.Journey.UserId.Equals(userId) && x.Id == flightId);
-        }
-
-        public bool IsUsersHotel(string userId, int hotelId)
-        {
-            return _context.HotelItems.Any(x => x.Journey.UserId.Equals(userId) && x.Id == hotelId);
-        }
-
-        public bool IsUsersEvent(string userId, int eventId)
-        {
-            return _context.EventItems.Any(x => x.Journey.UserId.Equals(userId) && x.Id == eventId);
-        }
-
-        public bool IsUsersReservation(string userId, int reservationId)
-        {
-            return _context.ReservationItems.Any(x => x.Journey.UserId.Equals(userId) && x.Id == reservationId);
+            return _context.JourneyItems.Any(x => x.Journey.UserId.Equals(userId) && x.Id == itemId);
         }
 
         public bool IsUsersNote(string userId, int noteId)
@@ -130,56 +115,22 @@ namespace MyJourneys.Repositories
 
         public List<JourneyItemViewModel> GetJourneyItems(int journeyId)
         {
-            var items = _context.FlightItems
-                .OfType<FlightItem>()
+            var items = _context.JourneyItems
                 .Where(item => item.JourneyId == journeyId)
                 .Select(item => new JourneyItemViewModel
                 {
                     Id = item.Id,
-                    Type = JourneyItemType.Flight.ToString(),
+                    Type = item.Type.ToString(),
                     Date = item.Date,
                     Airline = item.Airline,
                     FlightNumber = item.FlightNumber,
                     Origin = item.Origin,
-                    Destination = item.Destination
+                    Destination = item.Destination,
+                    Name = item.Name,
+                    Address = item.Address
                 })
-                .AsEnumerable()
-                .Union(_context.HotelItems
-                    .OfType<HotelItem>()
-                    .Where(item => item.JourneyId == journeyId)
-                    .Select(item => new JourneyItemViewModel
-                    {
-                        Id = item.Id,
-                        Type = JourneyItemType.Hotel.ToString(),
-                        Date = item.Date,
-                        Name = item.Name,
-                        Address = item.Address
-                    }))
-                .AsEnumerable()
-                .Union(_context.ReservationItems
-                    .OfType<ReservationItem>()
-                    .Where(item => item.JourneyId == journeyId)
-                    .Select(item => new JourneyItemViewModel
-                    {
-                        Id = item.Id,
-                        Type = JourneyItemType.Reservation.ToString(),
-                        Date = item.Date,
-                        Name = item.Name,
-                        Address = item.Address
-                    }))
-                .AsEnumerable()
-                .Union(_context.EventItems
-                    .OfType<EventItem>()
-                    .Where(item => item.JourneyId == journeyId)
-                    .Select(item => new JourneyItemViewModel
-                    {
-                        Id = item.Id,
-                        Type = JourneyItemType.Event.ToString(),
-                        Date = item.Date,
-                        Name = item.Name,
-                        Address = item.Address
-                    }))
                 .ToList();
+            
             items.Sort((it1, it2) => it1.Date.CompareTo(it2.Date));
             return items;
         }
@@ -240,146 +191,103 @@ namespace MyJourneys.Repositories
                 .ToList();
         }
 
-        public JourneyItemViewModel AddFlightItem(FlightItemFormViewModel model)
+        public JourneyItemViewModel AddItem(JourneyItemFormViewModel model)
         {
-            var item = new FlightItem
+            JourneyItemType type;
+            Enum.TryParse(model.Type, true, out type);
+            var item = new JourneyItem
             {
                 JourneyId = model.JourneyId,
+                Type = type,
                 Date = model.Date,
                 Airline = model.Airline,
                 FlightNumber = model.FlightNumber,
                 Origin = model.Origin,
-                Destination = model.Destination
+                Destination = model.Destination,
+                Name = model.Name,
+                Address = model.Address
             };
-            _context.FlightItems.Add(item);
+            _context.JourneyItems.Add(item);
             _context.SaveChanges();
-
             return new JourneyItemViewModel
             {
                 Id = item.Id,
-                Type = JourneyItemType.Flight.ToString(),
+                Type = item.Type.ToString(),
                 Date = item.Date,
                 Airline = item.Airline,
                 FlightNumber = item.FlightNumber,
                 Origin = item.Origin,
-                Destination = item.Destination
-            };
-        }
-
-        public int DeleteFlightItem(int itemId)
-        {
-            var item = _context.FlightItems.FirstOrDefault(i => i.Id == itemId);
-            if (item == null)
-            {
-                return -1;
-            }
-
-            _context.FlightItems.Remove(item);
-            _context.SaveChanges();
-            return item.Id;
-        }
-
-        public JourneyItemViewModel AddHotelItem(CommonItemFormViewModel model)
-        {
-            var item = new HotelItem
-            {
-                JourneyId = model.JourneyId,
-                Date = model.Date,
-                Name = model.Name,
-                Address = model.Address
-            };
-            _context.HotelItems.Add(item);
-            _context.SaveChanges();
-            return new JourneyItemViewModel
-            {
-                Id = item.Id,
-                Type = JourneyItemType.Hotel.ToString(),
-                Date = item.Date,
+                Destination = item.Destination,
                 Name = item.Name,
                 Address = item.Address
             };
         }
 
-        public int DeleteHotelItem(int itemId)
+        public int DeleteItem(int itemId)
         {
-            var item = _context.HotelItems.FirstOrDefault(i => i.Id == itemId);
+            var item = _context.JourneyItems.FirstOrDefault(i => i.Id == itemId);
             if (item == null)
             {
                 return -1;
             }
-
-            _context.HotelItems.Remove(item);
+            
+            _context.JourneyItems.Remove(item);
             _context.SaveChanges();
             return item.Id;
         }
-
-        public JourneyItemViewModel AddReservationItem(CommonItemFormViewModel model)
-        {
-            var item = new ReservationItem
-            {
-                JourneyId = model.JourneyId,
-                Date = model.Date,
-                Name = model.Name,
-                Address = model.Address
-            };
-            _context.ReservationItems.Add(item);
-            _context.SaveChanges();
-            return new JourneyItemViewModel
-            {
-                Id = item.Id,
-                Type = JourneyItemType.Reservation.ToString(),
-                Date = item.Date,
-                Name = item.Name,
-                Address = item.Address
-            };
-        }
-
-        public int DeleteReservationItem(int itemId)
-        {
-            var item = _context.ReservationItems.FirstOrDefault(i => i.Id == itemId);
-            if (item == null)
-            {
-                return -1;
-            }
-
-            _context.ReservationItems.Remove(item);
-            _context.SaveChanges();
-            return item.Id;
-        }
-
-        public JourneyItemViewModel AddEventItem(CommonItemFormViewModel model)
-        {
-            var item = new EventItem
-            {
-                JourneyId = model.JourneyId,
-                Date = model.Date,
-                Name = model.Name,
-                Address = model.Address
-            };
-            _context.EventItems.Add(item);
-            _context.SaveChanges();
-            return new JourneyItemViewModel
-            {
-                Id = item.Id,
-                Type = JourneyItemType.Event.ToString(),
-                Date = item.Date,
-                Name = item.Name,
-                Address = item.Address
-            };
-        }
-
-        public int DeleteEventItem(int itemId)
-        {
-            var item = _context.EventItems.FirstOrDefault(i => i.Id == itemId);
-            if (item == null)
-            {
-                return -1;
-            }
-
-            _context.EventItems.Remove(item);
-            _context.SaveChanges();
-            return item.Id;
-        }
+        
+        //
+        // public int DeleteFlightItem(int itemId)
+        // {
+        //     var item = _context.FlightItems.FirstOrDefault(i => i.Id == itemId);
+        //     if (item == null)
+        //     {
+        //         return -1;
+        //     }
+        //
+        //     _context.FlightItems.Remove(item);
+        //     _context.SaveChanges();
+        //     return item.Id;
+        // }
+        //
+        // public int DeleteHotelItem(int itemId)
+        // {
+        //     var item = _context.HotelItems.FirstOrDefault(i => i.Id == itemId);
+        //     if (item == null)
+        //     {
+        //         return -1;
+        //     }
+        //
+        //     _context.HotelItems.Remove(item);
+        //     _context.SaveChanges();
+        //     return item.Id;
+        // }
+        //
+        // public int DeleteReservationItem(int itemId)
+        // {
+        //     var item = _context.ReservationItems.FirstOrDefault(i => i.Id == itemId);
+        //     if (item == null)
+        //     {
+        //         return -1;
+        //     }
+        //
+        //     _context.ReservationItems.Remove(item);
+        //     _context.SaveChanges();
+        //     return item.Id;
+        // }
+        //
+        // public int DeleteEventItem(int itemId)
+        // {
+        //     var item = _context.EventItems.FirstOrDefault(i => i.Id == itemId);
+        //     if (item == null)
+        //     {
+        //         return -1;
+        //     }
+        //
+        //     _context.EventItems.Remove(item);
+        //     _context.SaveChanges();
+        //     return item.Id;
+        // }
 
         public PlaceViewModel AddPlaceItem(PlaceFormViewModel model)
         {

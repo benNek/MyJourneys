@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router";
 import Typography from "@material-ui/core/Typography";
-import OfflinePinIcon from '@material-ui/icons/OfflinePin';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Tabs from "@material-ui/core/Tabs";
 import Paper from "@material-ui/core/Paper";
@@ -9,8 +8,8 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import Itinerary from "./Itinerary";
 import {
-  deleteEventItem, deleteFlightItem, deleteHotelItem, deleteJourney,
-  deleteNote, deletePlace, deleteReservationItem,
+  deleteItem, deleteJourney,
+  deleteNote, deletePlace,
   getJourney,
   getJourneyItems,
   getNotes,
@@ -23,7 +22,6 @@ import Places from "./Places";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import _ from 'lodash';
 import update from 'immutability-helper';
-import {ITEM_TYPE_EVENT, ITEM_TYPE_FLIGHT, ITEM_TYPE_HOTEL, ITEM_TYPE_RESERVATION} from "../../types/journeyItemTypes";
 import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles(theme => ({
@@ -104,24 +102,8 @@ export default function Journey() {
     setItems([...items, data]);
   };
 
-  const handleDeleteItem = (id, type) => {
-    setItems(items.filter(item => item.type !== type || item.id !== id));
-  };
-
-  const handleDeleteFlightItem = id => {
-    deleteFlightItem(id).then(res => handleDeleteItem(res.data, ITEM_TYPE_FLIGHT)).catch(err => console.error(err));
-  };
-
-  const handleDeleteHotelItem = id => {
-    deleteHotelItem(id).then(res => handleDeleteItem(res.data, ITEM_TYPE_HOTEL)).catch(err => console.error(err));
-  };
-
-  const handleDeleteReservationItem = id => {
-    deleteReservationItem(id).then(res => handleDeleteItem(res.data, ITEM_TYPE_RESERVATION)).catch(err => console.error(err));
-  };
-
-  const handleDeleteEventItem = id => {
-    deleteEventItem(id).then(res => handleDeleteItem(res.data, ITEM_TYPE_EVENT)).catch(err => console.error(err));
+  const handleDeleteItem = (id) => {
+    deleteItem(id).then(res => setItems(items.filter(item => item.id !== res.data)));
   };
 
   function TabPanel(props) {
@@ -170,9 +152,7 @@ export default function Journey() {
         </Tabs>
       </Paper>
       <TabPanel value={tab} index={0}>
-        <Itinerary journey={journey} items={items} onItemAdd={handleAddItem} onFlightDelete={handleDeleteFlightItem}
-                   onHotelDelete={handleDeleteHotelItem} onReservationDelete={handleDeleteReservationItem}
-                   onEventDelete={handleDeleteEventItem}/>
+        <Itinerary journey={journey} items={items} onItemAdd={handleAddItem} onItemDelete={handleDeleteItem}/>
       </TabPanel>
       <TabPanel value={tab} index={1}>
         <Places journey={journey} places={places} onPlaceAdd={handleAddPlace} onPlaceDelete={handleDeletePlace}
