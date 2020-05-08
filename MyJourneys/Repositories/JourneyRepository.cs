@@ -235,59 +235,6 @@ namespace MyJourneys.Repositories
             _context.SaveChanges();
             return item.Id;
         }
-        
-        //
-        // public int DeleteFlightItem(int itemId)
-        // {
-        //     var item = _context.FlightItems.FirstOrDefault(i => i.Id == itemId);
-        //     if (item == null)
-        //     {
-        //         return -1;
-        //     }
-        //
-        //     _context.FlightItems.Remove(item);
-        //     _context.SaveChanges();
-        //     return item.Id;
-        // }
-        //
-        // public int DeleteHotelItem(int itemId)
-        // {
-        //     var item = _context.HotelItems.FirstOrDefault(i => i.Id == itemId);
-        //     if (item == null)
-        //     {
-        //         return -1;
-        //     }
-        //
-        //     _context.HotelItems.Remove(item);
-        //     _context.SaveChanges();
-        //     return item.Id;
-        // }
-        //
-        // public int DeleteReservationItem(int itemId)
-        // {
-        //     var item = _context.ReservationItems.FirstOrDefault(i => i.Id == itemId);
-        //     if (item == null)
-        //     {
-        //         return -1;
-        //     }
-        //
-        //     _context.ReservationItems.Remove(item);
-        //     _context.SaveChanges();
-        //     return item.Id;
-        // }
-        //
-        // public int DeleteEventItem(int itemId)
-        // {
-        //     var item = _context.EventItems.FirstOrDefault(i => i.Id == itemId);
-        //     if (item == null)
-        //     {
-        //         return -1;
-        //     }
-        //
-        //     _context.EventItems.Remove(item);
-        //     _context.SaveChanges();
-        //     return item.Id;
-        // }
 
         public PlaceViewModel AddPlaceItem(PlaceFormViewModel model)
         {
