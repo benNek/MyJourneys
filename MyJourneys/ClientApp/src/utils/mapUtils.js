@@ -43,6 +43,10 @@ export function resolveLatLon(file) {
 }
 
 export function resolveMapBounds(points) {
+  if (!points || !points.length) {
+    return [];
+  }
+  
   let minLon = 999, maxLon = -999, minLat = 999, maxLat = -999;
   points.forEach(point => {
     minLon = Math.min(minLon, point[0]);
