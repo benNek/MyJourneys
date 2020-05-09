@@ -126,14 +126,18 @@ namespace MyJourneys.Repositories
             _context.Articles.Add(article);
             _context.SaveChanges();
             AddTagsToArticle(article.Id, model.Tags);
+
+            var author = article.Author != null ? article.Author.UserName : "";
+            var tags = article.ArticleTags?.Select(tag => tag.Tag.Name).ToList() ?? new List<string>();
+            var likes = article.ArticleLikes?.Count ?? 0;
             return new ArticleViewModel
             {
                 Id = article.Id,
-                AuthorName = article.Author.UserName,
+                AuthorName = author,
                 Title = article.Title,
                 Text = article.Text,
-                Tags = article.ArticleTags.Select(tag => tag.Tag.Name).ToList(),
-                LikesCount = article.ArticleLikes.Count,
+                Tags = tags,
+                LikesCount = likes,
                 CreateDate = article.CreateDate,
                 Confirmed = article.Confirmed
             };

@@ -14,10 +14,6 @@ namespace MyJourneys.Data
         public virtual DbSet<ArticleLikes> ArticleLikes { get; set; }
         public virtual DbSet<Journey> Journeys { get; set; }
         public virtual DbSet<JourneyItem> JourneyItems { get; set; }
-        // public virtual DbSet<FlightItem> FlightItems { get; set; }
-        // public virtual DbSet<HotelItem> HotelItems { get; set; }
-        // public virtual DbSet<ReservationItem> ReservationItems { get; set; }
-        // public virtual DbSet<EventItem> EventItems { get; set; }
         public virtual DbSet<Note> Notes { get; set; }
         public virtual DbSet<Place> Places { get; set; }
         public virtual DbSet<OverviewJourney> OverviewJourneys { get; set; }

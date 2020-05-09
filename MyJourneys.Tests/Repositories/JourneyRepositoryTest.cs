@@ -48,7 +48,7 @@ namespace MyJourneys.Tests.Repositories
             };
 
             var journey = _repository.AddJourney("1", model);
-            Assert.AreEqual("Paris", journey.Location);
+            Assert.AreEqual("Barcelona", journey.Location);
         }
 
         [Test]
@@ -60,8 +60,8 @@ namespace MyJourneys.Tests.Repositories
         [Test]
         public void TestDeleteJourneyValid()
         {
+            Assert.AreEqual(0, _repository.DeleteJourney(0));
             Assert.AreEqual(1, _repository.DeleteJourney(1));
-            Assert.AreEqual(2, _repository.DeleteJourney(2));
         }
 
         [Test]
@@ -75,7 +75,7 @@ namespace MyJourneys.Tests.Repositories
         [Test]
         public void TestGetJourney()
         {
-            var journey = _repository.GetJourney(2);
+            var journey = _repository.GetJourney(1);
             Assert.NotNull(journey);
             Assert.AreEqual("Paris", journey.Location);
         }
@@ -91,54 +91,18 @@ namespace MyJourneys.Tests.Repositories
         {
             Assert.IsTrue(_repository.IsUsersJourney("1", 1));
         }
-        //
-        // [Test]
-        // public void TestIsUsersFlightFalse()
-        // {
-        //     Assert.IsFalse(_repository.IsUsersFlight("1", 3));
-        // }
-        //
-        // [Test]
-        // public void TestIsUsersFlightTrue()
-        // {
-        //     Assert.IsTrue(_repository.IsUsersFlight("1", 1));
-        // }
-        //
-        // [Test]
-        // public void TestIsUsersHotelFalse()
-        // {
-        //     Assert.IsFalse(_repository.IsUsersHotel("1", 3));
-        // }
-        //
-        // [Test]
-        // public void TestIsUsersHotelTrue()
-        // {
-        //     Assert.IsTrue(_repository.IsUsersHotel("1", 1));
-        // }
-        //
-        // [Test]
-        // public void TestIsUsersEventFalse()
-        // {
-        //     Assert.IsFalse(_repository.IsUsersEvent("1", 3));
-        // }
-        //
-        // [Test]
-        // public void TestIsUsersEventTrue()
-        // {
-        //     Assert.IsTrue(_repository.IsUsersEvent("1", 1));
-        // }
-        //
-        // [Test]
-        // public void TestIsUsersReservationFalse()
-        // {
-        //     Assert.IsFalse(_repository.IsUsersReservation("1", 3));
-        // }
-        //
-        // [Test]
-        // public void TestIsUsersReservationTrue()
-        // {
-        //     Assert.IsTrue(_repository.IsUsersReservation("1", 1));
-        // }
+
+        [Test]
+        public void TestIsUsersItemFalse()
+        {
+            Assert.IsFalse(_repository.IsUsersItem("2", 1));
+        }
+        
+        [Test]
+        public void TestIsUsersItemTrue()
+        {
+            Assert.IsTrue(_repository.IsUsersItem("1", 1));
+        }
 
         [Test]
         public void TestIsUsersPlaceFalse()
@@ -202,94 +166,37 @@ namespace MyJourneys.Tests.Repositories
             Assert.AreEqual(1, notes.Count);
         }
 
-        // TODO
-        // [Test]
-        // public void TestAddFlightItem()
-        // {
-        //     var model = new FlightItemFormViewModel {Airline = "Ryanair"};
-        //     var item = _repository.AddFlightItem(model);
-        //     Assert.NotNull(item);
-        //     Assert.AreEqual("Ryanair", item.Airline);
-        //     Assert.AreEqual(JourneyItemType.Flight.ToString(), item.Type);
-        // }
-
-        // [Test]
-        // public void TestDeleteFlightItemDoesntExist()
-        // {
-        //     Assert.AreEqual(-1, _repository.DeleteFlightItem(5));
-        // }
-        //
-        // [Test]
-        // public void TestDeleteFlightItemValid()
-        // {
-        //     Assert.AreEqual(1, _repository.DeleteFlightItem(1));
-        // }
-
-        // [Test]
-        // public void TestAddHotelItem()
-        // {
-        //     var model = new CommonItemFormViewModel {Name = "Hotel"};
-        //     var item = _repository.AddHotelItem(model);
-        //     Assert.NotNull(item);
-        //     Assert.AreEqual("Hotel", item.Name);
-        //     Assert.AreEqual(JourneyItemType.Hotel.ToString(), item.Type);
-        // }
-
-        // [Test]
-        // public void TestDeleteHotelItemDoesntExist()
-        // {
-        //     Assert.AreEqual(-1, _repository.DeleteHotelItem(5));
-        // }
-        //
-        // [Test]
-        // public void TestDeleteHotelItemValid()
-        // {
-        //     Assert.AreEqual(1, _repository.DeleteHotelItem(1));
-        // }
-
-        // [Test]
-        // public void TestAddReservationItem()
-        // {
-        //     var model = new CommonItemFormViewModel {Name = "Reservation"};
-        //     var item = _repository.AddReservationItem(model);
-        //     Assert.NotNull(item);
-        //     Assert.AreEqual("Reservation", item.Name);
-        //     Assert.AreEqual(JourneyItemType.Reservation.ToString(), item.Type);
-        // }
-
-        // [Test]
-        // public void TestDeleteReservationItemDoesntExist()
-        // {
-        //     Assert.AreEqual(-1, _repository.DeleteReservationItem(5));
-        // }
-        //
-        // [Test]
-        // public void TestDeleteReservationItemValid()
-        // {
-        //     Assert.AreEqual(1, _repository.DeleteReservationItem(1));
-        // }
-
-        // [Test]
-        // public void TestAddEventItem()
-        // {
-        //     var model = new CommonItemFormViewModel {Name = "Event"};
-        //     var item = _repository.AddEventItem(model);
-        //     Assert.NotNull(item);
-        //     Assert.AreEqual("Event", item.Name);
-        //     Assert.AreEqual(JourneyItemType.Event.ToString(), item.Type);
-        // }
-
-        // [Test]
-        // public void TestDeleteEventItemDoesntExist()
-        // {
-        //     Assert.AreEqual(-1, _repository.DeleteEventItem(5));
-        // }
-        //
-        // [Test]
-        // public void TestDeleteEventItemValid()
-        // {
-        //     Assert.AreEqual(1, _repository.DeleteEventItem(1));
-        // }
+        [Test]
+        public void TestAddItemFlight()
+        {
+            var model = new JourneyItemFormViewModel{ Airline = "Ryanair", Type = "Flight"};
+            var item = _repository.AddItem(model);
+            Assert.NotNull(item);
+            Assert.AreEqual("Ryanair", model.Airline);
+            Assert.AreEqual("Flight", item.Type);
+        }
+        
+        [Test]
+        public void TestAddItemHotel()
+        {
+            var model = new JourneyItemFormViewModel{ Name = "Hotel name", Type = "Hotel"};
+            var item = _repository.AddItem(model);
+            Assert.NotNull(item);
+            Assert.AreEqual("Hotel name", model.Name);
+            Assert.AreEqual("Hotel", item.Type);
+        }
+        
+        [Test]
+        public void TestDeleteItemDoesntExist()
+        {
+            Assert.AreEqual(-1, _repository.DeleteItem(5));
+        }
+        
+        [Test]
+        public void TestDeleteReservationItemValid()
+        {
+            Assert.AreEqual(3, _repository.DeleteItem(3));
+        }
 
         [Test]
         public void TestAddPlaceItem()
@@ -369,50 +276,41 @@ namespace MyJourneys.Tests.Repositories
         {
             var mockContext = new Mock<TravelContext>();
 
-            var journey1 = new Journey {Id = 1, UserId = "1", Location = "Barcelona"};
-            var journey2 = new Journey {Id = 2, UserId = "1", Location = "Paris"};
+            var journey1 = new Journey {Id = 0, UserId = "1", Location = "Barcelona"};
+            var journey2 = new Journey {Id = 1, UserId = "1", Location = "Paris"};
             var journeys = FakeDbSet<Journey>.Create(new List<Journey>
             {
                 journey1, journey2
             });
             mockContext.Setup(x => x.Journeys).Returns(journeys.Object);
 
-            // var flights = FakeDbSet<FlightItem>.Create(new List<FlightItem>
-            // {
-            //     new FlightItem
-            //     {
-            //         Journey = journey1, JourneyId = 1, Id = 1, Date = DateTime.Now, Airline = "Ryanair",
-            //         FlightNumber = "F01", Origin = "KUN", Destination = "BCN"
-            //     }
-            // });
-            // mockContext.Setup(x => x.FlightItems).Returns(flights.Object);
-            //
-            // var hotels = FakeDbSet<HotelItem>.Create(new List<HotelItem>
-            // {
-            //     new HotelItem
-            //     {
-            //         Journey = journey1, JourneyId = 1, Id = 1, Date = DateTime.Now, Address = "Rue 1, Barcelona"
-            //     }
-            // });
-            // mockContext.Setup(x => x.HotelItems).Returns(hotels.Object);
-            //
-            // var reservations = FakeDbSet<ReservationItem>.Create(new List<ReservationItem>
-            // {
-            //     new ReservationItem
-            //     {
-            //         Journey = journey1, JourneyId = 1, Id = 1, Date = DateTime.Now, Address = "Rue 1, Barcelona"
-            //     }
-            // });
-            // mockContext.Setup(x => x.ReservationItems).Returns(reservations.Object);
-            //
-            // var events = FakeDbSet<EventItem>.Create(new List<EventItem>
-            // {
-            //     new EventItem
-            //     {
-            //         Journey = journey1, JourneyId = 1, Id = 1, Date = DateTime.Now, Address = "Rue 1, Barcelona"
-            //     }
-            // });
-            // mockContext.Setup(x => x.EventItems).Returns(events.Object);
+            var items = FakeDbSet<JourneyItem>.Create(new List<JourneyItem>
+            {
+                new JourneyItem
+                {
+                    Id = 1, JourneyId = 1, Journey = journey1,
+                    Type = JourneyItemType.Flight, Date = DateTime.Now, Airline = "Ryanair", FlightNumber = "F01",
+                    Origin = "KUN", Destination = "BCN"
+                },
+                new JourneyItem
+                {
+                    Id = 2, JourneyId = 1, Journey = journey1,
+                    Type = JourneyItemType.Hotel, Date = DateTime.Now, Address = "H avenue 1", Name = "Hotel"
+                },
+                new JourneyItem
+                {
+                    Id = 3, JourneyId = 1, Journey = journey1,
+                    Type = JourneyItemType.Reservation, Date = DateTime.Now, Address = "R avenue 1",
+                    Name = "Reservation"
+                },
+                new JourneyItem
+                {
+                    Id = 4, JourneyId = 1, Journey = journey1,
+                    Type = JourneyItemType.Event, Date = DateTime.Now, Address = "E avenue 1",
+                    Name = "Event"
+                }
+            });
+            mockContext.Setup(x => x.JourneyItems).Returns(items.Object);
 
             var places = FakeDbSet<Place>.Create(new List<Place>
             {
