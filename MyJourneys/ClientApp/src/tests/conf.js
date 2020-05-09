@@ -15,5 +15,5 @@ exports.config = {
       }
     }));
   },
-  specs: ['spec.js']
+  specs: ['overview.js']
 };
