@@ -66,7 +66,7 @@ export default function Login() {
         }}
       >
         <Fade in={open}>
-          <div className={classes.paper}>
+          <div className={`${classes.paper} login__modal`}>
             <Typography className={classes.heading} variant="h5" component="h5">
               Sign in to access all the features!
             </Typography>

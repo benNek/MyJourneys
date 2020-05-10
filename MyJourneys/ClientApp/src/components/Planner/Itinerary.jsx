@@ -113,7 +113,7 @@ export default function Itinerary(props) {
     return Object.keys(groupedByDays).map(day => {
       const items = groupedByDays[day].map(item => {
         return (
-          <div className={classes.item} key={`${item.type}-${item.id}`}>
+          <div className={`${classes.item} journey__item`} key={`${item.type}-${item.id}`}>
             {getIcon(item)}
             {getItem(item)}
           </div>

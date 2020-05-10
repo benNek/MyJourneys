@@ -48,7 +48,7 @@ export default function Notes(props) {
   const renderNotes = () => {
     return notes.map(note =>
       <Grid item xs={4} key={note.id}>
-        <Card>
+        <Card className={'journey__note'}>
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
               {note.title}

@@ -48,7 +48,7 @@ export default function Filters(props) {
       {sortTypes.map(type => (
         <Chip
           key={type.code}
-          className={classes.type}
+          className={`${classes.type} articles__filter`}
           avatar={<Avatar>{type.short}</Avatar>}
           label={type.name}
           color={activeFilter === type.code ? 'secondary' : undefined}

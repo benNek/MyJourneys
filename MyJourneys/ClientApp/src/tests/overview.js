@@ -35,11 +35,11 @@ describe('Overview page', function () {
     const loginBtn = element(by.cssContainingText('span.MuiButton-label', 'Login'));
     await loginBtn.click();
 
-    const inputs = await element.all(by.css('.MuiFormControl-root')).count();
+    const inputs = await element.all(by.css('.login__modal .MuiFormControl-root')).count();
     expect(inputs).toEqual(2);
   });
-  
-  it('should have upload photos button', function() {
+
+  it('should have upload photos button', function () {
     expect(element(by.css('.MuiButtonBase-root.FloatingActionButton')).isPresent()).toBe(true);
   });
 });

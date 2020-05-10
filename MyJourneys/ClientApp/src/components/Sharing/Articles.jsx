@@ -144,7 +144,7 @@ export default function Articles() {
         articles.length > 0 || sortType !== 'feed' || search ?
           (
             <div className={classes.container}>
-              <div className={classes.articles}>
+              <div className={`${classes.articles} articles__list`}>
                 <Filters activeFilter={sortType} handleClick={handleSortTypeClick}/>
                 {renderArticles()}
                 {articles.length > 0 && articles.length === take + skip &&

@@ -37,7 +37,7 @@ export default function PopularTags(props) {
       <Typography component='h2' variant='h5'>
         Popular tags
       </Typography>
-      <div className={classes.tags}>
+      <div className={`${classes.tags} articles__popularTags`}>
         {tags.map(tag =>
           <Chip className={classes.tag} key={tag.tag}
                 avatar={<Avatar className={classes.avatar}>{tag.count}</Avatar>}

@@ -137,7 +137,7 @@ export default function Places(props) {
 
   const renderPlaces = () => {
     return places.map(place =>
-      <Card key={place.id} className={classes.card}>
+      <Card key={place.id} className={`${classes.card} journey__place`}>
         <CardContent>
           <div className={classes.heading}>
             <Typography gutterBottom variant="h5" component="h2">
