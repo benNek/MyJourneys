@@ -61,7 +61,6 @@ export default function OverviewMap(props) {
       return;
     }
     map.setStyle(getMapStyle(darkMode));
-    // TODO should update visited countries
   }, [darkMode]);
 
   useEffect(() => {

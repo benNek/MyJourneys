@@ -58,6 +58,29 @@ export function resolveMapBounds(points) {
   return [[minLon, minLat], [maxLon, maxLat]];
 }
 
+export function generateDirectionsUrl(places) {
+  const values = Object.values(places);
+  const origin = values.shift();
+  const destination = values.pop();
+
+  let waypoints = '';
+  values.forEach(place =>
+    waypoints += `${place.latitude},${place.longitude}|`
+  );
+  waypoints = waypoints.substring(0, waypoints.length - 1);
+
+  const baseUrl = 'https://www.google.com/maps/dir/?api=1';
+  const originUrl = origin ? `&origin=${origin.latitude},${origin.longitude}` : '';
+  const destinationUrl = destination ? `&destination=${destination.latitude},${destination.longitude}` : '';
+  const waypointsUrl = waypoints ? `&waypoints=${waypoints}` : '';
+
+  const url = `${baseUrl}${originUrl}${destinationUrl}${waypointsUrl}`;
+  if (!url.includes('origin') || !url.includes('destination')) {
+    return '';
+  }
+  return url;
+};
+
 export function getMapStyle(darkMode) {
   return darkMode ? "mapbox://styles/bennek/ck91w6y191la41kpmgetqg8ce" : "mapbox://styles/bennek/ck91vtkwy02bu1ioifdod49tt";
 }

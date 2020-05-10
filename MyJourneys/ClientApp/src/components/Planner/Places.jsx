@@ -23,6 +23,7 @@ import Button from "@material-ui/core/Button";
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import IconButton from "@material-ui/core/IconButton";
+import {generateDirectionsUrl} from "../../utils/mapUtils";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -92,7 +93,7 @@ export default function Places(props) {
       )
     }
 
-    const routeUrl = generateDirectionsUrl();
+    const routeUrl = generateDirectionsUrl(places);
     return (
       <React.Fragment>
         {routeUrl &&
@@ -110,31 +111,7 @@ export default function Places(props) {
       </React.Fragment>
     );
   };
-
-  // TODO react test
-  const generateDirectionsUrl = () => {
-    const values = Object.values(places);
-    const origin = values.shift();
-    const destination = values.pop();
-
-    let waypoints = '';
-    values.forEach(place =>
-      waypoints += `${place.latitude},${place.longitude}|`
-    );
-    waypoints = waypoints.substring(0, waypoints.length - 1);
-
-    const baseUrl = 'https://www.google.com/maps/dir/?api=1';
-    const originUrl = origin ? `&origin=${origin.latitude},${origin.longitude}` : '';
-    const destinationUrl = destination ? `&destination=${destination.latitude},${destination.longitude}` : '';
-    const waypointsUrl = waypoints ? `&waypoints=${waypoints}` : '';
-
-    const url = `${baseUrl}${originUrl}${destinationUrl}${waypointsUrl}`;
-    if (!url.includes('origin') || !url.includes('destination')) {
-      return '';
-    }
-    return url;
-  };
-
+  
   const renderPlaces = () => {
     return places.map(place =>
       <Card key={place.id} className={`${classes.card} journey__place`}>
