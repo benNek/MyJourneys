@@ -23,7 +23,7 @@ namespace MyJourneys
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
         {
@@ -48,6 +48,7 @@ namespace MyJourneys
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // ReSharper disable once UnusedMember.Global
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
@@ -73,8 +74,8 @@ namespace MyJourneys
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                    "default",
+                    "{controller}/{action=Index}/{id?}");
             });
 
             app.UseSpa(spa =>
@@ -83,7 +84,7 @@ namespace MyJourneys
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
+                    spa.UseReactDevelopmentServer("start");
                 }
             });
 
@@ -138,7 +139,7 @@ namespace MyJourneys
                 });
         }
 
-        private void AddScopes(IServiceCollection services)
+        private static void AddScopes(IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IJourneyService, JourneyService>();
@@ -150,7 +151,7 @@ namespace MyJourneys
             services.AddScoped<IPhotoRepository, PhotoRepository>();
         }
 
-        private async Task CreateRoles(IServiceProvider serviceProvider)
+        private static async Task CreateRoles(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             string[] roleNames = {"Admin", "Writer", "DeniedWriter"};
@@ -163,7 +164,7 @@ namespace MyJourneys
                     await roleManager.CreateAsync(new IdentityRole(roleName));
                 }
             }
-            
+
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
             var admin = await userManager.FindByNameAsync("admin");
             if (admin != null && !await userManager.IsInRoleAsync(admin, "Admin"))

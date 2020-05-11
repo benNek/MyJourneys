@@ -44,13 +44,11 @@ namespace MyJourneys.Utils
                 return false;
             }
 
-            using (var reader = new BinaryReader(file.OpenReadStream()))
-            {
-                var signatures = FileSignatures[extension];
-                var headerBytes = reader.ReadBytes(signatures.Max(m => m.Length));
-                return signatures.Any(signature =>
-                    headerBytes.Take(signature.Length).SequenceEqual(signature));
-            }
+            using var reader = new BinaryReader(file.OpenReadStream());
+            var signatures = FileSignatures[extension];
+            var headerBytes = reader.ReadBytes(signatures.Max(m => m.Length));
+            return signatures.Any(signature =>
+                headerBytes.Take(signature.Length).SequenceEqual(signature));
         }
     }
 }

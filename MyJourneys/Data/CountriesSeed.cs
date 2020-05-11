@@ -7,7 +7,7 @@ namespace MyJourneys.Data
 {
     public class CountriesSeed
     {
-        private TravelContext _context;
+        private readonly TravelContext _context;
 
         public CountriesSeed()
         {
@@ -21,21 +21,19 @@ namespace MyJourneys.Data
                 return;
             }
 
-            using (var webClient = new WebClient())
+            using var webClient = new WebClient();
+            var json = webClient.DownloadString("https://restcountries.eu/rest/v2/all");
+            var countries = JArray.Parse(json);
+            foreach (var jsonCountry in countries)
             {
-                var json = webClient.DownloadString("https://restcountries.eu/rest/v2/all");
-                var countries = JArray.Parse(json);
-                foreach (var jsonCountry in countries)
-                {
-                    var country = (JObject) jsonCountry;
-                    var name = (string) country["name"];
-                    var alpha2 = (string) country["alpha2Code"];
-                    var alpha3 = (string) country["alpha3Code"];
-                    _context.Countries.Add(new Country(name, alpha2, alpha3));
-                }
-
-                _context.SaveChanges();
+                var country = (JObject) jsonCountry;
+                var name = (string) country["name"];
+                var alpha2 = (string) country["alpha2Code"];
+                var alpha3 = (string) country["alpha3Code"];
+                _context.Countries.Add(new Country(name, alpha2, alpha3));
             }
+
+            _context.SaveChanges();
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -88,7 +89,7 @@ namespace MyJourneys.Controllers
                 try
                 {
                     models.Add(new JourneyOverviewUploadViewModel(file, Convert.ToDateTime(dates[i]),
-                        Double.Parse(latitudes[i]), Double.Parse(longitudes[i])));
+                        double.Parse(latitudes[i]), double.Parse(longitudes[i])));
                 }
                 catch (Exception)
                 {
@@ -96,15 +97,8 @@ namespace MyJourneys.Controllers
                 }
             }
 
-            List<Country> countryList = new List<Country>();
-            foreach (var countryCode in countries)
-            {
-                var country = _overviewRepository.GetCountry(countryCode);
-                if (country != null)
-                {
-                    countryList.Add(country);
-                }
-            }
+            List<Country> countryList = countries.Select(countryCode => _overviewRepository.GetCountry(countryCode))
+                .Where(country => country != null).ToList();
 
             _overviewRepository.AddJourneyOverview(userId, title, countryList, models);
             return Ok("Photos have been uploaded successfully");

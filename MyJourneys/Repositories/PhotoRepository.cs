@@ -49,10 +49,8 @@ namespace MyJourneys.Repositories
 
         public void SaveOverviewPhoto(IFormFile file, string path)
         {
-            using (var stream = _fileSystem.File.Create(path))
-            {
-                file.CopyTo(stream);
-            }
+            using var stream = _fileSystem.File.Create(path);
+            file.CopyTo(stream);
         }
 
         public void DeletePhoto(string path)

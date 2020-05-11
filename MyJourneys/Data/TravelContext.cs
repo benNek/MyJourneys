@@ -31,19 +31,15 @@ namespace MyJourneys.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                IConfigurationRoot configuration = new ConfigurationBuilder()
-                    .AddJsonFile("appsettings.json",
-                        optional: false,
-                        reloadOnChange: true)
-                    .AddJsonFile($"appsettings.{Environments.Development}.json", optional: true)
-                    .AddJsonFile($"appsettings.{Environments.Production}.json", optional: true)
-                    .AddEnvironmentVariables()
-                    .Build();
-                string connectionString = configuration.GetConnectionString("DefaultConnection");
-                optionsBuilder.UseSqlServer(connectionString);
-            }
+            if (optionsBuilder.IsConfigured) return;
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", false, true)
+                .AddJsonFile($"appsettings.{Environments.Development}.json", true)
+                .AddJsonFile($"appsettings.{Environments.Production}.json", true)
+                .AddEnvironmentVariables()
+                .Build();
+            string connectionString = configuration.GetConnectionString("DefaultConnection");
+            optionsBuilder.UseSqlServer(connectionString);
         }
     }
 }

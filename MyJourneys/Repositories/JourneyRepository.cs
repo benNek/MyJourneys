@@ -5,13 +5,11 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using MyJourneys.Data;
 using MyJourneys.Models;
 using MyJourneys.Models.Enums;
 using MyJourneys.Models.ViewModels;
-using Newtonsoft.Json.Bson;
 
 namespace MyJourneys.Repositories
 {
@@ -147,7 +145,7 @@ namespace MyJourneys.Repositories
                     Latitude = place.Latitude,
                     Longitude = place.Longitude,
                     Rank = place.Rank,
-                    Start = place.Start,
+                    Start = place.Start
                 })
                 .OrderByDescending(place => place.Start)
                 .ThenByDescending(place => place.Rank)
@@ -193,8 +191,7 @@ namespace MyJourneys.Repositories
 
         public JourneyItemViewModel AddItem(JourneyItemFormViewModel model)
         {
-            JourneyItemType type;
-            Enum.TryParse(model.Type, true, out type);
+            Enum.TryParse(model.Type, true, out JourneyItemType type);
             var item = new JourneyItem
             {
                 JourneyId = model.JourneyId,
@@ -260,7 +257,7 @@ namespace MyJourneys.Repositories
                 Latitude = place.Latitude,
                 Longitude = place.Longitude,
                 Rank = place.Rank,
-                Start = place.Start,
+                Start = place.Start
             };
         }
 

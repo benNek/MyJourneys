@@ -99,17 +99,14 @@ namespace MyJourneys.Repositories
                 }).Take(AuthorArticlesLimit).ToList();
         }
 
-        private DateTime GetMaxDate(ArticleSortType sortType)
+        private static DateTime GetMaxDate(ArticleSortType sortType)
         {
-            switch (sortType)
+            return sortType switch
             {
-                case ArticleSortType.Weekly:
-                    return DateTime.Now.AddDays(-7);
-                case ArticleSortType.Monthly:
-                    return DateTime.Now.AddMonths(-1);
-                default:
-                    return DateTime.MinValue;
-            }
+                ArticleSortType.Weekly => DateTime.Now.AddDays(-7),
+                ArticleSortType.Monthly => DateTime.Now.AddMonths(-1),
+                _ => DateTime.MinValue
+            };
         }
 
         public ArticleViewModel AddArticle(string userId, ArticleFormViewModel model)
@@ -143,7 +140,7 @@ namespace MyJourneys.Repositories
             };
         }
 
-        public void AddTagsToArticle(int articleId, List<string> tags)
+        private void AddTagsToArticle(int articleId, IEnumerable<string> tags)
         {
             foreach (string tag in tags)
             {
@@ -161,18 +158,15 @@ namespace MyJourneys.Repositories
         public Tag GetTag(string tagName)
         {
             var articleTag = _context.Tags.FirstOrDefault(tag => tag.Name.ToLower().Equals(tagName.ToLower()));
-            if (articleTag == null)
+            if (articleTag != null) return articleTag;
+            var newTag = new Tag
             {
-                var newTag = new Tag
-                {
-                    Name = tagName
-                };
-                _context.Tags.Add(newTag);
-                _context.SaveChanges();
-                return newTag;
-            }
+                Name = tagName
+            };
+            _context.Tags.Add(newTag);
+            _context.SaveChanges();
+            return newTag;
 
-            return articleTag;
         }
 
         public List<string> GetTags()

@@ -9,9 +9,9 @@ namespace MyJourneys.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly string writer = "Writer";
-        private readonly string deniedWriter = "DeniedWriter";
-        private readonly string admin = "Admin";
+        private const string Writer = "Writer";
+        private const string DeniedWriter = "DeniedWriter";
+        private const string Admin = "Admin";
 
         private readonly TravelContext _context;
         private readonly UserManager<User> _userManager;
@@ -44,17 +44,17 @@ namespace MyJourneys.Repositories
 
         public bool HasDeniedWriterRole(string userId)
         {
-            return HasRole(userId, deniedWriter);
+            return HasRole(userId, DeniedWriter);
         }
 
         public bool HasWriterRole(string userId)
         {
-            return HasRole(userId, writer);
+            return HasRole(userId, Writer);
         }
 
         public bool HasAdminRole(string userId)
         {
-            return HasRole(userId, admin);
+            return HasRole(userId, Admin);
         }
 
         public List<string> GetUnapprovedAuthors()
@@ -74,8 +74,8 @@ namespace MyJourneys.Repositories
                 return null;
             }
 
-            if (!await _userManager.IsInRoleAsync(user, writer))
-                await _userManager.AddToRoleAsync(user, writer);
+            if (!await _userManager.IsInRoleAsync(user, Writer))
+                await _userManager.AddToRoleAsync(user, Writer);
 
             return user.UserName;
         }
@@ -88,8 +88,8 @@ namespace MyJourneys.Repositories
                 return null;
             }
 
-            if (!await _userManager.IsInRoleAsync(user, deniedWriter))
-                await _userManager.AddToRoleAsync(user, deniedWriter);
+            if (!await _userManager.IsInRoleAsync(user, DeniedWriter))
+                await _userManager.AddToRoleAsync(user, DeniedWriter);
 
             return user.UserName;
         }

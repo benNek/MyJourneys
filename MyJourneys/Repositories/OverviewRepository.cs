@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using MyJourneys.Data;
 using MyJourneys.Models;
@@ -59,7 +58,7 @@ namespace MyJourneys.Repositories
                 .FirstOrDefault();
         }
 
-        public void AddJourneyOverview(string userId, string title, List<Country> countries,
+        public void AddJourneyOverview(string userId, string title, IEnumerable<Country> countries,
             List<JourneyOverviewUploadViewModel> models)
         {
             var journey = new OverviewJourney
@@ -93,7 +92,7 @@ namespace MyJourneys.Repositories
             _context.SaveChanges();
         }
 
-        private void AddCountriesToJourney(int journeyId, List<Country> countries)
+        private void AddCountriesToJourney(int journeyId, IEnumerable<Country> countries)
         {
             foreach (var country in countries)
             {

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyJourneys.Models;
 using MyJourneys.Models.Enums;
 using MyJourneys.Models.ViewModels;
 using MyJourneys.Repositories;
@@ -87,7 +86,7 @@ namespace MyJourneys.Controllers
             return _articleRepository.HasLiked(userId, id);
         }
 
-        private ArticleSortType GetSortType(string sortType)
+        private static ArticleSortType GetSortType(string sortType)
         {
             return sortType switch
             {

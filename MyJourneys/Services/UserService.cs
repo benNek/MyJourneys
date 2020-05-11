@@ -15,9 +15,9 @@ namespace MyJourneys.Services
 {
     public class UserService : IUserService
     {
-        private IConfiguration _configuration;
-        private UserManager<User> _userManager;
-        private SignInManager<User> _signInManager;
+        private readonly IConfiguration _configuration;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
         public UserService(IConfiguration configuration, UserManager<User> userManager,
             SignInManager<User> signInManager)
@@ -75,7 +75,7 @@ namespace MyJourneys.Services
             await _signInManager.SignOutAsync();
         }
 
-        private List<Claim> GetUserRolesList(IList<string> roles)
+        private static IEnumerable<Claim> GetUserRolesList(IEnumerable<string> roles)
         {
             return roles.Select(role => new Claim("roles", role)).ToList();
         }

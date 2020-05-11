@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
 using MyJourneys.Models;
 using MyJourneys.Models.ViewModels;
 using MyJourneys.Repositories;
@@ -10,7 +9,7 @@ namespace MyJourneys.Services
 {
     public class JourneyService : IJourneyService
     {
-        private IJourneyRepository _journeyRepository;
+        private readonly IJourneyRepository _journeyRepository;
 
         public JourneyService(IJourneyRepository journeyRepository)
         {
@@ -31,23 +30,23 @@ namespace MyJourneys.Services
             double[,] graph = ResolveGraph(places);
             int[] parent = ResolvePrimMst(start, places.Count, graph);
             UpdateRanks(start, parent, places);
-            
+
             return _journeyRepository.GetPlaces(journeyId);
         }
 
-        private void UpdateRanks(int start, int[] parent, List<Place> places)
+        private void UpdateRanks(int start, IReadOnlyList<int> parent, IReadOnlyList<Place> places)
         {
             int vertex = start;
             int rank = 9999;
             Stack<int> dfs = new Stack<int>();
-            bool[] visited = new bool[parent.Length];
+            bool[] visited = new bool[parent.Count];
             dfs.Push(vertex);
             while (dfs.Count > 0)
             {
                 vertex = dfs.Pop();
                 visited[vertex] = true;
                 _journeyRepository.UpdatePlaceRank(places[vertex].Id, rank--);
-                for (int i = 0; i < parent.Length; i++)
+                for (int i = 0; i < parent.Count; i++)
                 {
                     if (parent[i] == vertex && !visited[i])
                     {
@@ -57,7 +56,7 @@ namespace MyJourneys.Services
             }
         }
 
-        private double[,] ResolveGraph(List<Place> places)
+        private static double[,] ResolveGraph(IReadOnlyList<Place> places)
         {
             int vertices = places.Count;
             double[,] graph = new double[vertices, vertices];
@@ -74,7 +73,7 @@ namespace MyJourneys.Services
             return graph;
         }
 
-        private int[] ResolvePrimMst(int start, int vertices, double[,] graph)
+        private static int[] ResolvePrimMst(int start, int vertices, double[,] graph)
         {
             int[] parent = new int[vertices];
             double[] key = new double[vertices];
@@ -96,28 +95,24 @@ namespace MyJourneys.Services
 
                 for (int v = 0; v < vertices; v++)
                 {
-                    if (Math.Abs(graph[u, v]) > 0.001 && !mstSet[v] && graph[u, v] < key[v])
-                    {
-                        parent[v] = u;
-                        key[v] = graph[u, v];
-                    }
+                    if (!(Math.Abs(graph[u, v]) > 0.001) || mstSet[v] || !(graph[u, v] < key[v])) continue;
+                    parent[v] = u;
+                    key[v] = graph[u, v];
                 }
             }
 
             return parent;
         }
 
-        private int MinKey(double[] key, bool[] mstSet)
+        private static int MinKey(IReadOnlyList<double> key, IReadOnlyList<bool> mstSet)
         {
             double min = double.MaxValue;
             int minIndex = -1;
-            for (int v = 0; v < mstSet.Length; v++)
+            for (int v = 0; v < mstSet.Count; v++)
             {
-                if (!mstSet[v] && key[v] < min)
-                {
-                    min = key[v];
-                    minIndex = v;
-                }
+                if (mstSet[v] || !(key[v] < min)) continue;
+                min = key[v];
+                minIndex = v;
             }
 
             return minIndex;
