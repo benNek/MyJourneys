@@ -46,7 +46,7 @@ export default function FlightItemCard(props) {
         </Typography>
       </CardContent>
       <CardActions className={classes.action}>
-        <IconButton onClick={() => onDelete(flight.id)} variant="outlined">
+        <IconButton onClick={() => onDelete(flight.id)} variant="outlined" aria-label='delete item'>
           <DeleteForeverIcon/>
         </IconButton>
       </CardActions>

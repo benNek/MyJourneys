@@ -53,7 +53,7 @@ export default function HotelItemCard(props) {
         </Typography>
       </CardContent>
       <CardActions className={classes.action}>
-        <IconButton onClick={() => onDelete(hotel.id)} variant="outlined">
+        <IconButton onClick={() => onDelete(hotel.id)} variant="outlined" aria-label='delete item'>
           <DeleteForeverIcon/>
         </IconButton>
       </CardActions>

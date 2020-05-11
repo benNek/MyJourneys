@@ -93,7 +93,7 @@ export default function NavBar() {
   if (user) {
     authControls = (
       <Fragment>
-        <Link className={classes.settings} to="/settings">
+        <Link className={classes.settings} to="/settings" aria-label="Go to settings page">
           <SettingsIcon/>
         </Link>
         <Logout/>

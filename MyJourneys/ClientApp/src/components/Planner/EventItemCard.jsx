@@ -53,7 +53,7 @@ export default function EventItemCard(props) {
         </Typography>
       </CardContent>
       <CardActions className={classes.action}>
-        <IconButton onClick={() => onDelete(event.id)} variant="outlined">
+        <IconButton onClick={() => onDelete(event.id)} variant="outlined" aria-label='delete item'>
           <DeleteForeverIcon/>
         </IconButton>
       </CardActions>

@@ -53,7 +53,7 @@ export default function ReservationItemCard(props) {
         </Typography>
       </CardContent>
       <CardActions className={classes.action}>
-        <IconButton onClick={() => onDelete(reservation.id)} variant="outlined">
+        <IconButton onClick={() => onDelete(reservation.id)} variant="outlined" aria-label='delete item'>
           <DeleteForeverIcon/>
         </IconButton>
       </CardActions>
