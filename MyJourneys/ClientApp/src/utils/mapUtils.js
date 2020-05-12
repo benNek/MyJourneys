@@ -23,17 +23,10 @@ export function resolveLatLon(file) {
     }
 
     if (this.exifdata.GPSLatitude && this.exifdata.GPSLatitude.length > 2) {
-      const latDegree = this.exifdata.GPSLatitude[0].numerator;
-      const latMinute = this.exifdata.GPSLatitude[1].numerator;
-      const latSecond = this.exifdata.GPSLatitude[2].numerator / this.exifdata.GPSLatitude[2].denominator;
-      const latDirection = this.exifdata.GPSLatitudeRef;
-      const lat = convertDMSToDD(latDegree, latMinute, latSecond, latDirection);
-
-      const lonDegree = this.exifdata.GPSLongitude[0].numerator;
-      const lonMinute = this.exifdata.GPSLongitude[1].numerator;
-      const lonSecond = this.exifdata.GPSLongitude[2].numerator / this.exifdata.GPSLongitude[2].denominator;
-      const lonDirection = this.exifdata.GPSLongitudeRef;
-      const lon = convertDMSToDD(lonDegree, lonMinute, lonSecond, lonDirection);
+      const lat = convertDMSToDD(this.exifdata.GPSLatitude[0].numerator, this.exifdata.GPSLatitude[1].numerator,
+        this.exifdata.GPSLatitude[2].numerator / this.exifdata.GPSLatitude[2].denominator, this.exifdata.GPSLatitudeRef);
+      const lon = convertDMSToDD(this.exifdata.GPSLongitude[0].numerator, this.exifdata.GPSLongitude[1].numerator,
+        this.exifdata.GPSLongitude[2].numerator / this.exifdata.GPSLongitude[2].denominator, this.exifdata.GPSLongitudeRef);
       file.location = {lat, lon};
     }
 
@@ -46,7 +39,7 @@ export function resolveMapBounds(points) {
   if (!points || !points.length) {
     return [];
   }
-  
+
   let minLon = 999, maxLon = -999, minLat = 999, maxLat = -999;
   points.forEach(point => {
     minLon = Math.min(minLon, point[0]);

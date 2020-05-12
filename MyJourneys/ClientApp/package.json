@@ -57,6 +57,14 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/utils/*.{js,jsx,ts,tsx}",
+      "!src/utils/auth*.{js,jsx,ts,tsx}",
+      "!src/utils/networkFunctions*.{js,jsx,ts,tsx}",
+      "!src/utils/validation*.{js,jsx,ts,tsx}"
+    ]
+  },
   "scripts": {
     "start": "rimraf ./build && react-scripts start",
     "build": "react-scripts build",

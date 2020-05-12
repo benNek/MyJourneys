@@ -1,4 +1,4 @@
-import {convertDMSToDD, generateDirectionsUrl, getMapStyle, resolveMapBounds} from "./mapUtils";
+import {convertDMSToDD, generateDirectionsUrl, getMapStyle, resolveLatLon, resolveMapBounds} from "./mapUtils";
 
 it('converts Paris latitude DMS to DD', () => {
   expect(convertDMSToDD(48, 51, 29.1348, 'N')).toBeCloseTo(48.858093);
@@ -14,6 +14,12 @@ it('converts Rio de Janeiro latitude DMS to DD', () => {
 
 it('converts Rio de Janeiro longitude DMS to DD', () => {
   expect(convertDMSToDD(43, 17, 40.8984, 'W')).toBeCloseTo(-43.294694);
+});
+
+it('resolves empty image EXIF lat/lon coordinates', () => {
+  const file = {};
+  resolveLatLon(file);
+  expect(file).toEqual({});
 });
 
 it('resolves map bounds with no points', () => {
