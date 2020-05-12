@@ -76,6 +76,7 @@ export default function OverviewActions(props) {
           onChange={handleYearChange}
           inputProps={{
             name: 'year',
+            'aria-label': 'travel year filter'
           }}
         >
           {renderYears()}

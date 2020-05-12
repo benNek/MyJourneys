@@ -51,7 +51,7 @@ export default function Filters(props) {
           className={`${classes.type} articles__filter`}
           avatar={<Avatar>{type.short}</Avatar>}
           label={type.name}
-          color={activeFilter === type.code ? 'secondary' : undefined}
+          color={activeFilter === type.code ? 'primary' : undefined}
           onClick={() => handleClick(type.code)}
         />
       ))}

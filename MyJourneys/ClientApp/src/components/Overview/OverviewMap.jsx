@@ -217,6 +217,7 @@ export default function OverviewMap(props) {
 
     const img = document.createElement('img');
     img.setAttribute('src', getPhotoUrl(photo));
+    img.setAttribute('alt', '');
     img.className = classes.coverPhoto;
     el.appendChild(img);
     return el;
