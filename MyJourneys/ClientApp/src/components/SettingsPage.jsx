@@ -37,7 +37,7 @@ export default function SettingsPage() {
     deletePhotos().then(res => toast.success(res.data)).catch(err => console.error(err));
   };
   
-  const isAdmin = user.roles.includes('Admin');
+  const isAdmin = !!user.roles && user.roles.includes('Admin');
   
   return (
     <Fragment>

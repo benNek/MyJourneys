@@ -102,6 +102,7 @@
       <PackageReference Include="Moq" Version="4.14.1" />
       <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
       <PackageReference Include="Sentry.AspNetCore" Version="2.1.2-beta3" />
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
       <PackageReference Include="System.IO.Abstractions" Version="11.0.4" />
       <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="11.0.4" />
       <PackageReference Include="UnsplashClient" Version="2.2.1" />
