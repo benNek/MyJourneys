@@ -10,7 +10,7 @@ namespace MyJourneys.Models
         public string UserId { get; set; }
 
         [ForeignKey("UserId")] public virtual User User { get; set; }
-        public ICollection<LocationPhoto> LocationPhotos { get; set; }
+        public virtual ICollection<LocationPhoto> LocationPhotos { get; set; }
         public virtual ICollection<OverviewJourneysCountries> OverviewJourneysCountries { get; set; }
     }
 }

@@ -37,10 +37,10 @@ export default function App() {
       <ThemeProvider theme={darkMode ? darkTheme : createMuiTheme()}>
         <CssBaseline/>
         <Layout>
-          <Route exact path='/' component={Overview}/>
+          <Route exact path={["/", "/articles"]} component={Articles}/>
+          <PrivateRoute exact path='/overview' component={Overview}/>
           <PrivateRoute exact path='/journeys' component={Journeys}/>
           <PrivateRoute exact path='/journeys/:location.:id' component={Journey}/>
-          <Route exact path='/articles' component={Articles}/>
           <PrivateRoute Route exact path='/article' component={ArticleForm}/>
           <Route exact path='/articles/:id' component={Article}/>
           <PrivateRoute Route exact path='/upload' component={UploadPhotosPage}/>

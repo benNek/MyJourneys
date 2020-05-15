@@ -1,5 +1,5 @@
 import React, {Fragment, useState} from "react";
-import {uploadPhoto} from "../../utils/networkFunctions";
+import {uploadJourney} from "../../utils/networkFunctions";
 import Divider from "@material-ui/core/Divider";
 import './UploadPhotosPage.css';
 import Stepper from "@material-ui/core/Stepper";
@@ -106,7 +106,7 @@ export default function UploadPhotosPage() {
       fd.append("longitudes", file.location.lon);
       fd.append("latitudes", file.location.lat);
     });
-    uploadPhoto(fd).then(() => setSuccess(true)).catch(err => {
+    uploadJourney(fd).then(() => setSuccess(true)).catch(err => {
       toast.error(`${err.response.data} Status code: ${err.response.status}`);
     });
 
@@ -155,7 +155,7 @@ export default function UploadPhotosPage() {
       <div className={classes.successContainer}>
         <Success/>
         <Typography component='h1' variant='h4'>
-          Article published sucessfully!
+          Photos uploaded sucessfully!
         </Typography>
         <Typography variant='subtitle1' className={classes.recommendedActionsTitle}>
           Recommended actions:
@@ -165,7 +165,7 @@ export default function UploadPhotosPage() {
             <RecommendedAction Icon={AddAPhotoIcon} text="Add more photos" reload={true}/>
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
-            <RecommendedAction Icon={MapIcon} text="View the map" link='/'/>
+            <RecommendedAction Icon={MapIcon} text="View the map" link='/overview'/>
           </Grid>
         </Grid>
       </div>

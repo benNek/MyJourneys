@@ -20,5 +20,5 @@ svg.Article__heartIcon--active path:first-child:hover {
 }
 
 svg.Article__heartIcon path:nth-child(2) {
-    fill: #484848;
+    fill: #707070;
 }

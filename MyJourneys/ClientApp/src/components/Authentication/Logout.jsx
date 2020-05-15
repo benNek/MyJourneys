@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 
 import Button from "@material-ui/core/Button";
 import {toast} from "react-toastify";
-import {logout} from "../../utils/networkFunctions";
+import {logout, updateBearerToken} from "../../utils/networkFunctions";
 import {Context} from "../../state/store";
 import {setUser} from "../../state/actions";
 
@@ -13,8 +13,8 @@ export default function Logout() {
     await logout()
       .then(() => {
         localStorage.removeItem('accessToken');
+        updateBearerToken();
         setUser(dispatch, null);
-        window.location.reload();
       })
       .catch(err => {
         toast.error(`${err.response.data} Status code: ${err.response.status}`);

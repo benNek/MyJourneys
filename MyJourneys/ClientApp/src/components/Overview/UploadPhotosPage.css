@@ -33,7 +33,6 @@ svg.regular-icon:hover {
 .separator::before, .separator::after {
     content: '';
     flex: 1;
-    border-bottom: 1px solid rgba(0, 0, 0, .12);
 }
 
 .separator::before {

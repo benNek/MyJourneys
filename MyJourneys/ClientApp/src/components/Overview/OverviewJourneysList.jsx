@@ -14,6 +14,8 @@ const useStyles = makeStyles(theme => ({
     borderWidth: '1px',
     borderStyle: 'solid',
     borderColor: theme.palette.action.disabled,
+    maxHeight: '60vh',
+    overflowY: 'scroll'
   },
   card: {
     height: '76px',

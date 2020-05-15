@@ -107,17 +107,17 @@ export default function NavBar() {
     <div>
       <div className={classes.toolbar}/>
       <List>
-        <ListItem button component={Link} to="/" onClick={handleMobileDrawerClose}>
-          <ListItemIcon><MapIcon/></ListItemIcon>
-          <ListItemText primary="Past journeys"/>
+        <ListItem button component={Link} to="/journeys" onClick={handleMobileDrawerClose}>
+          <ListItemIcon><WorkIcon/></ListItemIcon>
+          <ListItemText primary="Planner"/>
         </ListItem>
         <ListItem button component={Link} to="/articles" onClick={handleMobileDrawerClose}>
           <ListItemIcon><SpeakerNotesIcon/></ListItemIcon>
           <ListItemText primary="Articles"/>
         </ListItem>
-        <ListItem button component={Link} to="/journeys" onClick={handleMobileDrawerClose}>
-          <ListItemIcon><WorkIcon/></ListItemIcon>
-          <ListItemText primary="Planner"/>
+        <ListItem button component={Link} to="/overview" onClick={handleMobileDrawerClose}>
+          <ListItemIcon><MapIcon/></ListItemIcon>
+          <ListItemText primary="Past journeys"/>
         </ListItem>
       </List>
       <Divider/>

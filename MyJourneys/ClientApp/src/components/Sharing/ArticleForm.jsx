@@ -13,7 +13,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Chip from "@material-ui/core/Chip";
 import Popover from "@material-ui/core/Popover";
 import removeMd from "remove-markdown";
-import {createArticle, getTags} from "../../utils/networkFunctions";
+import {createArticle, editArticle, getTags} from "../../utils/networkFunctions";
 import {articleValidation} from "../../utils/validation";
 import {Context} from "../../state/store";
 import Success from "../Success";
@@ -46,7 +46,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function ArticleForm() {
+export default function ArticleForm(props) {
+  const {location} = props;
+  const editingArticle = location && location.state && location.state.article;
   const classes = useStyles();
 
   const [state] = useContext(Context);
@@ -77,7 +79,7 @@ export default function ArticleForm() {
       <div className={classes.successContainer}>
         <Success/>
         <Typography component='h1' variant='h4'>
-          Article published sucessfully!
+          {editingArticle ? "Article updates successfully!" : "Article published successfully!"}
         </Typography>
         <Typography variant='subtitle1' className={classes.recommendedActionsTitle}>
           Recommended actions:
@@ -97,15 +99,21 @@ export default function ArticleForm() {
     )
   }
 
+  const initialValues = {
+    title: editingArticle ? editingArticle.title : '',
+    tags: editingArticle ? editingArticle.tags : [],
+    text: editingArticle ? editingArticle.text : ''
+  };
+
   return (
     <Card className={classes.card} variant="outlined">
       <CardContent>
         <Typography component='h1' variant='h3'>
-          Publish your article
+          {editingArticle ? "Edit your article" : "Publish your article"}
         </Typography>
         <Divider/>
         <Formik
-          initialValues={{title: '', tags: [], text: ' '}}
+          initialValues={initialValues}
           validationSchema={articleValidation}
           onSubmit={async (values, actions) => {
             if (!isSubmitting) {
@@ -119,20 +127,32 @@ export default function ArticleForm() {
             }
 
             actions.setSubmitting(true);
-            await createArticle(values)
-              .then(response => {
-                setCreatedId(response.data.id);
-                setSuccess(true);
-              })
-              .catch(err => {
-                toast.error(`${err.response.data} Status code: ${err.response.status}`);
-                actions.setSubmitting(false);
-              });
+            if (editingArticle) {
+              await editArticle(editingArticle.id, values)
+                .then(response => {
+                  setCreatedId(response.data.id);
+                  setSuccess(true);
+                })
+                .catch(err => {
+                  toast.error(`${err.response.data} Status code: ${err.response.status}`);
+                  actions.setSubmitting(false);
+                });
+            } else {
+              await createArticle(values)
+                .then(response => {
+                  setCreatedId(response.data.id);
+                  setSuccess(true);
+                })
+                .catch(err => {
+                  toast.error(`${err.response.data} Status code: ${err.response.status}`);
+                  actions.setSubmitting(false);
+                });
+            }
             setIsSubmitting(false);
           }}
         >
           {(formProps) => {
-            const {handleChange, setFieldTouched, setFieldValue, errors, touched} = formProps;
+            const {handleChange, setFieldTouched, setFieldValue, errors, touched, values} = formProps;
             const change = (name, e) => {
               e.persist();
               handleChange(e);
@@ -149,6 +169,7 @@ export default function ArticleForm() {
                       fullWidth
                       id="title"
                       label="Title"
+                      value={values['title']}
                       autoFocus
                       error={errors.title && touched.title}
                       helperText={(errors.title && touched.title) && errors.title}
@@ -160,6 +181,7 @@ export default function ArticleForm() {
                       multiple
                       id="tags"
                       options={tags.map((option) => option)}
+                      value={values['tags']}
                       freeSolo
                       renderTags={(value, getTagProps) =>
                         value.map((option, index) => (
@@ -175,6 +197,7 @@ export default function ArticleForm() {
                   <Grid item xs={12}>
                     <Editor
                       ref={editorRef}
+                      defaultValue={values['text']}
                       bodyPlaceholder="Express your thoughts in here!"
                       onChange={value => setFieldValue('text', value())}
                       dark={darkMode}

@@ -11,6 +11,7 @@ namespace MyJourneys.Repositories
         List<ArticleViewModel> GetArticles(string tagName, ArticleSortType sortType, string search, int skip, int take);
         List<ArticleViewModel> GetAuthorArticles(string name);
         ArticleViewModel AddArticle(string userId, ArticleFormViewModel model);
+        ArticleViewModel UpdateArticle(int id, ArticleFormViewModel model);
         Tag GetTag(string tagName);
         List<string> GetTags();
         List<PopularTagViewModel> GetPopularTags();

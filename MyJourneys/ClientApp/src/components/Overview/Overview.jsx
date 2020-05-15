@@ -4,6 +4,7 @@ import Fab from "@material-ui/core/Fab";
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import {useHistory} from "react-router";
 import {
+  deletePhoto,
   getOverviewJourney,
   getOverviewJourneys,
   getTravelingYears,
@@ -15,6 +16,8 @@ import SingleJourneyActions from "./SingleJourneyActions";
 import OverviewMap from "./OverviewMap";
 import {Context} from "../../state/store";
 import PhotoView from "./PhotoView";
+import _ from 'lodash';
+import update from 'immutability-helper';
 
 const useStyles = makeStyles(theme => ({
   fab: {
@@ -47,19 +50,23 @@ export default function Overview() {
 
   useEffect(() => {
     if (!user) {
+      setJourneys([]);
+      setCountries([]);
+      setAllYears([]);
       return;
     }
 
     getOverviewJourneys({year}).then(res => setJourneys(res.data)).catch(err => console.error(err));
+    getVisitedCountries({year}).then(res => setCountries(res.data)).catch(err => console.error(err));
     getTravelingYears().then(res => {
       if (res.data.length > 1) {
         setAllYears([0, ...res.data]);
       }
     }).catch(err => console.error(err));
-  }, []);
+  }, [user]);
 
   useEffect(() => {
-    if (!user) {
+    if (!user || year === 0) {
       return;
     }
 
@@ -96,6 +103,26 @@ export default function Overview() {
     }).catch(err => console.error(err));
   };
 
+  const handlePhotoDelete = id => {
+    setPhotoModalOpen(false);
+    setPhoto(null);
+    deletePhoto(currentJourney.id, id).then(res => {
+      const photoId = _.findIndex(currentJourney.photos, ['id', res.data]);
+      if (photoId !== -1 && currentJourney.photos.length === 1) {
+        setJourneys(journeys.filter(journey => journey.id !== currentJourney.id));
+        getVisitedCountries({year}).then(res => {
+          setCountries(res.data);
+          handleGoBackClick();
+        }).catch(err => console.error(err));
+      } else {
+        const newJourney = update(currentJourney, {
+          photos: {$splice: [[photoId, 1]]}
+        })
+        setCurrentJourney(newJourney);
+      }
+    }).catch(err => console.error(err));
+  }
+
   return (
     <React.Fragment>
       <div className={`map__container ${viewMode === 'gallery' && 'map__container--gallery'}`}>
@@ -111,11 +138,15 @@ export default function Overview() {
                            handleYearChange={handleYearChange}/>
         }
       </div>
-      <PhotoView open={photoModalOpen} handleClose={() => setPhotoModalOpen(false)} photo={photo}/>
-      <Fab onClick={() => history.push('/upload')} aria-label="add photos"
-           className={`${classes.fab} FloatingActionButton`}>
-        <AddPhotoAlternateIcon/>
-      </Fab>
+      <PhotoView open={photoModalOpen} handleClose={() => setPhotoModalOpen(false)}
+                 handleDelete={handlePhotoDelete} photo={photo}/>
+      {
+        user &&
+        <Fab onClick={() => history.push('/upload')} aria-label="add photos"
+             className={`${classes.fab} FloatingActionButton`}>
+          <AddPhotoAlternateIcon/>
+        </Fab>
+      }
     </React.Fragment>
   )
 }

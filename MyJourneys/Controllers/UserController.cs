@@ -105,7 +105,7 @@ namespace MyJourneys.Controllers
         public IActionResult DeletePhotos()
         {
             var userId = GetUserId(User);
-            _overviewRepository.DeletePhotos(userId);
+            _overviewRepository.DeleteJourneys(userId);
             return Ok("Photos have been deleted successfully");
         }
     }

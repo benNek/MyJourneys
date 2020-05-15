@@ -86,6 +86,14 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(4),
     outline: 'none'
   },
+  separator: {
+    '&::before': {
+      borderBottom: `1px solid ${theme.palette.divider}`
+    },
+    '&::after': {
+      borderBottom: `1px solid ${theme.palette.divider}`
+    },
+  },
   note: {
     marginBottom: '12px'
   },
@@ -218,8 +226,7 @@ export default function UploadPhotosStep2(props) {
   const handleSaveLocation = () => {
     editingPhoto.location =  {lat: marker.latitude, lon: marker.longitude};
     editingPhoto.date = moment(date).format();
-    editingPhoto.status = updated
-    // editingPhoto.location = {lat: marker.latitude, lon: marker.longitude};
+    editingPhoto.status = updated;
     setInvalidPhotos(_.orderBy([
       ...invalidPhotos.filter(invalidPhoto => invalidPhoto !== editingPhoto), editingPhoto
     ], 'status', 'desc'));
@@ -401,7 +408,7 @@ export default function UploadPhotosStep2(props) {
                 );
               }}
             />
-            <div className="separator">
+            <div className={`${classes.separator} separator`}>
               OR
             </div>
             <Typography variant="body2" className={classes.note}>

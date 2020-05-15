@@ -26,18 +26,20 @@ export const blockAuthor = author => axios.get(`/api/user/block/${author}`);
 export const deletePhotos = () => axios.delete(`/api/user/delete-photos`);
 
 // Overview
-export const uploadPhoto = data => axios.post('/api/overview', data, {
+export const uploadJourney = data => axios.post('/api/overview', data, {
   'Content-Type': 'multipart/form-data'
 });
 export const getTravelingYears = () => axios.get('/api/overview/years');
 export const getVisitedCountries = params => axios.get(`/api/overview/countries${createParameters(params)}`);
 export const getOverviewJourneys = params => axios.get(`/api/overview${createParameters(params)}`);
 export const getOverviewJourney = id => axios.get(`/api/overview/${id}`);
+export const deletePhoto = (journeyId, id) => axios.delete(`api/overview/${journeyId}/photos/${id}`);
 
 // Sharing
 export const getTags = () => axios.get('/api/article/tags');
 export const getPopularTags = () => axios.get('/api/article/tags/popular');
 export const createArticle = data => axios.post('/api/article', data);
+export const editArticle = (id, data) => axios.put(`/api/article/${id}`, data);
 export const deleteArticle = id => axios.delete(`/api/article/${id}`);
 export const getArticles = params => axios.get(`/api/article${createParameters(params)}`);
 export const getAuthorArticles = name => axios.get(`/api/article/author/${name}`);
@@ -62,3 +64,5 @@ export const reorderPlaces = id => axios.get(`/api/journey/${id}/places/reorder`
 export const createNote = data => axios.post('/api/journey/note', data);
 export const updateNote = (id, data) => axios.put(`/api/journey/note/${id}`, data);
 export const deleteNote = id => axios.delete(`/api/journey/note/${id}`);
+
+export const updateBearerToken = () => axios.defaults.headers.Authorization = `Bearer ${localStorage.getItem('accessToken')}`;

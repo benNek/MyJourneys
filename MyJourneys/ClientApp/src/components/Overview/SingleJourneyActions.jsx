@@ -58,7 +58,6 @@ export default function SingleJourneyActions(props) {
       return;
     }
 
-    console.log('render photos?')
     return (
       <Grid container spacing={2} className={classes.gallery}>
         {journey.photos.map(photo => 

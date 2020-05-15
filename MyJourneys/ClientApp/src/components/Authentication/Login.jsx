@@ -8,7 +8,7 @@ import TextField from "@material-ui/core/TextField";
 import {Form, Formik} from "formik";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import {login} from "../../utils/networkFunctions";
+import {login, updateBearerToken} from "../../utils/networkFunctions";
 import {toast} from 'react-toastify';
 import {parseUser} from "../../utils/auth";
 import {Context} from "../../state/store";
@@ -78,8 +78,8 @@ export default function Login() {
                   .then(response => {
                     localStorage.setItem('accessToken', response.data);
                     
+                    updateBearerToken();
                     setUser(dispatch, parseUser());
-                    window.location.reload();
                   })
                   .catch(err => {
                     toast.error(`${err.response.data} Status code: ${err.response.status}`);

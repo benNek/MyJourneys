@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using MyJourneys.Data;
 using MyJourneys.Models;
@@ -44,6 +45,11 @@ namespace MyJourneys.Repositories
         public bool IsUsersJourney(string userId, int journeyId)
         {
             return _context.OverviewJourneys.Any(x => x.UserId.Equals(userId) && x.Id == journeyId);
+        }
+
+        public bool JourneyHasPhotos(int journeyId)
+        {
+            return _context.OverviewJourneys.Any(j => j.Id == journeyId && j.LocationPhotos.Any());
         }
 
         public OverviewJourneyViewModel GetJourneyOverview(int journeyId)
@@ -133,13 +139,40 @@ namespace MyJourneys.Repositories
                 .Select(p => p.Date.Year).Distinct().OrderByDescending(y => y).ToList();
         }
 
-        public void DeletePhotos(string userId)
+        public void DeleteJourneys(string userId)
         {
             var journeys = _context.OverviewJourneys.Where(journey => journey.UserId.Equals(userId)).ToList();
             var photos = _context.LocationPhotos.Where(photo => journeys.Contains(photo.OverviewJourney)).ToList();
             photos.ForEach(photo => { _photoRepository.DeletePhoto(photo.Path); });
             _context.OverviewJourneys.RemoveRange(journeys);
             _context.SaveChanges();
+        }
+
+        public int DeleteJourney(int journeyId)
+        {
+            var journey = _context.OverviewJourneys.FirstOrDefault(j => j.Id == journeyId);
+            if (journey == null)
+            {
+                return -1;
+            }
+
+            _context.OverviewJourneys.Remove(journey);
+            _context.SaveChanges();
+            return journey.Id;
+        }
+
+        public int DeletePhoto(int photoId)
+        {
+            var photo = _context.LocationPhotos.FirstOrDefault(p => p.Id == photoId);
+            if (photo == null)
+            {
+                return -1;
+            }
+
+            _photoRepository.DeletePhoto(photo.Path);
+            _context.LocationPhotos.Remove(photo);
+            _context.SaveChanges();
+            return photo.Id;
         }
     }
 }

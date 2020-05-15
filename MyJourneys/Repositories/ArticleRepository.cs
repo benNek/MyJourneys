@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using MyJourneys.Data;
 using MyJourneys.Models;
 using MyJourneys.Models.Enums;
@@ -123,7 +124,29 @@ namespace MyJourneys.Repositories
             _context.Articles.Add(article);
             _context.SaveChanges();
             AddTagsToArticle(article.Id, model.Tags);
+            return GetArticleViewModel(article);
+        }
 
+        public ArticleViewModel UpdateArticle(int id, ArticleFormViewModel model)
+        {
+            var article = _context.Articles.FirstOrDefault(a => a.Id == id);
+            if (article == null)
+            {
+                return null;
+            }
+
+            article.Title = model.Title;
+            article.Text = model.Text;
+
+            _context.Entry(article).State = EntityState.Modified;
+            _context.SaveChanges();
+
+            UpdateArticleTags(article, model.Tags);
+            return GetArticleViewModel(article);
+        }
+
+        private ArticleViewModel GetArticleViewModel(Article article)
+        {
             var author = article.Author != null ? article.Author.UserName : "";
             var tags = article.ArticleTags?.Select(tag => tag.Tag.Name).ToList() ?? new List<string>();
             var likes = article.ArticleLikes?.Count ?? 0;
@@ -155,6 +178,29 @@ namespace MyJourneys.Repositories
             _context.SaveChanges();
         }
 
+        private void UpdateArticleTags(Article article, List<string> tags)
+        {
+            var unusedTags = _context.ArticleTags
+                .Where(x => x.ArticleId == article.Id && !tags.Contains(x.Tag.Name))
+                .ToList();
+            
+            _context.ArticleTags.RemoveRange(unusedTags);
+            foreach (string tag in tags)
+            {
+                if (!_context.ArticleTags.Any(x => x.ArticleId == article.Id && x.Tag.Name.Equals(tag)))
+                {
+                    var tagId = GetTag(tag).Id;
+                    _context.ArticleTags.Add(new ArticleTags
+                    {
+                        TagId = tagId,
+                        ArticleId = article.Id
+                    });
+                }
+            }
+
+            _context.SaveChanges();
+        }
+
         public Tag GetTag(string tagName)
         {
             var articleTag = _context.Tags.FirstOrDefault(tag => tag.Name.ToLower().Equals(tagName.ToLower()));
@@ -166,7 +212,6 @@ namespace MyJourneys.Repositories
             _context.Tags.Add(newTag);
             _context.SaveChanges();
             return newTag;
-
         }
 
         public List<string> GetTags()
@@ -176,10 +221,11 @@ namespace MyJourneys.Repositories
 
         public List<PopularTagViewModel> GetPopularTags()
         {
-            return _context.Tags.Select(tag => new PopularTagViewModel
+            return _context.Tags.Where(tag => tag.ArticleTags.Any(x => x.Article.Confirmed))
+                .Select(tag => new PopularTagViewModel
                 {
                     Tag = tag.Name,
-                    Count = tag.ArticleTags.Count
+                    Count = tag.ArticleTags.Count(x => x.Article.Confirmed)
                 })
                 .OrderByDescending(tag => tag.Count)
                 .Take(PopularLimit)

@@ -120,5 +120,24 @@ namespace MyJourneys.Controllers
             var userId = GetUserId(User);
             return _overviewRepository.GetTravelingYears(userId);
         }
+
+        [HttpDelete("{journeyId}/photos/{id}")]
+        [Authorize]
+        public ActionResult<int> DeletePhoto(int journeyId, int id)
+        {
+            var userid = GetUserId(User);
+            if (!_overviewRepository.IsUsersJourney(userid, journeyId))
+            {
+                return StatusCode(403, "Journey doesn't belong to the user");
+            }
+
+            var deletedId = _overviewRepository.DeletePhoto(id);
+            if (!_overviewRepository.JourneyHasPhotos(journeyId))
+            {
+                _overviewRepository.DeleteJourney(journeyId);
+            }
+
+            return Ok(deletedId);
+        }
     }
 }

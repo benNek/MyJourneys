@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {Fragment, useContext, useEffect, useState} from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {useHistory, useParams} from "react-router";
 import {deleteArticle, getArticle, hasLikedArticle, likeArticle} from "../../utils/networkFunctions";
@@ -21,11 +21,16 @@ import './Article.css';
 import {Context} from "../../state/store";
 import Button from "@material-ui/core/Button";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import EditIcon from '@material-ui/icons/Edit';
 import {setArticles} from "../../state/actions";
 
 const useStyles = makeStyles(theme => ({
   heading: {
     marginBottom: '8px'
+  },
+  editBtn: {
+    display: 'flex',
+    marginTop: '12px'
   },
   divider: {
     margin: '12px 0'
@@ -85,14 +90,20 @@ export default function Article() {
     setHasLiked(!hasLiked);
     likeArticle(id).then(res => res);
   };
-
+  
   const handleDeleteArticle = () => {
     deleteArticle(article.id).then(res => {
       setArticles(dispatch, articles.filter(a => a.id !== res.data));
       history.push(`/articles`);
     }).catch(err => console.error(err));
-    console.log(article.id);
   };
+  
+  const handleEditArticle = () => {
+    history.push({
+      pathname: '/article',
+      state: { article }
+    })
+  }
 
   const getLikesCountMessage = (likesCount) => {
     if (likesCount === 0) {
@@ -114,13 +125,23 @@ export default function Article() {
 
   const renderAuthorOptions = () => {
     return (
-      <Button
-        variant="outlined"
-        startIcon={<DeleteForeverIcon/>}
-        onClick={handleDeleteArticle}
-      >
-        Delete
-      </Button>
+      <Fragment>
+        <Button
+          variant="outlined"
+          startIcon={<DeleteForeverIcon/>}
+          onClick={handleDeleteArticle}
+        >
+          Delete
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<EditIcon/>}
+          onClick={handleEditArticle}
+          className={classes.editBtn}
+        >
+          Edit
+        </Button>
+      </Fragment>
     )
   };
 

@@ -4,6 +4,7 @@ import Modal from "@material-ui/core/Modal";
 import React, {Fragment} from "react";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {getPhotoUrl} from "../../utils/photoUtils";
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -15,6 +16,17 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[3],
     padding: theme.spacing(2),
+    maxWidth: '90vw',
+    position: 'relative'
+  },
+  delete: {
+    position: 'absolute',
+    top: '16px',
+    right: '16px',
+    stroke: theme.palette.text.primary,
+    fill: theme.palette.background.default,
+    strokeWidth: .75,
+    cursor: 'pointer'
   },
   photo: {
     height: '100%',
@@ -26,7 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function PhotoView(props) {
   const classes = useStyles();
-  const {open, handleClose, photo} = props;
+  const {open, handleClose, handleDelete, photo} = props;
 
   if (!photo) {
     return (<Fragment/>);
@@ -47,6 +59,7 @@ export default function PhotoView(props) {
     >
       <Fade in={open}>
         <div className={classes.paper}>
+          <DeleteForeverIcon onClick={() => handleDelete(photo.id)} className={classes.delete}/>
           <img src={getPhotoUrl(photo.path)} className={classes.photo} alt=""/>
         </div>
       </Fade>

@@ -71,7 +71,7 @@ export default function Register() {
                 actions.setSubmitting(true);
                 await register(values)
                   .then(() => {
-                    toast.success("User registered successfully.");
+                    toast.success("You have registered successfully.");
                     handleClose();
                   })
                   .catch(err => {

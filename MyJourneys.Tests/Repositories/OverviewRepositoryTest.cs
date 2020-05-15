@@ -142,7 +142,7 @@ namespace MyJourneys.Tests.Repositories
         [Test]
         public void TestDeletePhotos()
         {
-            _repository.DeletePhotos("1");
+            _repository.DeleteJourneys("1");
             var journeys = _repository.GetJourneyOverviews("1", 0);
             Assert.AreEqual(2, journeys.Count);
         }

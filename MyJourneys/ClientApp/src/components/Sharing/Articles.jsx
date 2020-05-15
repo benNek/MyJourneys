@@ -50,7 +50,7 @@ export default function Articles() {
   const classes = useStyles();
   const history = useHistory();
   const [state, dispatch] = useContext(Context);
-  const {articles} = state;
+  const {user, articles} = state;
 
   const [popularTags, setPopularTags] = useState([]);
   const [sortType, setSortType] = useState('feed');
@@ -163,12 +163,15 @@ export default function Articles() {
             </Typography>
           )
       }
-      <Fab onClick={() => history.push('/article')}
-           aria-label="add article"
-           color="primary"
-           className="FloatingActionButton">
-        <SubjectIcon/>
-      </Fab>
+      {
+        user &&
+        <Fab onClick={() => history.push('/article')}
+             aria-label="add article"
+             color="primary"
+             className="FloatingActionButton">
+          <SubjectIcon/>
+        </Fab>
+      }
     </React.Fragment>
   )
 }

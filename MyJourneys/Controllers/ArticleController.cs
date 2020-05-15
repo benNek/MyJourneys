@@ -25,6 +25,19 @@ namespace MyJourneys.Controllers
             var userId = GetUserId(User);
             return Ok(_articleRepository.AddArticle(userId, model));
         }
+
+        [HttpPut("{id}")]
+        [Authorize]
+        public ActionResult<ArticleViewModel> Edit(int id, [FromBody] ArticleFormViewModel model)
+        {
+            var userId = GetUserId(User);
+            if (!_articleRepository.IsUserAuthor(id, userId))
+            {
+                return StatusCode(403, "Article doesn't belong to the user");
+            }
+
+            return Ok(_articleRepository.UpdateArticle(id, model));
+        }
         
         [HttpDelete("{id}")]
         [Authorize]
