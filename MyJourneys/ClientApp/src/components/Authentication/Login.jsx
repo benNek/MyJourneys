@@ -77,9 +77,9 @@ export default function Login() {
                 await login(values)
                   .then(response => {
                     localStorage.setItem('accessToken', response.data);
-                    
                     updateBearerToken();
                     setUser(dispatch, parseUser());
+                    toast.success("You have login successfully!");
                   })
                   .catch(err => {
                     toast.error(`${err.response.data} Status code: ${err.response.status}`);

@@ -161,28 +161,38 @@ namespace MyJourneys.Tests.Repositories
             };
 
             var likes = new List<ArticleLikes>();
+            var article1 = new Article
+            {
+                Id = 1, AuthorId = "1", Author = author, Title = "Article", Text = "Text", ArticleTags = tags,
+                ArticleLikes = likes, Confirmed = true
+            };
+            var article2 = new Article
+            {
+                Id = 2, AuthorId = "2", Author = author, Title = "Article 2", Text = "Text 2", ArticleTags = tags,
+                ArticleLikes = likes, Confirmed = false
+            };
             var articles = FakeDbSet<Article>.Create(new List<Article>
             {
-                new Article
-                {
-                    Id = 1, AuthorId = "1", Author = author, Title = "Article", Text = "Text", ArticleTags = tags,
-                    ArticleLikes = likes, Confirmed = true
-                },
-                new Article
-                {
-                    Id = 2, AuthorId = "2", Author = author, Title = "Article 2", Text = "Text 2", ArticleTags = tags,
-                    ArticleLikes = likes, Confirmed = false
-                }
+                article1, article2
             });
             mockContext.Setup(x => x.Articles).Returns(articles.Object);
 
+            var tags2 = new List<ArticleTags>
+            {
+                new ArticleTags {Tag = tag, Article = article1}
+            };
+            var tag2 = new Tag {Name = "Travel", ArticleTags = tags2};
             var dbTags = FakeDbSet<Tag>.Create(new List<Tag>
             {
-                new Tag {Name = "Travel", ArticleTags = tags}
+                tag2
             });
             mockContext.Setup(x => x.Tags).Returns(dbTags.Object);
 
-            var articleTags = FakeDbSet<ArticleTags>.Create(new List<ArticleTags>());
+            var articleTags = FakeDbSet<ArticleTags>.Create(new List<ArticleTags>
+            {
+                new ArticleTags {Article = article1, Tag = tag2},
+                new ArticleTags {Article = article2, Tag = tag2},
+            });
             mockContext.Setup(x => x.ArticleTags).Returns(articleTags.Object);
 
             var articleLikes = FakeDbSet<ArticleLikes>.Create(new List<ArticleLikes>

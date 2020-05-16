@@ -176,7 +176,7 @@ export default function OverviewMap(props) {
       const el = renderPhotoCard(journey.id, journey.coverPhoto.path, e => onJourneyClick(e.currentTarget.dataset.id));
 
       const heading = document.createElement('p');
-      heading.className = classes.coverTitle;
+      heading.className = `${classes.coverTitle} overview__photoTitle`;
       heading.innerText = journey.title;
       el.appendChild(heading);
 

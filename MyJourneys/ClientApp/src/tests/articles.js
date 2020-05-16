@@ -9,6 +9,10 @@ describe('Articles page', function () {
     browser.wait(EC.presenceOf(header), 10000);
   });
 
+  it('should have a title', function () {
+    expect(browser.getTitle()).toEqual('MyJourneys');
+  });
+  
   it('should have valid h1', () => {
     expect(element(by.css('h1')).getText()).toEqual('Articles');
   });
@@ -40,11 +44,34 @@ describe('Articles page', function () {
   });
 
   it('should have working search', async () => {
-    const searchInput = await element(by.css('.MuiFormControl-root input'));
+    const searchInput = await element(by.css('.articles__searchForm input'));
     searchInput.sendKeys('Lietuv');
     browser.sleep(100);
     const blogs = await element.all(by.css('.articles__list .MuiCard-root')).count();
     expect(blogs > 0).toBe(true);
+  });
+
+  it('should have 3 links in sidebar', async function () {
+    const links = await element.all(by.css('.MuiDrawer-root .MuiList-root .MuiButtonBase-root')).count();
+    expect(links).toEqual(3 * 2);
+  });
+
+  it('should have working register modal', async function () {
+    const registerBtn = element.all(by.cssContainingText('span.MuiButton-label', 'Register')).first();
+    await registerBtn.click();
+
+    const inputs = await element.all(by.css('.MuiFormControl-root')).count();
+    expect(inputs).toEqual(5);
+    browser.actions().mouseMove(registerBtn, -100, -100).click().perform();
+  });
+
+  it('should have working login modal', async function () {
+    const loginBtn = element.all(by.cssContainingText('span.MuiButton-label', 'Login')).first();
+    await loginBtn.click();
+
+    const inputs = await element.all(by.css('.login__modal .MuiFormControl-root')).count();
+    expect(inputs).toEqual(2);
+    browser.actions().mouseMove(loginBtn, -100, -100).click().perform();
   });
 
 });

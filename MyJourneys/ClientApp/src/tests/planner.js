@@ -25,7 +25,7 @@ describe('Planner page', () => {
     browser.waitForAngular();
 
     browser.get(`https://localhost:5001/journeys`);
-    plannerHeader = element(by.css('.MuiAppBar-root'));
+    const plannerHeader = element(by.css('.MuiAppBar-root'));
     browser.wait(EC.presenceOf(plannerHeader), 10000);
   });
 

@@ -15,5 +15,5 @@ exports.config = {
       }
     }));
   },
-  specs: ['overview.js', 'articles.js', 'planner.js']
+  specs: ['articles.js', 'planner.js', 'overview.js']
 };

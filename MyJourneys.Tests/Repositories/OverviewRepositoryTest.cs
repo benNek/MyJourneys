@@ -44,7 +44,7 @@ namespace MyJourneys.Tests.Repositories
         {
             Assert.IsFalse(_repository.IsUsersJourney("2", 1));
         }
-        
+
         [Test]
         public void TestIsUsersJourneyTrue()
         {
@@ -52,9 +52,21 @@ namespace MyJourneys.Tests.Repositories
         }
 
         [Test]
+        public void JourneyHasPhotosFalse()
+        {
+            Assert.IsFalse(_repository.JourneyHasPhotos(3));
+        }
+
+        [Test]
+        public void JourneyHasPhotosTrue()
+        {
+            Assert.IsTrue(_repository.JourneyHasPhotos(2));
+        }
+
+        [Test]
         public void TestGetJourneyOverviewNull()
         {
-            var journey = _repository.GetJourneyOverview(3);
+            var journey = _repository.GetJourneyOverview(4);
             Assert.IsNull(journey);
         }
 
@@ -140,11 +152,41 @@ namespace MyJourneys.Tests.Repositories
         }
 
         [Test]
-        public void TestDeletePhotos()
+        public void TestDeleteJourneys()
         {
             _repository.DeleteJourneys("1");
             var journeys = _repository.GetJourneyOverviews("1", 0);
             Assert.AreEqual(2, journeys.Count);
+        }
+
+        [Test]
+        public void TestDeletePhotoNotFound()
+        {
+            Assert.AreEqual(-1, _repository.DeletePhoto(100));
+        }
+
+        [Test]
+        public void TestDeletePhotoValid()
+        {
+            Assert.AreEqual(3, _repository.DeletePhoto(3));
+        }
+
+        [Test]
+        public void TestDeleteJourneyNotFound()
+        {
+            Assert.AreEqual(-1, _repository.DeleteJourney(100));
+        }
+
+        [Test]
+        public void TestDeleteJourneyValidBarcelona()
+        {
+            Assert.AreEqual(1, _repository.DeleteJourney(1));
+        }
+        
+        [Test]
+        public void TestDeleteJourneyValidParis()
+        {
+            Assert.AreEqual(2, _repository.DeleteJourney(2));
         }
 
         private IConfiguration MockConfig()
@@ -194,9 +236,18 @@ namespace MyJourneys.Tests.Repositories
                 OverviewJourneysCountries = new List<OverviewJourneysCountries>
                     {new OverviewJourneysCountries {OverviewJourneyId = 2, CountryId = 2, Country = france}}
             };
+
+            var journey3 = new OverviewJourney
+            {
+                Id = 3,
+                UserId = "1",
+                LocationPhotos = new List<LocationPhoto>(),
+                Title = "Kaunas",
+                OverviewJourneysCountries = new List<OverviewJourneysCountries>()
+            };
             var journeys = FakeDbSet<OverviewJourney>.Create(new List<OverviewJourney>
             {
-                journey1, journey2
+                journey1, journey2, journey3
             });
             mockContext.Setup(x => x.OverviewJourneys).Returns(journeys.Object);
 
@@ -215,10 +266,10 @@ namespace MyJourneys.Tests.Repositories
 
             var locationPhotos = FakeDbSet<LocationPhoto>.Create(new List<LocationPhoto>
             {
-                new LocationPhoto {Date = DateTime.Parse("Jan 1, 2018"), OverviewJourney = journey1},
-                new LocationPhoto {Date = DateTime.Parse("Jan 1, 2010"), OverviewJourney = journey1},
-                new LocationPhoto {Date = DateTime.Parse("Jan 1, 2020"), OverviewJourney = journey2},
-                new LocationPhoto {Date = DateTime.Parse("Jan 1, 2020"), OverviewJourney = journey2}
+                new LocationPhoto {Id = 1, Date = DateTime.Parse("Jan 1, 2018"), OverviewJourney = journey1},
+                new LocationPhoto {Id = 2, Date = DateTime.Parse("Jan 1, 2010"), OverviewJourney = journey1},
+                new LocationPhoto {Id = 3, Date = DateTime.Parse("Jan 1, 2020"), OverviewJourney = journey2},
+                new LocationPhoto {Id = 4, Date = DateTime.Parse("Jan 1, 2020"), OverviewJourney = journey2}
             });
             mockContext.Setup(x => x.LocationPhotos).Returns(locationPhotos.Object);
             return mockContext.Object;

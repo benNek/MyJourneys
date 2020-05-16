@@ -33,7 +33,7 @@ export default function ArticleSearch(props) {
           <SearchIcon/>
         </Grid>
         <Grid item>
-          <TextField onChange={handleChange} id="input-with-icon-grid" label="Search" size="small"/>
+          <TextField className={'articles__searchForm'} onChange={handleChange} id="input-with-icon-grid" label="Search" size="small"/>
         </Grid>
       </Grid>
     </div>
