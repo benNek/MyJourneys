@@ -19,6 +19,13 @@ namespace MyJourneys.Utils
                     }
                 },
                 {
+                    ".jpeg", new List<byte[]>
+                    {
+                        new byte[] {255, 216, 255, 224},
+                        new byte[] {255, 216, 255, 225}
+                    }
+                },
+                {
                     ".png", new List<byte[]>
                     {
                         new byte[] {137, 80, 78, 71}

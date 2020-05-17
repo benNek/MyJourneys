@@ -77,7 +77,7 @@ namespace MyJourneys.Controllers
                 if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
                 {
                     return StatusCode(422,
-                        $"File extension is not whitelisted for file ({file.FileName})! only .jpg and .png are allowed");
+                        $"File extension is not whitelisted for file ({file.FileName})! only .jpg, .jpeg and .png are allowed");
                 }
 
                 if (!FileUtils.IsValidImageSignature(file))
