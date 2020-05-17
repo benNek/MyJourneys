@@ -117,7 +117,7 @@ export default function NavBar() {
         </ListItem>
         <ListItem button component={Link} to="/overview" onClick={handleMobileDrawerClose}>
           <ListItemIcon><MapIcon/></ListItemIcon>
-          <ListItemText primary="Past journeys"/>
+          <ListItemText primary="Overview"/>
         </ListItem>
       </List>
       <Divider/>
