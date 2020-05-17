@@ -7,8 +7,7 @@ const prefersDarkMode = window.matchMedia && window.matchMedia('(prefers-color-s
 const initialState = {
   darkMode: savedDarkMode || (!localStorage.getItem('theme') && prefersDarkMode),
   user: parseUser(),
-  journeys: [],
-  articles: []
+  journeys: []
 };
 
 const Store = ({children}) => {

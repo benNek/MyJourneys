@@ -2,7 +2,6 @@ import React, {useContext, useEffect, useState} from "react";
 import {getArticles, getPopularTags} from "../../utils/networkFunctions";
 import Typography from "@material-ui/core/Typography";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {loadArticles, setArticles} from "../../state/actions";
 import {Context} from "../../state/store";
 import Divider from "@material-ui/core/Divider";
 import PopularTags from "./PopularTags";
@@ -50,8 +49,9 @@ export default function Articles() {
   const classes = useStyles();
   const history = useHistory();
   const [state, dispatch] = useContext(Context);
-  const {user, articles} = state;
+  const {user} = state;
 
+  const [articles, setArticles] = useState([]);
   const [popularTags, setPopularTags] = useState([]);
   const [sortType, setSortType] = useState('feed');
   const [search, setSearch] = useState('');
@@ -63,7 +63,7 @@ export default function Articles() {
         tag: activeTag,
         sortType,
         search
-      }).then(res => setArticles(dispatch, res.data)).catch(err => toast.error(err));
+      }).then(res => setArticles(res.data)).catch(err => toast.error(err));
     }
 
     if (!popularTags.length) {
@@ -77,20 +77,20 @@ export default function Articles() {
       tag = '';
     }
     setActiveTag(tag);
-    getArticles({tag, sortType, search}).then(res => setArticles(dispatch, res.data)).catch(err => toast.error(err));
+    getArticles({tag, sortType, search}).then(res => setArticles(res.data)).catch(err => toast.error(err));
   };
 
   const handleLoadMoreClick = () => {
     skip += take;
     getArticles({
       tag: activeTag, search, skip, take
-    }).then(res => loadArticles(dispatch, res.data)).catch(err => toast.error(err));
+    }).then(res => setArticles(res.data)).catch(err => toast.error(err));
   };
 
   const handleSortTypeClick = (type) => {
     setSortType(type);
     getArticles({tag: activeTag, sortType: type, search})
-      .then(res => setArticles(dispatch, res.data)).catch(err => toast.error(err));
+      .then(res => setArticles(res.data)).catch(err => toast.error(err));
   };
 
   const handleSearchChange = value => {
@@ -98,12 +98,12 @@ export default function Articles() {
       getArticles({tag: activeTag, sortType, search: value})
         .then(res => {
           setSearch(value);
-          setArticles(dispatch, res.data);
+          setArticles(res.data);
         }).catch(err => toast.error(err));
     } else if (value.length >= 3) {
       setSearch(value);
       getArticles({tag: activeTag, sortType, search: value})
-        .then(res => setArticles(dispatch, res.data)).catch(err => toast.error(err));
+        .then(res => setArticles(res.data)).catch(err => toast.error(err));
     }
   };
 
@@ -113,7 +113,7 @@ export default function Articles() {
         setActiveTag('');
         setSearch('');
         setSortType('feed');
-        setArticles(dispatch, res.data)
+        setArticles(res.data);
       }).catch(err => toast.error(err));
   };
 

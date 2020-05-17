@@ -22,7 +22,6 @@ import {Context} from "../../state/store";
 import Button from "@material-ui/core/Button";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditIcon from '@material-ui/icons/Edit';
-import {setArticles} from "../../state/actions";
 
 const useStyles = makeStyles(theme => ({
   heading: {
@@ -92,8 +91,7 @@ export default function Article() {
   };
   
   const handleDeleteArticle = () => {
-    deleteArticle(article.id).then(res => {
-      setArticles(dispatch, articles.filter(a => a.id !== res.data));
+    deleteArticle(article.id).then(() => {
       history.push(`/articles`);
     }).catch(err => console.error(err));
   };

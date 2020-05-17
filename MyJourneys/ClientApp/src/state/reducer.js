@@ -16,16 +16,6 @@ const Reducer = (state, action) => {
         ...state,
         journeys: action.payload
       };
-    case 'SET_ARTICLES':
-      return {
-        ...state,
-        articles: action.payload
-      };
-    case 'LOAD_ARTICLES':
-      return {
-        ...state,
-        articles: [...state.articles, ...action.payload]
-      };
     default:
       return state;
   }
