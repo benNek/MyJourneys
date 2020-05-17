@@ -123,7 +123,7 @@ export default function UploadPhotosStep2(props) {
 
   const [state] = useContext(Context);
   const {darkMode} = state;
-  
+
   const [open, setOpen] = useState(false);
   const [editingPhoto, setEditingPhoto] = useState({});
   const [invalidPhotos, setInvalidPhotos] = useState([]);
@@ -153,7 +153,7 @@ export default function UploadPhotosStep2(props) {
   useEffect(() => {
     setInvalidPhotos(files);
   }, [props]);
-  
+
   const fetch = React.useMemo(
     () =>
       throttle((request, callback) => {
@@ -224,7 +224,7 @@ export default function UploadPhotosStep2(props) {
   };
 
   const handleSaveLocation = () => {
-    editingPhoto.location =  {lat: marker.latitude, lon: marker.longitude};
+    editingPhoto.location = {lat: marker.latitude, lon: marker.longitude};
     editingPhoto.date = moment(date).format();
     editingPhoto.status = updated;
     setInvalidPhotos(_.orderBy([
@@ -362,13 +362,13 @@ export default function UploadPhotosStep2(props) {
               options={options}
               autoComplete
               includeInputInList
-              onChange={e => {
-                if (!e.currentTarget || !e.currentTarget.children || !e.currentTarget.children[0]) {
+              onChange={(e, value) => {
+                if (!value || !value.center) {
                   return;
                 }
-                const data = e.currentTarget.children[0].dataset;
-                const longitude = parseFloat(data.lon);
-                const latitude = parseFloat(data.lat);
+                
+                const longitude = parseFloat(value.center[0]);
+                const latitude = parseFloat(value.center[1]);
                 setMarker({longitude, latitude})
                 setViewport({
                   ...viewport,
@@ -392,7 +392,7 @@ export default function UploadPhotosStep2(props) {
               renderOption={(option) => {
                 const address = option.properties.address ? option.properties.address : option.place_name;
                 return (
-                  <Grid container alignItems="center" data-lon={option.center[0]} data-lat={option.center[1]}>
+                  <Grid container alignItems="center">
                     <Grid item>
                       <LocationOnIcon className={classes.icon}/>
                     </Grid>

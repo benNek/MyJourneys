@@ -147,8 +147,7 @@ export default function PlaceForm(props) {
             renderOption={(option) => {
               const address = option.properties.address ? option.properties.address : option.place_name;
               return (
-                <Grid container alignItems="center" data-lon={option.center[0]} data-lat={option.center[1]}
-                      data-name={option.text} data-address={address}>
+                <Grid container alignItems="center">
                   <Grid item>
                     <LocationOnIcon className={classes.icon}/>
                   </Grid>
