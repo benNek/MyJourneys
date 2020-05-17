@@ -57,7 +57,7 @@ export default function Journey() {
 
   const handleAddPlace = data => {
     if (places.length > 2) {
-      setPlaces([...places.slice(0, places.length - 1), data, ...places.slice(places.length - 1)]);
+      setPlaces([...places, data]);
     } else {
       setPlaces([...places, data]);
     }

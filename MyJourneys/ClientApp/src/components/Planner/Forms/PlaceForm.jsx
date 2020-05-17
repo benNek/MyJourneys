@@ -95,7 +95,6 @@ export default function PlaceForm(props) {
       latitude: parseFloat(location[0]),
       longitude: parseFloat(location[1])
     };
-    console.log(values)
     await createPlace(values)
       .then(response => {
         onSuccess(response.data);
