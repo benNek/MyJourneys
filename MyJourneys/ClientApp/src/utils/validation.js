@@ -1,11 +1,23 @@
 import * as Yup from 'yup';
 import moment from "moment";
 
-// Planner
-
 const yesterday = moment().subtract(1, 'days').toDate();
 const today = moment().toDate();
 
+// Auth
+export const registerValidation = Yup.object().shape({
+  username: Yup.string().required('Username is required'),
+  email: Yup.string().email('Please enter an email'),
+  password: Yup.string().required('Password is required').min(8, 'Password must be at least 8 characters long'),
+  confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match')
+});
+
+export const loginValidation = Yup.object().shape({
+  username: Yup.string().required('Username is required'),
+  password: Yup.string().required('Password is required')
+});
+
+// Planner
 export const journeyValidation = Yup.object().shape({
   location: Yup.string().required('Location name is required'),
   startDate: Yup.date().required('Start date is required')

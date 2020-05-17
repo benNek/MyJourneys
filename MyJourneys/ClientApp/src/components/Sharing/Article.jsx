@@ -119,7 +119,7 @@ export default function Article() {
     )
   }
 
-  const isAuthor = article && article.authorName === user.username;
+  const isAuthor = user && article && article.authorName === user.username;
 
   const renderAuthorOptions = () => {
     return (
@@ -142,24 +142,14 @@ export default function Article() {
       </Fragment>
     )
   };
-
-  return (
-    <Card variant="outlined">
-      <CardContent>
-        <Typography className={classes.heading} variant="h3" component="h1">
-          {article.title}
-          {!article.confirmed &&
-          <Typography variant="body1" className={classes.notApproved}>
-            This article is not yet approved!
-          </Typography>}
-        </Typography>
-        {isAuthor && renderAuthorOptions()}
-        <Divider className={classes.divider}/>
-        <Editor
-          readOnly={true}
-          defaultValue={article.text}
-          dark={darkMode}
-        />
+  
+  const renderActions = () => {
+    if (!article.confirmed) {
+      return;
+    }
+    
+    return (
+      <Fragment>
         <Divider className={classes.divider}/>
         <Typography className={classes.bottom} variant="caption">
           <div className={classes.likes}>
@@ -186,6 +176,28 @@ export default function Article() {
             </FacebookShareButton>
           </span>
         </Typography>
+      </Fragment>
+    )
+  }
+
+  return (
+    <Card variant="outlined">
+      <CardContent>
+        <Typography className={classes.heading} variant="h3" component="h1">
+          {article.title}
+          {!article.confirmed &&
+          <Typography variant="body1" className={classes.notApproved}>
+            This article is not yet approved!
+          </Typography>}
+        </Typography>
+        {isAuthor && renderAuthorOptions()}
+        <Divider className={classes.divider}/>
+        <Editor
+          readOnly={true}
+          defaultValue={article.text}
+          dark={darkMode}
+        />
+        {renderActions()}
       </CardContent>
     </Card>
   )

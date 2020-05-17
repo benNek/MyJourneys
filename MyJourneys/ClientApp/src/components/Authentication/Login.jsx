@@ -13,6 +13,7 @@ import {toast} from 'react-toastify';
 import {parseUser} from "../../utils/auth";
 import {Context} from "../../state/store";
 import {setUser} from "../../state/actions";
+import {loginValidation} from "../../utils/validation";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -72,6 +73,7 @@ export default function Login() {
             </Typography>
             <Formik
               initialValues={{username: '', password: ''}}
+              validationSchema={loginValidation}
               onSubmit={async (values, actions) => {
                 actions.setSubmitting(true);
                 await login(values)
@@ -89,7 +91,7 @@ export default function Login() {
               }}
             >
               {(formProps) => {
-                const {handleChange, setFieldTouched} = formProps;
+                const {handleChange, setFieldTouched, touched, errors, values} = formProps;
                 const change = (name, e) => {
                   e.persist();
                   handleChange(e);
@@ -108,6 +110,9 @@ export default function Login() {
                           id="username"
                           label="Username"
                           autoFocus
+                          value={values['username']}
+                          error={errors.username && touched.username}
+                          helperText={(errors.username && touched.username) && errors.username}
                           onChange={change.bind(null, "username")}
                         />
                       </Grid>
@@ -121,6 +126,9 @@ export default function Login() {
                           type="password"
                           id="password"
                           autoComplete="current-password"
+                          value={values['password']}
+                          error={errors.password && touched.password}
+                          helperText={(errors.password && touched.password) && errors.password}
                           onChange={change.bind(null, "password")}
                         />
                       </Grid>

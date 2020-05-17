@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import {register} from "../../utils/networkFunctions";
 import {toast} from 'react-toastify';
+import {registerValidation} from "../../utils/validation";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -21,6 +22,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[3],
     padding: theme.spacing(2, 4, 3),
+    maxWidth: '890px'
   },
   heading: {
     marginBottom: '32px',
@@ -66,7 +68,8 @@ export default function Register() {
               Sign up now!
             </Typography>
             <Formik
-              initialValues={{username: '', email: '', password: ''}}
+              validationSchema={registerValidation}
+              initialValues={{username: '', email: '', password: '', confirmPassword: ''}}
               onSubmit={async (values, actions) => {
                 actions.setSubmitting(true);
                 await register(values)
@@ -82,7 +85,7 @@ export default function Register() {
               }}
             >
               {(formProps) => {
-                const {handleChange, setFieldTouched} = formProps;
+                const {handleChange, setFieldTouched, touched, errors, values} = formProps;
                 const change = (name, e) => {
                   e.persist();
                   handleChange(e);
@@ -93,7 +96,7 @@ export default function Register() {
                     <Grid container spacing={2}>
                       <Grid item xs={12}>
                         <TextField
-                          autoComplete="fname"
+                          autoComplete="username"
                           name="username"
                           variant="outlined"
                           required
@@ -101,6 +104,9 @@ export default function Register() {
                           id="username"
                           label="Username"
                           autoFocus
+                          value={values['username']}
+                          error={errors.username && touched.username}
+                          helperText={(errors.username && touched.username) && errors.username}
                           onChange={change.bind(null, "username")}
                         />
                       </Grid>
@@ -113,6 +119,9 @@ export default function Register() {
                           label="Email Address"
                           name="email"
                           autoComplete="email"
+                          value={values['email']}
+                          error={errors.email && touched.email}
+                          helperText={(errors.email && touched.email) && errors.email}
                           onChange={change.bind(null, "email")}
                         />
                       </Grid>
@@ -126,6 +135,9 @@ export default function Register() {
                           type="password"
                           id="password"
                           autoComplete="current-password"
+                          value={values['password']}
+                          error={errors.password && touched.password}
+                          helperText={(errors.password && touched.password) && errors.password}
                           onChange={change.bind(null, "password")}
                         />
                       </Grid>
@@ -139,6 +151,9 @@ export default function Register() {
                           type="password"
                           id="confirmPassword"
                           autoComplete="confirm-password"
+                          value={values['confirmPassword']}
+                          error={errors.confirmPassword && touched.confirmPassword}
+                          helperText={(errors.confirmPassword && touched.confirmPassword) && errors.confirmPassword}
                           onChange={change.bind(null, "confirmPassword")}
                         />
                       </Grid>
