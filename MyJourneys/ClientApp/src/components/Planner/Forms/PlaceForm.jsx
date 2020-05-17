@@ -11,6 +11,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import {throttle} from "lodash";
 import {createPlace} from "../../../utils/networkFunctions";
+import {Add} from "@material-ui/icons";
 
 const useStyles = makeStyles(theme => ({
   formTitle: {
@@ -94,6 +95,7 @@ export default function PlaceForm(props) {
       latitude: parseFloat(location[0]),
       longitude: parseFloat(location[1])
     };
+    console.log(values)
     await createPlace(values)
       .then(response => {
         onSuccess(response.data);
@@ -118,14 +120,20 @@ export default function PlaceForm(props) {
             options={options}
             autoComplete
             includeInputInList
-            onChange={e => {
-              if (!e.currentTarget || !e.currentTarget.children || !e.currentTarget.children[0]) {
+            onChange={(e, value) => {
+              if (!value) {
                 return;
               }
-              const data = e.currentTarget.children[0].dataset;
-              setName(data.name);
-              setAddress(data.address);
-              setLocation([data.lat, data.lon]);
+              const lon = value.center[0];
+              const lat = value.center[1];
+              const name = value.text;
+              const address = value.properties.address ? value.properties.address : value.place_name;
+              if (!lon || !lat || !name || !Add) {
+                return;
+              }
+              setName(name);
+              setAddress(address);
+              setLocation([lat, lon]);
             }}
             renderInput={(params) => (
               <TextField

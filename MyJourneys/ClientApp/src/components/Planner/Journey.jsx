@@ -28,11 +28,6 @@ const useStyles = makeStyles(theme => ({
   title: {
     marginBottom: '12px',
     textAlign: 'center'
-  },
-  deleteBtn: {
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: '16px'
-    },
   }
 }));
 
