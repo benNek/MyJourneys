@@ -84,7 +84,7 @@ export default function Articles() {
     skip += take;
     getArticles({
       tag: activeTag, search, skip, take
-    }).then(res => setArticles(res.data)).catch(err => toast.error(err));
+    }).then(res => setArticles([...articles, ...res.data])).catch(err => toast.error(err));
   };
 
   const handleSortTypeClick = (type) => {

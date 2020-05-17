@@ -71,8 +71,8 @@ export default function Article() {
   const [hasLiked, setHasLiked] = useState(false);
   const history = useHistory();
 
-  const [state, dispatch] = useContext(Context);
-  const {darkMode, user, articles} = state;
+  const [state] = useContext(Context);
+  const {darkMode, user} = state;
   let {id} = useParams();
 
   useEffect(() => {
