@@ -1,4 +1,4 @@
-import React, {Fragment, useContext, useEffect, useState} from "react";
+import React, {Fragment, useEffect, useState} from "react";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -8,9 +8,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Fade from "@material-ui/core/Fade";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop/Backdrop";
-import {Context} from "../../state/store";
 import {getJourneys} from "../../utils/networkFunctions";
-import {setJourneys} from "../../state/actions";
 import {toast} from "react-toastify";
 import JourneyCard from "./JourneyCard";
 import JourneyForm from "./Forms/JourneyForm";
@@ -41,10 +39,9 @@ const useStyles = makeStyles(theme => ({
 
 export default function Journeys() {
   const classes = useStyles();
-  const [state, dispatch] = useContext(Context);
+  const [journeys, setJourneys] = useState([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const {journeys} = state;
 
   useEffect(() => {
     if (journeys.length) {
@@ -54,10 +51,10 @@ export default function Journeys() {
     if (!journeys.length) {
       getJourneys().then(res => {
         setLoading(false);
-        setJourneys(dispatch, res.data);
+        setJourneys(res.data);
       }).catch(err => toast.error(err));
     }
-  }, [dispatch]);
+  }, []);
 
   const handleOpen = () => {
     setOpen(true);
@@ -69,7 +66,7 @@ export default function Journeys() {
 
   const handleAddJourney = (data) => {
     data.expired = false;
-    setJourneys(dispatch, [...journeys, data]);
+    setJourneys([...journeys, data]);
   };
 
   const content = () => {

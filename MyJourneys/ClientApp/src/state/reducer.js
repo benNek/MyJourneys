@@ -11,11 +11,6 @@ const Reducer = (state, action) => {
         ...state,
         user: action.payload
       };
-    case 'SET_JOURNEYS':
-      return {
-        ...state,
-        journeys: action.payload
-      };
     default:
       return state;
   }
