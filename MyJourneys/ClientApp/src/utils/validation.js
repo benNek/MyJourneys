@@ -21,9 +21,9 @@ export const loginValidation = Yup.object().shape({
 export const journeyValidation = Yup.object().shape({
   location: Yup.string().required('Location name is required'),
   startDate: Yup.date().required('Start date is required')
-    .max(Yup.ref('endDate'), 'Start date should be before end date'),
+    .max(Yup.ref('endDate'), 'Start date should be before end date')
+    .min(today, 'Start date should not be in the past'),
   endDate: Yup.date().required('End date is required')
-    .min(today, 'End date should not be in the past')
 });
 
 export const flightItemValidation = Yup.object().shape({

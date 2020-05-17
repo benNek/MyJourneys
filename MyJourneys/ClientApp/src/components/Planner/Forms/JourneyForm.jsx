@@ -29,8 +29,8 @@ export default function JourneyForm(props) {
     <Formik
       initialValues={{
         location: '',
-        startDate: moment().format('YYYY-MM-DD'),
-        endDate: moment().add(7, 'days').format('YYYY-MM-DD')
+        startDate: moment().add(1, 'days').format('YYYY-MM-DD'),
+        endDate: moment().add(8, 'days').format('YYYY-MM-DD')
       }}
       validationSchema={journeyValidation}
       onSubmit={async (values, actions) => {
@@ -83,6 +83,7 @@ export default function JourneyForm(props) {
                   variant="outlined"
                   inputVariant="outlined"
                   fullWidth
+                  minDate={moment().format('YYYY-MM-DD')}
                   value={values['startDate']}
                   format="YYYY-MM-DD"
                   error={errors.startDate && touched.startDate}
